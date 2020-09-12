@@ -12,7 +12,6 @@ const TableName = "rules"
 type Rule struct {
 	models.BaseTable
 	Title string `json:"title"`
-
 }
 
 func (Rule) TableName() string {

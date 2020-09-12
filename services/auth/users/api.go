@@ -17,19 +17,19 @@ type Service struct {
 
 // UserRequest create or update user request
 type UserRequest struct {
-	Username string        `form:"username" json:"username" xml:"username" binding:"required"`
-	Password string        `form:"password" json:"password" xml:"password" binding:"required"`
-	Email    string        `form:"email" json:"email" xml:"email" binding:"required"`
-	Enable   bool          `form:"enable" json:"enable" xml:"enable" binding:"required"`
+	Username string `form:"username" json:"username" xml:"username" binding:"required"`
+	Password string `form:"password" json:"password" xml:"password" binding:"required"`
+	Email    string `form:"email" json:"email" xml:"email" binding:"required"`
+	Enable   bool   `form:"enable" json:"enable" xml:"enable" binding:"required"`
 }
 
 // UserResponse create or update user request
 type UserResponse struct {
-	UUID     string        `json:"uuid" xml:"uuid"`
-	Username string        `form:"username" json:"username" xml:"username"`
-	Password string        `form:"password" json:"password" xml:"password"`
-	Email    string        `form:"email" json:"email" xml:"email"`
-	Enable   bool          `form:"enable" json:"enable" xml:"enable"`
+	UUID     string `json:"uuid" xml:"uuid"`
+	Username string `form:"username" json:"username" xml:"username"`
+	Password string `form:"password" json:"password" xml:"password"`
+	Email    string `form:"email" json:"email" xml:"email"`
+	Enable   bool   `form:"enable" json:"enable" xml:"enable"`
 }
 
 func NewService(router *gin.Engine, repo *Repository, logger *zap.Logger) {

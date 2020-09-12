@@ -12,11 +12,11 @@ const TableName = "users"
 // User is db model for single user
 type User struct {
 	models.BaseTable
-	UUID     string        `json:"uuid"`
-	Username string        `json:"username"`
-	Password string        `json:"password"`
-	Enable   bool          `json:"enable"`
-	Email    string        `json:"email"`
+	UUID     string `json:"uuid"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Enable   bool   `json:"enable"`
+	Email    string `json:"email"`
 }
 
 func (User) TableName() string {
