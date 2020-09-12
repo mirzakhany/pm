@@ -1,0 +1,21 @@
+apiVersion: v0.1
+server:
+  host: 0.0.0.0
+  port: 8080
+  debug: true
+
+db:
+  engine: postgres
+  host: 127.0.0.1
+  port: 5432
+  user: postgres
+  password: postgress
+  connectionMaxAge: 0
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  user: redis
+  password: redis
+
+
