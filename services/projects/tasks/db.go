@@ -1,12 +1,13 @@
 package tasks
 
 import (
+	"projectmanager/internal/models"
+	"projectmanager/services/projects/sprints"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"projectmanager/internal/models"
-	"projectmanager/services/projects/sprints"
 )
 
 const TableName = "tasks"

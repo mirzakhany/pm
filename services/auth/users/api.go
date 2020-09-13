@@ -2,11 +2,12 @@ package users
 
 import (
 	"errors"
+	"net/http"
+	"projectmanager/internal/jsonapi"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"net/http"
-	"projectmanager/internal/jsonapi"
 )
 
 type Service struct {

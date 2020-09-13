@@ -1,11 +1,12 @@
 package projects
 
 import (
+	"projectmanager/services/projects/sprints"
+	"projectmanager/services/projects/tasks"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"projectmanager/services/projects/sprints"
-	"projectmanager/services/projects/tasks"
 )
 
 func Setup(db *gorm.DB, router *gin.Engine, logger *zap.Logger) error {

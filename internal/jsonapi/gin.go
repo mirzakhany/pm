@@ -2,6 +2,7 @@ package jsonapi
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 

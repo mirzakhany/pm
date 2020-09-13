@@ -2,8 +2,9 @@ package jsonapi
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func PaginationQuery(c *gin.Context, perPage int) (int, int, error) {

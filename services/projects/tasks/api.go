@@ -1,10 +1,11 @@
 package tasks
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"net/http"
 	"projectmanager/internal/jsonapi"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type Service struct {

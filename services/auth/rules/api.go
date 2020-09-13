@@ -2,11 +2,12 @@ package rules
 
 import (
 	"errors"
+	"net/http"
+	"projectmanager/internal/jsonapi"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"net/http"
-	"projectmanager/internal/jsonapi"
 )
 
 type Service struct {
@@ -15,15 +16,23 @@ type Service struct {
 	itemPerPage int
 }
 
-// RuleRequest create or update role request
+// RuleRequest create or update rule request
 type RuleRequest struct {
-	Title string `form:"title" json:"title" xml:"title" binding:"required"`
+	Subject  string `form:"subject" json:"subject" xml:"subject" binding:"required"`
+	Domain   string `form:"domain" json:"domain" xml:"domain" binding:"required"`
+	Resource string `form:"resource" json:"resource" xml:"resource" binding:"required"`
+	Action   string `form:"action" json:"action" xml:"action" binding:"required"`
+	Object   string `form:"object" json:"object" xml:"object" binding:"required"`
 }
 
-// RuleResponse create or update role request
+// RuleResponse create or update rule request
 type RuleResponse struct {
-	UUID  string `json:"uuid" xml:"uuid"`
-	Title string `form:"title" json:"title" xml:"title"`
+	UUID     string `json:"uuid" xml:"uuid"`
+	Subject  string `form:"subject" json:"subject" xml:"subject"`
+	Domain   string `form:"domain" json:"domain" xml:"domain"`
+	Resource string `form:"resource" json:"resource" xml:"resource"`
+	Action   string `form:"action" json:"action" xml:"action"`
+	Object   string `form:"object" json:"object" xml:"object"`
 }
 
 func NewService(router *gin.Engine, repo *Repository, logger *zap.Logger) {
@@ -50,7 +59,7 @@ func (s *Service) CreateHandler(c *gin.Context) {
 
 	item, err := s.Repo.Create(json)
 	if err != nil {
-		s.Logger.Error("create role failed with error %s", zap.Error(err))
+		s.Logger.Error("create rule failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -72,7 +81,7 @@ func (s *Service) UpdateHandler(c *gin.Context) {
 
 	item, err := s.Repo.Update(itemUUID, json)
 	if err != nil {
-		s.Logger.Error("update role failed with error %s", zap.Error(err))
+		s.Logger.Error("update rule failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -95,7 +104,7 @@ func (s *Service) GetHandler(c *gin.Context) {
 			return
 		}
 
-		s.Logger.Error("retrieve role failed with error %s", zap.Error(err))
+		s.Logger.Error("retrieve rule failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -127,7 +136,7 @@ func (s *Service) DeleteHandler(c *gin.Context) {
 	}
 	err := s.Repo.Delete(itemUUID)
 	if err != nil {
-		s.Logger.Error("delete role failed with error %s", zap.Error(err))
+		s.Logger.Error("delete rule failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

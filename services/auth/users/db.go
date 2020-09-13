@@ -1,10 +1,11 @@
 package users
 
 import (
+	"projectmanager/internal/models"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"projectmanager/internal/models"
 )
 
 const TableName = "users"
@@ -13,10 +14,10 @@ const TableName = "users"
 type User struct {
 	models.BaseTable
 	UUID     string `json:"uuid"`
-	Username string `json:"username"`
+	Username string `json:"username" gorm:"index"`
 	Password string `json:"password"`
 	Enable   bool   `json:"enable"`
-	Email    string `json:"email"`
+	Email    string `json:"email" gorm:"index"`
 }
 
 func (User) TableName() string {

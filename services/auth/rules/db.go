@@ -1,9 +1,10 @@
 package rules
 
 import (
+	"projectmanager/internal/models"
+
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"projectmanager/internal/models"
 )
 
 const TableName = "rules"
@@ -11,7 +12,11 @@ const TableName = "rules"
 // Rule is db model for single rule
 type Rule struct {
 	models.BaseTable
-	Title string `json:"title"`
+	Subject  string `json:"subject"`
+	Domain   string `json:"domain"`
+	Resource string `json:"resource"`
+	Action   string `json:"action"`
+	Object   string `json:"object"`
 }
 
 func (Rule) TableName() string {
@@ -31,7 +36,11 @@ func NewRepository(db *gorm.DB) *Repository {
 func (r *Repository) Create(rule RuleRequest) (*Rule, error) {
 
 	newItem := &Rule{
-		Title: rule.Title,
+		Subject:  rule.Subject,
+		Domain:   rule.Domain,
+		Resource: rule.Resource,
+		Action:   rule.Action,
+		Object:   rule.Object,
 	}
 
 	result := r.DB.Create(newItem)
@@ -49,7 +58,11 @@ func (r *Repository) Update(uuid string, rule RuleRequest) (*Rule, error) {
 	}
 
 	result = r.DB.Model(item).Updates(Rule{
-		Title: rule.Title,
+		Subject:  rule.Subject,
+		Domain:   rule.Domain,
+		Resource: rule.Resource,
+		Action:   rule.Action,
+		Object:   rule.Object,
 	})
 
 	if result.Error != nil {

@@ -1,10 +1,11 @@
 package roles
 
 import (
+	"projectmanager/internal/models"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"projectmanager/internal/models"
 )
 
 const TableName = "roles"

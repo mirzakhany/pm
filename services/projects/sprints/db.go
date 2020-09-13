@@ -1,11 +1,12 @@
 package sprints
 
 import (
+	"projectmanager/internal/models"
+	"time"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"projectmanager/internal/models"
-	"time"
 )
 
 const TableName = "sprints"
