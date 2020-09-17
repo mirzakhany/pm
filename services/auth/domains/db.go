@@ -15,7 +15,7 @@ type Domain struct {
 	models.BaseTable
 	UUID    string `json:"uuid"`
 	Title   string `json:"title"`
-	Address string `json:"address"  gorm:"index"`
+	Address string `json:"address"  gorm:"index;unique"`
 }
 
 func (Domain) TableName() string {
@@ -65,7 +65,7 @@ func (r *Repository) Update(uuid string, domain DomainRequest) (*Domain, error) 
 	}
 
 	var savedItem Domain
-	result = r.DB.First(&savedItem, result.RowsAffected)
+	result = r.DB.First(&savedItem, item.ID)
 	if result.Error != nil {
 		return nil, result.Error
 	}
