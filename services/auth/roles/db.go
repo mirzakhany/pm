@@ -14,7 +14,7 @@ const TableName = "roles"
 type Role struct {
 	models.BaseTable
 	UUID  string `json:"uuid"`
-	Title string `json:"title"`
+	Title string `json:"title" gorm:"index;unique"`
 }
 
 func (Role) TableName() string {
@@ -62,7 +62,7 @@ func (r *Repository) Update(uuid string, role RoleRequest) (*Role, error) {
 	}
 
 	var savedItem Role
-	result = r.DB.First(&savedItem, result.RowsAffected)
+	result = r.DB.First(&savedItem, item.ID)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -93,5 +93,10 @@ func (r *Repository) Get(query string, args ...interface{}) (*Role, error) {
 }
 
 func (r *Repository) Delete(uuid string) error {
+	var item Role
+	result := r.DB.Where("uuid = ?", uuid).First(&item)
+	if result.Error != nil {
+		return result.Error
+	}
 	return r.DB.Where("uuid = ?", uuid).Delete(&Role{}).Error
 }
