@@ -13,7 +13,7 @@ const TableName = "roles"
 // Role is db model for single role
 type Role struct {
 	models.BaseTable
-	UUID  string `json:"uuid"`
+	UUID  string `json:"uuid" gorm:"index;unique"`
 	Title string `json:"title" gorm:"index;unique"`
 }
 

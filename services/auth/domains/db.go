@@ -13,7 +13,7 @@ const TableName = "domains"
 // Domain is db model for single domain
 type Domain struct {
 	models.BaseTable
-	UUID    string `json:"uuid"`
+	UUID    string `json:"uuid" gorm:"index;unique"`
 	Title   string `json:"title"`
 	Address string `json:"address"  gorm:"index;unique"`
 }
