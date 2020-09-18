@@ -1,6 +1,7 @@
 package rules
 
 import (
+	"github.com/google/uuid"
 	"projectmanager/internal/models"
 
 	"go.uber.org/zap"
@@ -12,6 +13,7 @@ const TableName = "rules"
 // Rule is db model for single rule
 type Rule struct {
 	models.BaseTable
+	UUID  string `json:"uuid" gorm:"index;unique"`
 	Subject  string `json:"subject"`
 	Domain   string `json:"domain"`
 	Resource string `json:"resource"`
@@ -36,6 +38,7 @@ func NewRepository(db *gorm.DB) *Repository {
 func (r *Repository) Create(rule RuleRequest) (*Rule, error) {
 
 	newItem := &Rule{
+		UUID: uuid.New().String(),
 		Subject:  rule.Subject,
 		Domain:   rule.Domain,
 		Resource: rule.Resource,
@@ -101,5 +104,10 @@ func (r *Repository) Get(query string, args ...interface{}) (*Rule, error) {
 }
 
 func (r *Repository) Delete(uuid string) error {
+	var item Rule
+	result := r.DB.Where("uuid = ?", uuid).First(&item)
+	if result.Error != nil {
+		return result.Error
+	}
 	return r.DB.Where("uuid = ?", uuid).Delete(&Rule{}).Error
 }
