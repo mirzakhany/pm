@@ -3,10 +3,10 @@ package domains
 import (
 	"fmt"
 	"os"
+	"projectmanager/pkg/utiles"
 	"reflect"
 	"testing"
 
-	"github.com/google/uuid"
 	"gorm.io/driver/sqlite"
 
 	"go.uber.org/zap"
@@ -32,11 +32,6 @@ func dbTestSetup() (*gorm.DB, *Repository, *zap.Logger, func()) {
 		logger.Sync()
 		_ = os.Remove("/tmp/gorm_domains.db")
 	}
-}
-
-func isValidUUID(u string) bool {
-	_, err := uuid.Parse(u)
-	return err == nil
 }
 
 func TestNewRepository(t *testing.T) {
@@ -90,7 +85,7 @@ func TestRepository_Create(t *testing.T) {
 				Address: "https://google.com",
 			},
 			checkFunc: func(req DomainRequest, res *Domain) error {
-				if !isValidUUID(res.UUID) {
+				if !utiles.IsValidUUID(res.UUID) {
 					return fmt.Errorf("response uuid is not valid")
 				}
 
@@ -108,10 +103,8 @@ func TestRepository_Create(t *testing.T) {
 				Title:   "Google",
 				Address: "https://google.com",
 			},
-			checkFunc: func(req DomainRequest, res *Domain) error {
-				return nil
-			},
-			wantErr: true,
+			checkFunc: nil,
+			wantErr:   true,
 		},
 	}
 	for _, tt := range tests {
@@ -119,6 +112,9 @@ func TestRepository_Create(t *testing.T) {
 			got, err := repo.Create(tt.domainReq)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Repository.Create() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if tt.checkFunc == nil {
 				return
 			}
 			if err := tt.checkFunc(tt.domainReq, got); err != nil {
@@ -175,10 +171,8 @@ func TestRepository_Update(t *testing.T) {
 				Title:   "Fb",
 				Address: "https://amazon.com",
 			},
-			checkFunc: func(req DomainRequest, res *Domain) error {
-				return nil
-			},
-			wantErr: true,
+			checkFunc: nil,
+			wantErr:   true,
 		},
 	}
 	for _, tt := range tests {
@@ -186,6 +180,9 @@ func TestRepository_Update(t *testing.T) {
 			got, err := repo.Update(tt.uuid, tt.domainReq)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Repository.Update() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if tt.checkFunc == nil {
 				return
 			}
 			if err := tt.checkFunc(tt.domainReq, got); err != nil {

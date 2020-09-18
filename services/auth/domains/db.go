@@ -96,5 +96,10 @@ func (r *Repository) Get(query string, args ...interface{}) (*Domain, error) {
 }
 
 func (r *Repository) Delete(uuid string) error {
+	var item Domain
+	result := r.DB.Where("uuid = ?", uuid).First(&item)
+	if result.Error != nil {
+		return result.Error
+	}
 	return r.DB.Where("uuid = ?", uuid).Delete(&Domain{}).Error
 }

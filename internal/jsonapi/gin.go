@@ -6,8 +6,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type PaginationData struct {
+	Offset int   `json:"offset"`
+	Limit  int   `json:"limit"`
+	Total  int64 `json:"total"`
+}
+
+type LinksData struct {
+	Next string `json:"next,omitempty"`
+	Prev string `json:"prev,omitempty"`
+	Self string `json:"self"`
+}
+
+type PaginatedRes struct {
+	Pagination PaginationData `json:"pagination"`
+	Data       interface{}    `json:"data"`
+	Links      LinksData      `json:"links"`
+}
+
+type SingleRes struct {
+	Data interface{} `json:"data"`
+}
+
 func Single(status int, c *gin.Context, data interface{}) {
-	c.JSON(status, gin.H{"data": data})
+	c.JSON(status, SingleRes{Data: data})
 }
 
 func List(status int, c *gin.Context, data interface{}, offset, limit int, total int64) {
@@ -19,23 +41,25 @@ func List(status int, c *gin.Context, data interface{}, offset, limit int, total
 
 	nextOffset := offset + limit
 
-	links := gin.H{"self": c.FullPath()}
+	res := PaginatedRes{
+		Data: data,
+		Pagination: PaginationData{
+			Offset: offset,
+			Limit:  limit,
+			Total:  total,
+		},
+		Links: LinksData{
+			Self: c.FullPath(),
+		},
+	}
 
 	if offset > 0 {
-		links["prev"] = fmt.Sprintf("%s?offset=%d&limit=%d", c.FullPath(), prevOffset, limit)
+		res.Links.Prev = fmt.Sprintf("%s?offset=%d&limit=%d", c.FullPath(), prevOffset, limit)
 	}
 
 	if int64(nextOffset) < total {
-		links["next"] = fmt.Sprintf("%s?offset=%d&limit=%d", c.FullPath(), offset+limit, limit)
+		res.Links.Next = fmt.Sprintf("%s?offset=%d&limit=%d", c.FullPath(), offset+limit, limit)
 	}
 
-	c.JSON(status, gin.H{
-		"pagination": gin.H{
-			"offset": offset,
-			"limit":  limit,
-			"total":  total,
-		},
-		"data":  data,
-		"links": links,
-	})
+	c.JSON(status, res)
 }
