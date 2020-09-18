@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"projectmanager/internal/jsonapi"
+	"projectmanager/pkg/db"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -51,6 +52,10 @@ func (s *Service) CreateHandler(c *gin.Context) {
 
 	item, err := s.Repo.Create(json)
 	if err != nil {
+		if db.IsBadRequestErr(err) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		s.Logger.Error("create role failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -73,6 +78,14 @@ func (s *Service) UpdateHandler(c *gin.Context) {
 
 	item, err := s.Repo.Update(itemUUID, json)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		if db.IsBadRequestErr(err) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		s.Logger.Error("update role failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -96,6 +109,11 @@ func (s *Service) GetHandler(c *gin.Context) {
 			return
 		}
 
+		if db.IsBadRequestErr(err) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
 		s.Logger.Error("retrieve role failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -113,6 +131,10 @@ func (s *Service) RetrieveHandler(c *gin.Context) {
 
 	items, totalCount, err := s.Repo.Retrieve(offset, limit)
 	if err != nil {
+		if db.IsBadRequestErr(err) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		s.Logger.Error("retrieve roles failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -128,6 +150,14 @@ func (s *Service) DeleteHandler(c *gin.Context) {
 	}
 	err := s.Repo.Delete(itemUUID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		if db.IsBadRequestErr(err) {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		s.Logger.Error("delete role failed with error %s", zap.Error(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
