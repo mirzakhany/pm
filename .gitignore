@@ -3,3 +3,5 @@
 fswatch.cfg
 dist
 *.db
+coverage-all.out
+coverage.out
