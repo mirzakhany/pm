@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package sprints;
+
+option go_package = "sprints";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+enum SprintStatus {
+    IN_PROGRESS = 0;
+    DONE = 1;
+    ARCHIVED = 2;
+}
+
+message ListSprintsRequest {
+    int32 page_size = 1;
+    string page_token = 2;
+}
+
+message ListSprintsResponse {
+    repeated Sprint sprints = 1;
+    int32 total_size = 2;
+    string next_page_token = 3;
+}
+
+message GetSprintRequest {
+    string uuid = 1;
+}
+
+message CreateSprintRequest {
+    string title = 1;
+    SprintStatus status = 2;
+    google.protobuf.Timestamp start_at = 3;
+    google.protobuf.Timestamp end_at = 4;
+}
+
+message UpdateSprintRequest {
+    string uuid = 1;
+    string title = 2;
+    SprintStatus status = 3;
+    google.protobuf.Timestamp start_at = 4;
+    google.protobuf.Timestamp end_at = 5;
+}
+
+message DeleteSprintRequest {
+    string uuid = 1;
+}
+
+message Sprint {
+    string uuid = 1;
+    string title = 2;
+    SprintStatus status = 3;
+    google.protobuf.Timestamp start_at = 4;
+    google.protobuf.Timestamp end_at = 5;
+}
+
+service SprintService {
+
+    // List Sprints
+    rpc ListSprints (ListSprintsRequest) returns (ListSprintsResponse) {
+        option (google.api.http) = {
+          get: "/sprints"
+        };
+    }
+    // Get Sprint
+    rpc GetSprint (GetSprintRequest) returns (Sprint) {
+        option (google.api.http) = {
+          get: "/sprints/{uuid}"
+        };
+    }
+    // Create Sprint object request
+    rpc CreateSprint (CreateSprintRequest) returns (Sprint) {
+        option (google.api.http) = {
+            post: "/v1/sprints"
+            body: "*"
+        };
+    }
+
+    // Update Sprint object request
+    rpc UpdateSprint (UpdateSprintRequest) returns (Sprint) {
+        option (google.api.http) = {
+            put: "/v1/sprints/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Sprint object request
+    rpc DeleteSprint (DeleteSprintRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/sprints/{uuid}"
+        };
+    }
+}

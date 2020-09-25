@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package rules;
+
+option go_package = "rules";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+message ListRulesRequest {
+    int32 page_size = 1;
+    string page_token = 2;
+}
+
+message ListRulesResponse {
+    repeated Rule rules = 1;
+    int32 total_size = 2;
+    string next_page_token = 3;
+}
+
+message GetRuleRequest {
+    string uuid = 1;
+}
+
+message CreateRuleRequest {
+    string title = 1;
+}
+
+message UpdateRuleRequest {
+    string uuid = 1;
+    string title = 2;
+}
+
+message DeleteRuleRequest {
+    string uuid = 1;
+}
+
+message Rule {
+    string uuid = 1;
+    string title = 2;
+}
+
+service RuleService {
+
+    // List Rules
+    rpc ListRules (ListRulesRequest) returns (ListRulesResponse) {
+        option (google.api.http) = {
+          get: "/rules"
+        };
+    }
+    // Get Rule
+    rpc GetRule (GetRuleRequest) returns (Rule) {
+        option (google.api.http) = {
+          get: "/rules/{uuid}"
+        };
+    }
+
+    // Create Rule object request
+    rpc CreateRule (CreateRuleRequest) returns (Rule) {
+        option (google.api.http) = {
+            post: "/v1/rules"
+            body: "*"
+        };
+    }
+
+    // Update Rule object request
+    rpc UpdateRule (UpdateRuleRequest) returns (Rule) {
+        option (google.api.http) = {
+            put: "/v1/rules/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Rule object request
+    rpc DeleteRule (DeleteRuleRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/rules/{uuid}"
+        };
+    }
+}

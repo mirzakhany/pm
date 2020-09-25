@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package roles;
+
+option go_package = "roles";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+message ListRolesRequest {
+    int32 page_size = 1;
+    string page_token = 2;
+}
+
+message ListRolesResponse {
+    repeated Role roles = 1;
+    int32 total_size = 2;
+    string next_page_token = 3;
+}
+
+message GetRoleRequest {
+    string uuid = 1;
+}
+
+message CreateRoleRequest {
+    string title = 1;
+}
+
+message UpdateRoleRequest {
+    string uuid = 1;
+    string title = 2;
+}
+
+message DeleteRoleRequest {
+    string uuid = 1;
+}
+
+message Role {
+    string uuid = 1;
+    string title = 2;
+}
+
+service RoleService {
+
+    // List Roles
+    rpc ListRoles (ListRolesRequest) returns (ListRolesResponse) {
+        option (google.api.http) = {
+            get: "/v1/roles"
+        };
+    }
+    // Get Role
+    rpc GetRole (GetRoleRequest) returns (Role) {
+        option (google.api.http) = {
+          get: "/v1/roles/{uuid}"
+        };
+    }
+
+    // Create Role object request
+    rpc CreateRole (CreateRoleRequest) returns (Role) {
+        option (google.api.http) = {
+            post: "/v1/roles"
+            body: "*"
+        };
+    }
+
+    // Update Role object request
+    rpc UpdateRole (UpdateRoleRequest) returns (Role) {
+        option (google.api.http) = {
+            put: "/v1/roles/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Role object request
+    rpc DeleteRole (DeleteRoleRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/roles/{uuid}"
+        };
+    }
+}

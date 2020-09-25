@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package tasks;
+
+option go_package = "tasks";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+enum TaskStatus {
+    IN_BACKLOG = 0;
+    IN_PROGRESS = 1;
+    TEST = 2;
+    DONE = 3;
+    ARCHIVED = 4;
+}
+
+message ListTasksRequest {
+    int32 page_size = 1;
+    string page_token = 2;
+}
+
+message ListTasksResponse {
+    repeated Task tasks = 1;
+    int32 total_size = 2;
+    string next_page_token = 3;
+}
+
+message GetTaskRequest {
+    string uuid = 1;
+}
+
+message CreateTaskRequest {
+    string title = 1;
+    TaskStatus status = 2;
+    int64 sprint_id = 3;
+    int32 estimate = 4;
+    int64 assignee_id = 5;
+}
+
+message UpdateTaskRequest {
+    string uuid = 1;
+    TaskStatus status = 2;
+    int64 sprint_id = 3;
+    int32 estimate = 4;
+    int64 assignee_id = 5;
+}
+
+message DeleteTaskRequest {
+    string uuid = 1;
+}
+
+message Task {
+    string uuid = 1;
+    string title = 2;
+    TaskStatus status = 3;
+    int64 sprint_id = 4;
+    int32 estimate = 5;
+    int64 assignee_id = 6;
+}
+
+service TaskService {
+
+    // List Tasks
+    rpc ListTasks (ListTasksRequest) returns (ListTasksResponse) {
+        option (google.api.http) = {
+          get: "/tasks"
+        };
+    }
+    // Get Task
+    rpc GetTask (GetTaskRequest) returns (Task) {
+        option (google.api.http) = {
+          get: "/tasks/{uuid}"
+        };
+    }
+    // Create Task object request
+    rpc CreateTask (CreateTaskRequest) returns (Task) {
+        option (google.api.http) = {
+            post: "/v1/tasks"
+            body: "*"
+        };
+    }
+
+    // Update Task object request
+    rpc UpdateTask (UpdateTaskRequest) returns (Task) {
+        option (google.api.http) = {
+            put: "/v1/tasks/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Task object request
+    rpc DeleteTask (DeleteTaskRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/tasks/{uuid}"
+        };
+    }
+}

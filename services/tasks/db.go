@@ -2,7 +2,7 @@ package tasks
 
 import (
 	"projectmanager/internal/models"
-	"projectmanager/services/projects/sprints"
+	"projectmanager/services/sprints"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"

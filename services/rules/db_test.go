@@ -1,4 +1,4 @@
-package roles
+package rules
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ import (
 )
 
 func dbTestSetup() (*gorm.DB, *Repository, *zap.Logger, func()) {
-	db, err := gorm.Open(sqlite.Open("/tmp/gorm_roles.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("/tmp/gorm_rules.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -24,13 +24,13 @@ func dbTestSetup() (*gorm.DB, *Repository, *zap.Logger, func()) {
 
 	repo := NewRepository(db)
 
-	err = db.AutoMigrate(&Role{})
+	err = db.AutoMigrate(&Rule{})
 	if err != nil {
 		panic(err)
 	}
 	return db, repo, logger, func() {
 		logger.Sync()
-		_ = os.Remove("/tmp/gorm_roles.db")
+		_ = os.Remove("/tmp/gorm_rules.db")
 	}
 }
 
@@ -74,40 +74,32 @@ func TestRepository_Create(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		roleReq RoleRequest
-		checkFunc func(req RoleRequest, res *Role) error
+		ruleReq   RuleRequest
+		checkFunc func(req RuleRequest, res *Rule) error
 		wantErr   bool
 	}{
 		{
-			name: "create new role object",
-			roleReq: RoleRequest{
-				Title:   "Google",
+			name: "create new rule object",
+			ruleReq: RuleRequest{
+				Subject:  "bob",
+				Domain:   "task.com",
+				Resource: "sprints",
+				Action:   "get",
+				Object:   "*",
 			},
-			checkFunc: func(req RoleRequest, res *Role) error {
+			checkFunc: func(req RuleRequest, res *Rule) error {
 				if !utiles.IsValidUUID(res.UUID) {
 					return fmt.Errorf("response uuid is not valid")
-				}
-
-				if req.Title != res.Title {
-					return fmt.Errorf("response is not same as request")
 				}
 
 				return nil
 			},
 			wantErr: false,
 		},
-		{
-			name: "create role object with duplicate address",
-			roleReq: RoleRequest{
-				Title:   "Google",
-			},
-			checkFunc: nil,
-			wantErr:   true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := repo.Create(tt.roleReq)
+			got, err := repo.Create(tt.ruleReq)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Repository.Create() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -115,7 +107,7 @@ func TestRepository_Create(t *testing.T) {
 			if tt.checkFunc == nil {
 				return
 			}
-			if err := tt.checkFunc(tt.roleReq, got); err != nil {
+			if err := tt.checkFunc(tt.ruleReq, got); err != nil {
 				t.Errorf("Repository.Create() error = %v", err)
 				return
 			}
@@ -129,49 +121,44 @@ func TestRepository_Update(t *testing.T) {
 	_, repo, _, cleaner := dbTestSetup()
 	defer cleaner()
 
-	d1 := RoleRequest{
-		Title:   "admin",
+	d1 := RuleRequest{
+		Subject:  "bob",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "get",
+		Object:   "*",
 	}
-	d2 := RoleRequest{
-		Title:   "owner",
-	}
-	role1, _ := repo.Create(d1)
-	role2, _ := repo.Create(d2)
+	rule1, _ := repo.Create(d1)
 
 	tests := []struct {
 		name      string
 		uuid      string
-		roleReq RoleRequest
-		checkFunc func(req RoleRequest, res *Role) error
+		ruleReq   RuleRequest
+		checkFunc func(req RuleRequest, res *Rule) error
 		wantErr   bool
 	}{
 		{
-			name: "update role title",
-			uuid: role1.UUID,
-			roleReq: RoleRequest{
-				Title:   "administrator",
+			name: "update rule title",
+			uuid: rule1.UUID,
+			ruleReq: RuleRequest{
+				Subject:  "bob",
+				Domain:   "api.task.com",
+				Resource: "sprints",
+				Action:   "get",
+				Object:   "*",
 			},
-			checkFunc: func(req RoleRequest, res *Role) error {
-				if req.Title != res.Title {
+			checkFunc: func(req RuleRequest, res *Rule) error {
+				if req.Domain != res.Domain {
 					return fmt.Errorf("response is not same as request, req : %v, res: %v", req, res)
 				}
 				return nil
 			},
 			wantErr: false,
 		},
-		{
-			name: "update role address to a already exist duplicate",
-			uuid: role2.UUID,
-			roleReq: RoleRequest{
-				Title:   "administrator",
-			},
-			checkFunc: nil,
-			wantErr:   true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := repo.Update(tt.uuid, tt.roleReq)
+			got, err := repo.Update(tt.uuid, tt.ruleReq)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Repository.Update() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -179,7 +166,7 @@ func TestRepository_Update(t *testing.T) {
 			if tt.checkFunc == nil {
 				return
 			}
-			if err := tt.checkFunc(tt.roleReq, got); err != nil {
+			if err := tt.checkFunc(tt.ruleReq, got); err != nil {
 				t.Errorf("Repository.Update() error = %v", err)
 				return
 			}
@@ -192,11 +179,19 @@ func TestRepository_Retrieve(t *testing.T) {
 	_, repo, _, cleaner := dbTestSetup()
 	defer cleaner()
 
-	d1 := RoleRequest{
-		Title:   "admin",
+	d1 := RuleRequest{
+		Subject:  "bob",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "get",
+		Object:   "*",
 	}
-	d2 := RoleRequest{
-		Title:   "owner",
+	d2 := RuleRequest{
+		Subject:  "rob",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "get",
+		Object:   "*",
 	}
 	repo.Create(d1)
 	repo.Create(d2)
@@ -224,18 +219,34 @@ func TestRepository_RetrievePagination(t *testing.T) {
 		offset     = 0
 	)
 
-	items := []RoleRequest{
+	items := []RuleRequest{
 		{
-			Title:   "admin",
+			Subject:  "bob",
+			Domain:   "task.com",
+			Resource: "sprints",
+			Action:   "get",
+			Object:   "*",
 		},
 		{
-			Title:   "owner",
+			Subject:  "rob",
+			Domain:   "gitlab.com",
+			Resource: "issues",
+			Action:   "get",
+			Object:   "*",
 		},
 		{
-			Title:   "writer",
+			Subject:  "bob",
+			Domain:   "github.com",
+			Resource: "repository",
+			Action:   "get",
+			Object:   "*",
 		},
 		{
-			Title:   "viewer",
+			Subject:  "admin",
+			Domain:   "task.com",
+			Resource: "sprints",
+			Action:   "delete",
+			Object:   "*",
 		},
 	}
 
@@ -250,7 +261,7 @@ func TestRepository_RetrievePagination(t *testing.T) {
 	}
 
 	if len(page1Items) != pageLimit {
-		t.Error("Repository.Retrieve() return wrong number of result in on page")
+		t.Errorf("Repository.Retrieve() return wrong number of result in one page, %d", len(page1Items))
 		return
 	}
 
@@ -276,8 +287,12 @@ func TestRepository_GetByUUID(t *testing.T) {
 	_, repo, _, cleaner := dbTestSetup()
 	defer cleaner()
 
-	d1 := RoleRequest{
-		Title:   "admin",
+	d1 := RuleRequest{
+		Subject:  "admin",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "delete",
+		Object:   "*",
 	}
 	res, _ := repo.Create(d1)
 
@@ -287,7 +302,7 @@ func TestRepository_GetByUUID(t *testing.T) {
 		return
 	}
 
-	if item.Title != d1.Title {
+	if item.Subject != d1.Subject && item.Domain != d1.Domain && item.Resource != d1.Resource && item.Action != d1.Action || item.Object != d1.Object {
 		t.Errorf("Repository.GetByUUID() return wrong item = %v", item)
 		return
 	}
@@ -298,8 +313,12 @@ func TestRepository_Get(t *testing.T) {
 	_, repo, _, cleaner := dbTestSetup()
 	defer cleaner()
 
-	d1 := RoleRequest{
-		Title:   "admin",
+	d1 := RuleRequest{
+		Subject:  "admin",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "delete",
+		Object:   "*",
 	}
 	res, _ := repo.Create(d1)
 
@@ -309,7 +328,7 @@ func TestRepository_Get(t *testing.T) {
 		return
 	}
 
-	if item.Title != d1.Title {
+	if item.Subject != d1.Subject && item.Domain != d1.Domain && item.Resource != d1.Resource && item.Action != d1.Action || item.Object != d1.Object {
 		t.Errorf("Repository.Get() return wrong item = %v", item)
 		return
 	}
@@ -320,8 +339,12 @@ func TestRepository_Delete(t *testing.T) {
 	_, repo, _, cleaner := dbTestSetup()
 	defer cleaner()
 
-	d1 := RoleRequest{
-		Title:   "owner",
+	d1 := RuleRequest{
+		Subject:  "admin",
+		Domain:   "task.com",
+		Resource: "sprints",
+		Action:   "delete",
+		Object:   "*",
 	}
 	res, _ := repo.Create(d1)
 
