@@ -5,3 +5,4 @@ dist
 *.db
 coverage-all.out
 coverage.out
+config.yaml
