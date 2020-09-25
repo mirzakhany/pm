@@ -1,16 +1,18 @@
 apiVersion: v0.1
 server:
   host: 0.0.0.0
-  port: 8080
+  httpPort: 8080
+  grpcPort: 9090
   debug: true
 
 db:
   engine: postgres
-  host: 127.0.0.1
+  host: localhost
   port: 5432
+  db: task_manager
   user: postgres
-  password: postgress
-  connectionMaxAge: 0
+  password: postgres
+  timeZone: Europe/Stockholm
 
 redis:
   host: 127.0.0.1
