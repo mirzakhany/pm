@@ -5,6 +5,7 @@ import (
 	"fmt"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rs/cors"
@@ -53,11 +54,13 @@ func RegisterInterceptor(i Interceptor) {
 
 func newGrpcServer() *grpc.Server {
 	unaryMiddlewares := []grpc.UnaryServerInterceptor{
+		grpc_recovery.UnaryServerInterceptor(),
 		grpc_ctxtags.UnaryServerInterceptor(),
 		grpc_zap.UnaryServerInterceptor(log.Logger()),
 	}
 
 	streamMiddlewares := []grpc.StreamServerInterceptor{
+		grpc_recovery.StreamServerInterceptor(),
 		grpc_ctxtags.StreamServerInterceptor(),
 		grpc_zap.StreamServerInterceptor(log.Logger()),
 	}
