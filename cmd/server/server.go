@@ -1,8 +1,14 @@
 package main
 
-import "projectmanager/internal/server"
+import (
+	"os"
+	"proj/internal/server"
+)
 
 func main() {
 	err := server.Start()
-	panic(err)
+	if err!=nil{
+		panic(err)
+	}
+	os.Exit(0)
 }
