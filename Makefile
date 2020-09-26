@@ -34,6 +34,10 @@ test-cover: test ## run unit tests and show test coverage information
 run: ## run the API server
 	go run ${LDFLAGS} cmd/server/server.go
 
+.PHONY: run-debug
+run-debug: ## run the API server with debug mode
+	go run ${LDFLAGS} cmd/server/server.go -debug=true
+
 .PHONY: run-restart
 run-restart: ## restart the API server
 	@pkill -P `cat $(PID_FILE)` || true

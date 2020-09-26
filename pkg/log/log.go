@@ -11,9 +11,14 @@ var (
 	dbLogger zapgorm2.Logger
 )
 
-func Init(ctx context.Context) error {
+func Init(ctx context.Context, debug bool) error {
 	var err error
-	logger, err = zap.NewProduction()
+	if debug {
+		logger, err = zap.NewDevelopment()
+	} else {
+		logger, err = zap.NewProduction()
+	}
+
 	if err != nil {
 		return err
 	}
