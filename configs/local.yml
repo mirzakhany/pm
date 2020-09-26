@@ -3,7 +3,6 @@ server:
   host: 0.0.0.0
   httpPort: 8080
   grpcPort: 9090
-  debug: true
 
 db:
   engine: postgres
