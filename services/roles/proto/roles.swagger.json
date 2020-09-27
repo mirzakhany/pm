@@ -31,17 +31,18 @@
         },
         "parameters": [
           {
-            "name": "page_size",
+            "name": "limit",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "int64"
           },
           {
-            "name": "page_token",
+            "name": "offset",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -208,23 +209,40 @@
             "$ref": "#/definitions/rolesRole"
           }
         },
-        "total_size": {
-          "type": "integer",
-          "format": "int32"
+        "total_count": {
+          "type": "string",
+          "format": "int64"
         },
-        "next_page_token": {
-          "type": "string"
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
     "rolesRole": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "uuid": {
           "type": "string"
         },
         "title": {
           "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
