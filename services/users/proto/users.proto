@@ -6,16 +6,31 @@ option go_package = "users";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
+
 
 message ListUsersRequest {
-    int32 page_size = 1;
-    string page_token = 2;
+    int64 limit = 1;
+    int64 offset = 2;
 }
 
 message ListUsersResponse {
     repeated User users = 1;
-    int32 total_size = 2;
-    string next_page_token = 3;
+    int64 total_count = 2;
+    int64 limit = 3;
+    int64 offset = 4;
 }
 
 message GetUserRequest {
@@ -32,7 +47,6 @@ message CreateUserRequest {
 message UpdateUserRequest {
     string uuid = 1;
     string username = 2;
-    string password = 3;
     string email = 4;
     bool enable = 5;
 }
@@ -42,11 +56,14 @@ message DeleteUserRequest {
 }
 
 message User {
-    string uuid = 1;
-    string username = 2;
-    string password = 3;
-    string email = 4;
-    bool enable = 5;
+    uint64 id = 1;
+    string uuid = 2;
+    string username = 3;
+    string password = 4;
+    string email = 5;
+    bool enable = 6;
+    google.protobuf.Timestamp created_at = 7 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp updated_at = 8 [(gogoproto.stdtime) = true];
 }
 
 message LoginRequest {
@@ -65,20 +82,27 @@ message RegisterRequest {
     string email = 4;
 }
 
+message RegisterResponse {
+    string uuid = 1;
+    string username = 2;
+    string email = 4;
+}
+
 service UserService {
 
     // List Users
     rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
         option (google.api.http) = {
-          get: "/users"
+            get: "/v1/users"
         };
     }
     // Get User
     rpc GetUser (GetUserRequest) returns (User) {
         option (google.api.http) = {
-          get: "/users/{uuid}"
+          get: "/v1/users/{uuid}"
         };
     }
+
     // Create User object request
     rpc CreateUser (CreateUserRequest) returns (User) {
         option (google.api.http) = {
@@ -111,7 +135,7 @@ service UserService {
     }
 
     // Login login user
-    rpc Register(RegisterRequest) returns (User) {
+    rpc Register(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {
             post: "/v1/users/login"
             body: "*"

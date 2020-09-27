@@ -1,142 +1,85 @@
 package users
 
 import (
-	"errors"
-	"net/http"
-	"projectmanager/internal/jsonapi"
-
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
+	"context"
+	"github.com/gogo/protobuf/types"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"proj/pkg/grpcgw"
+	users "proj/services/users/proto"
 )
 
-type Service struct {
-	Repo        *Repository
-	Logger      *zap.Logger
-	itemPerPage int
+type API interface {
+	grpcgw.Controller
+	users.UserServiceServer
 }
 
-// UserRequest create or update user request
-type UserRequest struct {
-	Username string `form:"username" json:"username" xml:"username" binding:"required"`
-	Password string `form:"password" json:"password" xml:"password" binding:"required"`
-	Email    string `form:"email" json:"email" xml:"email" binding:"required"`
-	Enable   bool   `form:"enable" json:"enable" xml:"enable" binding:"required"`
+type api struct {
+	service Service
 }
 
-// UserResponse create or update user request
-type UserResponse struct {
-	UUID     string `json:"uuid" xml:"uuid"`
-	Username string `form:"username" json:"username" xml:"username"`
-	Password string `form:"password" json:"password" xml:"password"`
-	Email    string `form:"email" json:"email" xml:"email"`
-	Enable   bool   `form:"enable" json:"enable" xml:"enable"`
+func (a api) Login(ctx context.Context, request *users.LoginRequest) (*users.LoginResponse, error) {
+	panic("implement me")
 }
 
-func NewService(router *gin.Engine, repo *Repository, logger *zap.Logger) {
-
-	service := &Service{
-		Repo:        repo,
-		Logger:      logger,
-		itemPerPage: 10,
-	}
-
-	router.POST("/users", service.CreateHandler)
-	router.PUT("/users/:uuid", service.UpdateHandler)
-	router.GET("/users", service.RetrieveHandler)
-	router.GET("/users/:uuid", service.GetHandler)
-	router.DELETE("/users/:uuid", service.DeleteHandler)
+func (a api) Register(ctx context.Context, request *users.RegisterRequest) (*users.RegisterResponse, error) {
+	panic("implement me")
 }
 
-func (s *Service) CreateHandler(c *gin.Context) {
-	var json UserRequest
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+func (a api) InitRest(ctx context.Context, conn *grpc.ClientConn, mux *runtime.ServeMux) {
+	cl := users.NewUserServiceClient(conn)
+	_ = users.RegisterUserServiceHandlerClient(ctx, mux, cl)
+}
 
-	item, err := s.Repo.Create(json)
+func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
+	users.RegisterUserServiceServer(server, a)
+}
+
+func (a api) ListUsers(ctx context.Context, request *users.ListUsersRequest) (*users.ListUsersResponse, error) {
+	offset, limit := grpcgw.GetOffsetAndLimit(request.Limit, request.Offset)
+	res, err := a.service.Query(ctx, offset, limit)
 	if err != nil {
-		s.Logger.Error("create user failed with error %s", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	jsonapi.Single(http.StatusOK, c, item)
+	return res, err
 }
 
-func (s *Service) UpdateHandler(c *gin.Context) {
-	var json UserRequest
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	itemUUID := c.Param("uuid")
-	if itemUUID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "uuid not provided"})
-		return
-	}
-
-	item, err := s.Repo.Update(itemUUID, json)
+func (a api) GetUser(ctx context.Context, request *users.GetUserRequest) (*users.User, error) {
+	res, err := a.service.Get(ctx, request.Uuid)
 	if err != nil {
-		s.Logger.Error("update user failed with error %s", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	jsonapi.Single(http.StatusOK, c, item)
+	return res, err
 }
 
-func (s *Service) GetHandler(c *gin.Context) {
-
-	itemUUID := c.Param("uuid")
-	if itemUUID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "uuid not provided"})
-		return
-	}
-
-	item, err := s.Repo.GetByUUID(itemUUID)
+func (a api) CreateUser(ctx context.Context, request *users.CreateUserRequest) (*users.User, error) {
+	res,err := a.service.Create(ctx, request)
 	if err != nil {
-
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
-
-		s.Logger.Error("retrieve user failed with error %s", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	jsonapi.Single(http.StatusOK, c, item)
+	return res, err
 }
 
-func (s *Service) RetrieveHandler(c *gin.Context) {
-
-	offset, limit, err := jsonapi.PaginationQuery(c, s.itemPerPage)
+func (a api) UpdateUser(ctx context.Context, request *users.UpdateUserRequest) (*users.User, error) {
+	res, err := a.service.Update(ctx, request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-
-	items, totalCount, err := s.Repo.Retrieve(offset, limit)
-	if err != nil {
-		s.Logger.Error("retrieve users failed with error %s", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	jsonapi.List(http.StatusOK, c, items, offset, limit, totalCount)
+	return res, err
 }
 
-func (s *Service) DeleteHandler(c *gin.Context) {
-	itemUUID := c.Param("uuid")
-	if itemUUID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "uuid not provided"})
-		return
-	}
-	err := s.Repo.Delete(itemUUID)
+func (a api) DeleteUser(ctx context.Context, request *users.DeleteUserRequest) (*types.Empty, error) {
+	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
-		s.Logger.Error("delete user failed with error %s", zap.Error(err))
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	c.JSON(http.StatusNoContent, nil)
+	return &types.Empty{}, err
+}
+
+func New(srv Service) API {
+	s := api{service: srv}
+	grpcgw.RegisterController(s)
+	return s
 }

@@ -11,7 +11,7 @@
     "application/json"
   ],
   "paths": {
-    "/users": {
+    "/v1/users": {
       "get": {
         "summary": "List Users",
         "operationId": "UserService_ListUsers",
@@ -31,56 +31,24 @@
         },
         "parameters": [
           {
-            "name": "page_size",
+            "name": "limit",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "int64"
           },
           {
-            "name": "page_token",
+            "name": "offset",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
           "UserService"
         ]
-      }
-    },
-    "/users/{uuid}": {
-      "get": {
-        "summary": "Get User",
-        "operationId": "UserService_GetUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/usersUser"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "UserService"
-        ]
-      }
-    },
-    "/v1/users": {
+      },
       "post": {
         "summary": "Create User object request",
         "operationId": "UserService_CreateUser",
@@ -121,7 +89,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersUser"
+              "$ref": "#/definitions/usersRegisterResponse"
             }
           },
           "default": {
@@ -147,6 +115,35 @@
       }
     },
     "/v1/users/{uuid}": {
+      "get": {
+        "summary": "Get User",
+        "operationId": "UserService_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/usersUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      },
       "delete": {
         "summary": "Delete User object request",
         "operationId": "UserService_DeleteUser",
@@ -275,12 +272,17 @@
             "$ref": "#/definitions/usersUser"
           }
         },
-        "total_size": {
-          "type": "integer",
-          "format": "int32"
+        "total_count": {
+          "type": "string",
+          "format": "int64"
         },
-        "next_page_token": {
-          "type": "string"
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -320,7 +322,7 @@
         }
       }
     },
-    "usersUpdateUserRequest": {
+    "usersRegisterResponse": {
       "type": "object",
       "properties": {
         "uuid": {
@@ -329,7 +331,18 @@
         "username": {
           "type": "string"
         },
-        "password": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "usersUpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "username": {
           "type": "string"
         },
         "email": {
@@ -343,6 +356,10 @@
     "usersUser": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "uuid": {
           "type": "string"
         },
@@ -357,6 +374,14 @@
         },
         "enable": {
           "type": "boolean"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
