@@ -10,7 +10,7 @@ import (
 )
 
 type IssueModel struct {
-	tableName   struct{} `pg:"issues,alias:t"` //nolint
+	tableName   struct{} `pg:"issues,alias:i"` //nolint
 	ID          uint64   `pg:",pk"`
 	UUID        string
 	Title       string
@@ -57,7 +57,7 @@ func (r repository) Get(ctx context.Context, uuid string) (IssueModel, error) {
 	var issue IssueModel
 	err := r.db.With(ctx).Model(&issue).
 		Relation("Assignee").Relation("Creator").
-		Where("t.uuid = ?", uuid).First()
+		Where("i.uuid = ?", uuid).First()
 
 	return issue, err
 }
