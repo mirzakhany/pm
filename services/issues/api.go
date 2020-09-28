@@ -1,4 +1,4 @@
-package tasks
+package issues
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/gogo/protobuf/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
-	tasks "github.com/mirzakhany/pm/services/tasks/proto"
+	issues "github.com/mirzakhany/pm/services/issues/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,7 +14,7 @@ import (
 
 type API interface {
 	grpcgw.Controller
-	tasks.TaskServiceServer
+	issues.IssueServiceServer
 }
 
 type api struct {
@@ -22,15 +22,15 @@ type api struct {
 }
 
 func (a api) InitRest(ctx context.Context, conn *grpc.ClientConn, mux *runtime.ServeMux) {
-	cl := tasks.NewTaskServiceClient(conn)
-	_ = tasks.RegisterTaskServiceHandlerClient(ctx, mux, cl)
+	cl := issues.NewIssueServiceClient(conn)
+	_ = issues.RegisterIssueServiceHandlerClient(ctx, mux, cl)
 }
 
 func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
-	tasks.RegisterTaskServiceServer(server, a)
+	issues.RegisterIssueServiceServer(server, a)
 }
 
-func (a api) ListTasks(ctx context.Context, request *tasks.ListTasksRequest) (*tasks.ListTasksResponse, error) {
+func (a api) ListIssues(ctx context.Context, request *issues.ListIssuesRequest) (*issues.ListIssuesResponse, error) {
 	offset, limit := grpcgw.GetOffsetAndLimit(request.Offset, request.Limit)
 	res, err := a.service.Query(ctx, offset, limit)
 	if err != nil {
@@ -39,7 +39,7 @@ func (a api) ListTasks(ctx context.Context, request *tasks.ListTasksRequest) (*t
 	return res, err
 }
 
-func (a api) GetTask(ctx context.Context, request *tasks.GetTaskRequest) (*tasks.Task, error) {
+func (a api) GetIssue(ctx context.Context, request *issues.GetIssueRequest) (*issues.Issue, error) {
 	res, err := a.service.Get(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -47,7 +47,7 @@ func (a api) GetTask(ctx context.Context, request *tasks.GetTaskRequest) (*tasks
 	return res, err
 }
 
-func (a api) CreateTask(ctx context.Context, request *tasks.CreateTaskRequest) (*tasks.Task, error) {
+func (a api) CreateIssue(ctx context.Context, request *issues.CreateIssueRequest) (*issues.Issue, error) {
 	res, err := a.service.Create(ctx, request)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -55,7 +55,7 @@ func (a api) CreateTask(ctx context.Context, request *tasks.CreateTaskRequest) (
 	return res, err
 }
 
-func (a api) UpdateTask(ctx context.Context, request *tasks.UpdateTaskRequest) (*tasks.Task, error) {
+func (a api) UpdateIssue(ctx context.Context, request *issues.UpdateIssueRequest) (*issues.Issue, error) {
 	res, err := a.service.Update(ctx, request)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -63,7 +63,7 @@ func (a api) UpdateTask(ctx context.Context, request *tasks.UpdateTaskRequest) (
 	return res, err
 }
 
-func (a api) DeleteTask(ctx context.Context, request *tasks.DeleteTaskRequest) (*types.Empty, error) {
+func (a api) DeleteIssue(ctx context.Context, request *issues.DeleteIssueRequest) (*types.Empty, error) {
 	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())

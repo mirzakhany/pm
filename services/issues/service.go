@@ -1,4 +1,4 @@
-package tasks
+package issues
 
 import (
 	"context"
@@ -6,31 +6,31 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
-	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
+	issuesProto "github.com/mirzakhany/pm/services/issues/proto"
 	"github.com/mirzakhany/pm/services/users"
 	usersProto "github.com/mirzakhany/pm/services/users/proto"
 )
 
-// Service encapsulates use case logic for tasks.
+// Service encapsulates use case logic for issues.
 type Service interface {
-	Get(ctx context.Context, uuid string) (*tasksProto.Task, error)
-	Query(ctx context.Context, offset, limit int64) (*tasksProto.ListTasksResponse, error)
+	Get(ctx context.Context, uuid string) (*issuesProto.Issue, error)
+	Query(ctx context.Context, offset, limit int64) (*issuesProto.ListIssuesResponse, error)
 	Count(ctx context.Context) (int64, error)
-	Create(ctx context.Context, input *tasksProto.CreateTaskRequest) (*tasksProto.Task, error)
-	Update(ctx context.Context, input *tasksProto.UpdateTaskRequest) (*tasksProto.Task, error)
-	Delete(ctx context.Context, uuid string) (*tasksProto.Task, error)
+	Create(ctx context.Context, input *issuesProto.CreateIssueRequest) (*issuesProto.Issue, error)
+	Update(ctx context.Context, input *issuesProto.UpdateIssueRequest) (*issuesProto.Issue, error)
+	Delete(ctx context.Context, uuid string) (*issuesProto.Issue, error)
 }
 
-// ValidateCreateRequest validates the CreateTaskRequest fields.
-func ValidateCreateRequest(c tasksProto.CreateTaskRequest) error {
+// ValidateCreateRequest validates the CreateIssueRequest fields.
+func ValidateCreateRequest(c issuesProto.CreateIssueRequest) error {
 	return validation.ValidateStruct(&c,
 		validation.Field(&c.Title, validation.Required, validation.Length(0, 128)),
 		validation.Field(&c.Description, validation.Required, validation.Length(0, 1000)),
 	)
 }
 
-// Validate validates the UpdateTaskRequest fields.
-func ValidateUpdateRequest(u tasksProto.UpdateTaskRequest) error {
+// Validate validates the UpdateIssueRequest fields.
+func ValidateUpdateRequest(u issuesProto.UpdateIssueRequest) error {
 	return validation.ValidateStruct(&u,
 		validation.Field(&u.Title, validation.Required, validation.Length(0, 128)),
 		validation.Field(&u.Description, validation.Required, validation.Length(0, 1000)),
@@ -42,46 +42,46 @@ type service struct {
 	userSrv users.Service
 }
 
-// NewService creates a new task service.
+// NewService creates a new issue service.
 func NewService(repo Repository, userSrv users.Service) Service {
 	return service{repo, userSrv}
 }
 
-// Get returns the task with the specified the task UUID.
-func (s service) Get(ctx context.Context, UUID string) (*tasksProto.Task, error) {
-	task, err := s.repo.Get(ctx, UUID)
+// Get returns the issue with the specified the issue UUID.
+func (s service) Get(ctx context.Context, UUID string) (*issuesProto.Issue, error) {
+	issue, err := s.repo.Get(ctx, UUID)
 	if err != nil {
 		return nil, err
 	}
-	return &tasksProto.Task{
-		Uuid:        task.UUID,
-		Title:       task.Title,
-		Description: task.Description,
-		Status:      task.Status,
-		SprintId:    task.SprintID,
+	return &issuesProto.Issue{
+		Uuid:        issue.UUID,
+		Title:       issue.Title,
+		Description: issue.Description,
+		Status:      issue.Status,
+		SprintId:    issue.SprintID,
 		Assignee: &usersProto.User{
-			Uuid:      task.Assignee.UUID,
-			Username:  task.Assignee.Username,
-			Email:     task.Assignee.Email,
-			Enable:    task.Assignee.Enable,
-			CreatedAt: &task.Assignee.CreatedAt,
-			UpdatedAt: &task.Assignee.UpdatedAt,
+			Uuid:      issue.Assignee.UUID,
+			Username:  issue.Assignee.Username,
+			Email:     issue.Assignee.Email,
+			Enable:    issue.Assignee.Enable,
+			CreatedAt: &issue.Assignee.CreatedAt,
+			UpdatedAt: &issue.Assignee.UpdatedAt,
 		},
 		Creator: &usersProto.User{
-			Uuid:      task.Creator.UUID,
-			Username:  task.Creator.Username,
-			Email:     task.Creator.Email,
-			Enable:    task.Creator.Enable,
-			CreatedAt: &task.Creator.CreatedAt,
-			UpdatedAt: &task.Creator.UpdatedAt,
+			Uuid:      issue.Creator.UUID,
+			Username:  issue.Creator.Username,
+			Email:     issue.Creator.Email,
+			Enable:    issue.Creator.Enable,
+			CreatedAt: &issue.Creator.CreatedAt,
+			UpdatedAt: &issue.Creator.UpdatedAt,
 		},
-		CreatedAt: &task.CreatedAt,
-		UpdatedAt: &task.UpdatedAt,
+		CreatedAt: &issue.CreatedAt,
+		UpdatedAt: &issue.UpdatedAt,
 	}, nil
 }
 
-// Create creates a new task.
-func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) (*tasksProto.Task, error) {
+// Create creates a new issue.
+func (s service) Create(ctx context.Context, req *issuesProto.CreateIssueRequest) (*issuesProto.Issue, error) {
 	if err := ValidateCreateRequest(*req); err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) 
 
 	now := time.Now()
 	id := uuid.New().String()
-	err = s.repo.Create(ctx, TaskModel{
+	err = s.repo.Create(ctx, IssueModel{
 		UUID:        id,
 		Title:       req.Title,
 		Description: req.Description,
@@ -136,15 +136,15 @@ func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) 
 	return s.Get(ctx, id)
 }
 
-// Update updates the task with the specified UUID.
-func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) (*tasksProto.Task, error) {
+// Update updates the issue with the specified UUID.
+func (s service) Update(ctx context.Context, req *issuesProto.UpdateIssueRequest) (*issuesProto.Issue, error) {
 	if err := ValidateUpdateRequest(*req); err != nil {
 		return nil, err
 	}
 
-	task, err := s.Get(ctx, req.Uuid)
+	issue, err := s.Get(ctx, req.Uuid)
 	if err != nil {
-		return task, err
+		return issue, err
 	}
 	now := time.Now()
 
@@ -158,9 +158,9 @@ func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) 
 		return nil, err
 	}
 
-	taskModel := TaskModel{
-		ID:          task.Id,
-		UUID:        task.Uuid,
+	issueModel := IssueModel{
+		ID:          issue.Id,
+		UUID:        issue.Uuid,
 		Title:       req.Title,
 		Description: req.Description,
 		Status:      req.Status,
@@ -188,42 +188,42 @@ func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) 
 			CreatedAt: *creator.CreatedAt,
 			UpdatedAt: *creator.UpdatedAt,
 		},
-		CreatedAt: *task.CreatedAt,
+		CreatedAt: *issue.CreatedAt,
 		UpdatedAt: now,
 	}
 
-	if err := s.repo.Update(ctx, taskModel); err != nil {
-		return task, err
+	if err := s.repo.Update(ctx, issueModel); err != nil {
+		return issue, err
 	}
 	return s.Get(ctx, req.Uuid)
 }
 
-// Delete deletes the task with the specified UUID.
-func (s service) Delete(ctx context.Context, UUID string) (*tasksProto.Task, error) {
-	task, err := s.Get(ctx, UUID)
+// Delete deletes the issue with the specified UUID.
+func (s service) Delete(ctx context.Context, UUID string) (*issuesProto.Issue, error) {
+	issue, err := s.Get(ctx, UUID)
 	if err != nil {
 		return nil, err
 	}
 	if err = s.repo.Delete(ctx, UUID); err != nil {
 		return nil, err
 	}
-	return task, nil
+	return issue, nil
 }
 
-// Count returns the number of tasks.
+// Count returns the number of issues.
 func (s service) Count(ctx context.Context) (int64, error) {
 	return s.repo.Count(ctx)
 }
 
-// Query returns the tasks with the specified offset and limit.
-func (s service) Query(ctx context.Context, offset, limit int64) (*tasksProto.ListTasksResponse, error) {
+// Query returns the issues with the specified offset and limit.
+func (s service) Query(ctx context.Context, offset, limit int64) (*issuesProto.ListIssuesResponse, error) {
 	items, count, err := s.repo.Query(ctx, offset, limit)
 	if err != nil {
 		return nil, err
 	}
-	var result []*tasksProto.Task
+	var result []*issuesProto.Issue
 	for _, item := range items {
-		result = append(result, &tasksProto.Task{
+		result = append(result, &issuesProto.Issue{
 			Uuid:        item.UUID,
 			Title:       item.Title,
 			Description: item.Description,
@@ -250,8 +250,8 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*tasksProto.Li
 			UpdatedAt: &item.UpdatedAt,
 		})
 	}
-	return &tasksProto.ListTasksResponse{
-		Tasks:      result,
+	return &issuesProto.ListIssuesResponse{
+		Issues:     result,
 		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,
