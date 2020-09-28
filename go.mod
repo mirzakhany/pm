@@ -1,26 +1,25 @@
-module projectmanager
+module github.com/mirzakhany/pm
 
 go 1.15
 
 require (
-	github.com/gin-contrib/zap v0.0.1
-	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.3.0 // indirect
-	github.com/golang/protobuf v1.4.2 // indirect
+	github.com/fsnotify/fsnotify v1.4.9
+	github.com/go-ozzo/ozzo-dbx v1.5.0
+	github.com/go-ozzo/ozzo-validation/v4 v4.2.2
+	github.com/go-pg/pg v8.0.7+incompatible
+	github.com/go-pg/pg/v10 v10.3.1
+	github.com/gogo/gateway v1.1.0
+	github.com/gogo/protobuf v1.3.1
+	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.2
-	github.com/jackc/pgproto3/v2 v2.0.4 // indirect
-	github.com/json-iterator/go v1.1.10 // indirect
-	github.com/mattn/go-sqlite3 v1.14.2
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
+	github.com/grpc-ecosystem/grpc-gateway v1.15.0
+	github.com/lib/pq v1.8.0
+	github.com/pkg/errors v0.9.1
+	github.com/rs/cors v1.7.0
+	github.com/spf13/viper v1.7.1
+	github.com/stretchr/testify v1.6.1
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
-	golang.org/x/sys v0.0.0-20200905004654-be1d3432aa8f // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gorm.io/driver/postgres v1.0.0
-	gorm.io/driver/sqlite v1.1.1
-	gorm.io/gorm v1.20.0
-	moul.io/zapgorm2 v1.0.1
+	google.golang.org/genproto v0.0.0-20200925023002-c2d885f95484
+	google.golang.org/grpc v1.32.0
 )
