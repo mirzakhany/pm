@@ -4,13 +4,13 @@
 package tasks
 
 import (
+	bytes "bytes"
 	context "context"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
 	types "github.com/gogo/protobuf/types"
-	golang_proto "github.com/golang/protobuf/proto"
 	proto1 "github.com/mirzakhany/pm/services/users/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
@@ -19,12 +19,13 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
 	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = golang_proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 var _ = time.Kitchen
@@ -77,9 +78,8 @@ type ListTasksRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListTasksRequest) Reset()         { *m = ListTasksRequest{} }
-func (m *ListTasksRequest) String() string { return proto.CompactTextString(m) }
-func (*ListTasksRequest) ProtoMessage()    {}
+func (m *ListTasksRequest) Reset()      { *m = ListTasksRequest{} }
+func (*ListTasksRequest) ProtoMessage() {}
 func (*ListTasksRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{0}
 }
@@ -124,10 +124,6 @@ func (m *ListTasksRequest) GetOffset() int64 {
 	return 0
 }
 
-func (*ListTasksRequest) XXX_MessageName() string {
-	return "tasks.ListTasksRequest"
-}
-
 type ListTasksResponse struct {
 	Tasks                []*Task  `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks"`
 	TotalCount           int64    `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count"`
@@ -138,9 +134,8 @@ type ListTasksResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListTasksResponse) Reset()         { *m = ListTasksResponse{} }
-func (m *ListTasksResponse) String() string { return proto.CompactTextString(m) }
-func (*ListTasksResponse) ProtoMessage()    {}
+func (m *ListTasksResponse) Reset()      { *m = ListTasksResponse{} }
+func (*ListTasksResponse) ProtoMessage() {}
 func (*ListTasksResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{1}
 }
@@ -199,10 +194,6 @@ func (m *ListTasksResponse) GetOffset() int64 {
 	return 0
 }
 
-func (*ListTasksResponse) XXX_MessageName() string {
-	return "tasks.ListTasksResponse"
-}
-
 type GetTaskRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -210,9 +201,8 @@ type GetTaskRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetTaskRequest) Reset()         { *m = GetTaskRequest{} }
-func (m *GetTaskRequest) String() string { return proto.CompactTextString(m) }
-func (*GetTaskRequest) ProtoMessage()    {}
+func (m *GetTaskRequest) Reset()      { *m = GetTaskRequest{} }
+func (*GetTaskRequest) ProtoMessage() {}
 func (*GetTaskRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{2}
 }
@@ -250,10 +240,6 @@ func (m *GetTaskRequest) GetUuid() string {
 	return ""
 }
 
-func (*GetTaskRequest) XXX_MessageName() string {
-	return "tasks.GetTaskRequest"
-}
-
 type CreateTaskRequest struct {
 	Id                   uint64     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uuid                 string     `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -269,9 +255,8 @@ type CreateTaskRequest struct {
 	XXX_sizecache        int32      `json:"-"`
 }
 
-func (m *CreateTaskRequest) Reset()         { *m = CreateTaskRequest{} }
-func (m *CreateTaskRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateTaskRequest) ProtoMessage()    {}
+func (m *CreateTaskRequest) Reset()      { *m = CreateTaskRequest{} }
+func (*CreateTaskRequest) ProtoMessage() {}
 func (*CreateTaskRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{3}
 }
@@ -365,10 +350,6 @@ func (m *CreateTaskRequest) GetCreatorUuid() string {
 	return ""
 }
 
-func (*CreateTaskRequest) XXX_MessageName() string {
-	return "tasks.CreateTaskRequest"
-}
-
 type UpdateTaskRequest struct {
 	Id                   uint64     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uuid                 string     `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -384,9 +365,8 @@ type UpdateTaskRequest struct {
 	XXX_sizecache        int32      `json:"-"`
 }
 
-func (m *UpdateTaskRequest) Reset()         { *m = UpdateTaskRequest{} }
-func (m *UpdateTaskRequest) String() string { return proto.CompactTextString(m) }
-func (*UpdateTaskRequest) ProtoMessage()    {}
+func (m *UpdateTaskRequest) Reset()      { *m = UpdateTaskRequest{} }
+func (*UpdateTaskRequest) ProtoMessage() {}
 func (*UpdateTaskRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{4}
 }
@@ -480,10 +460,6 @@ func (m *UpdateTaskRequest) GetCreatorUuid() string {
 	return ""
 }
 
-func (*UpdateTaskRequest) XXX_MessageName() string {
-	return "tasks.UpdateTaskRequest"
-}
-
 type DeleteTaskRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -491,9 +467,8 @@ type DeleteTaskRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteTaskRequest) Reset()         { *m = DeleteTaskRequest{} }
-func (m *DeleteTaskRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteTaskRequest) ProtoMessage()    {}
+func (m *DeleteTaskRequest) Reset()      { *m = DeleteTaskRequest{} }
+func (*DeleteTaskRequest) ProtoMessage() {}
 func (*DeleteTaskRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{5}
 }
@@ -531,10 +506,6 @@ func (m *DeleteTaskRequest) GetUuid() string {
 	return ""
 }
 
-func (*DeleteTaskRequest) XXX_MessageName() string {
-	return "tasks.DeleteTaskRequest"
-}
-
 type Task struct {
 	Id                   uint64       `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uuid                 string       `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -552,9 +523,8 @@ type Task struct {
 	XXX_sizecache        int32        `json:"-"`
 }
 
-func (m *Task) Reset()         { *m = Task{} }
-func (m *Task) String() string { return proto.CompactTextString(m) }
-func (*Task) ProtoMessage()    {}
+func (m *Task) Reset()      { *m = Task{} }
+func (*Task) ProtoMessage() {}
 func (*Task) Descriptor() ([]byte, []int) {
 	return fileDescriptor_28885d47473eb74c, []int{6}
 }
@@ -662,86 +632,835 @@ func (m *Task) GetUpdatedAt() *time.Time {
 	return nil
 }
 
-func (*Task) XXX_MessageName() string {
-	return "tasks.Task"
-}
 func init() {
 	proto.RegisterEnum("tasks.TaskStatus", TaskStatus_name, TaskStatus_value)
-	golang_proto.RegisterEnum("tasks.TaskStatus", TaskStatus_name, TaskStatus_value)
 	proto.RegisterType((*ListTasksRequest)(nil), "tasks.ListTasksRequest")
-	golang_proto.RegisterType((*ListTasksRequest)(nil), "tasks.ListTasksRequest")
 	proto.RegisterType((*ListTasksResponse)(nil), "tasks.ListTasksResponse")
-	golang_proto.RegisterType((*ListTasksResponse)(nil), "tasks.ListTasksResponse")
 	proto.RegisterType((*GetTaskRequest)(nil), "tasks.GetTaskRequest")
-	golang_proto.RegisterType((*GetTaskRequest)(nil), "tasks.GetTaskRequest")
 	proto.RegisterType((*CreateTaskRequest)(nil), "tasks.CreateTaskRequest")
-	golang_proto.RegisterType((*CreateTaskRequest)(nil), "tasks.CreateTaskRequest")
 	proto.RegisterType((*UpdateTaskRequest)(nil), "tasks.UpdateTaskRequest")
-	golang_proto.RegisterType((*UpdateTaskRequest)(nil), "tasks.UpdateTaskRequest")
 	proto.RegisterType((*DeleteTaskRequest)(nil), "tasks.DeleteTaskRequest")
-	golang_proto.RegisterType((*DeleteTaskRequest)(nil), "tasks.DeleteTaskRequest")
 	proto.RegisterType((*Task)(nil), "tasks.Task")
-	golang_proto.RegisterType((*Task)(nil), "tasks.Task")
 }
 
 func init() { proto.RegisterFile("services/tasks/proto/tasks.proto", fileDescriptor_28885d47473eb74c) }
-func init() {
-	golang_proto.RegisterFile("services/tasks/proto/tasks.proto", fileDescriptor_28885d47473eb74c)
-}
 
 var fileDescriptor_28885d47473eb74c = []byte{
-	// 802 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x55, 0x4f, 0x6f, 0xe2, 0x46,
-	0x1c, 0xad, 0x81, 0x10, 0xfc, 0x73, 0x4a, 0x60, 0x94, 0xa4, 0x96, 0xa9, 0x80, 0xd2, 0x56, 0x49,
-	0xa3, 0x16, 0xb7, 0xe9, 0xad, 0x97, 0x16, 0x08, 0xa2, 0xa8, 0x51, 0x48, 0x0d, 0x54, 0x55, 0x2f,
-	0xc8, 0x81, 0x09, 0x1d, 0x15, 0xb0, 0xeb, 0x19, 0x47, 0xaa, 0xaa, 0x5e, 0xfa, 0x09, 0x2a, 0xf5,
-	0xb2, 0xd2, 0x5e, 0xf6, 0x63, 0xec, 0x71, 0x8f, 0x39, 0xae, 0xb4, 0xf7, 0xec, 0x2a, 0xd9, 0x53,
-	0x3e, 0xc5, 0x6a, 0xfe, 0xd8, 0x86, 0x90, 0xc3, 0x5e, 0x57, 0xda, 0x53, 0x7e, 0x7f, 0xde, 0xbc,
-	0xbc, 0x79, 0xd8, 0xcf, 0x50, 0xa5, 0x38, 0xb8, 0x24, 0x63, 0x4c, 0x6d, 0xe6, 0xd2, 0x3f, 0xa8,
-	0xed, 0x07, 0x1e, 0xf3, 0x64, 0x5d, 0x17, 0x35, 0xda, 0x10, 0x8d, 0xf5, 0xf1, 0xd4, 0xf3, 0xa6,
-	0x33, 0x6c, 0xbb, 0x3e, 0xb1, 0xdd, 0xc5, 0xc2, 0x63, 0x2e, 0x23, 0xde, 0x42, 0x81, 0xac, 0x92,
-	0xda, 0x8a, 0xee, 0x3c, 0xbc, 0xb0, 0xf1, 0xdc, 0x67, 0x7f, 0xa9, 0x65, 0xe5, 0xfe, 0x92, 0x91,
-	0x39, 0xa6, 0xcc, 0x9d, 0xfb, 0x0a, 0xf0, 0xd5, 0x94, 0xb0, 0xdf, 0xc3, 0xf3, 0xfa, 0xd8, 0x9b,
-	0xdb, 0x53, 0x6f, 0xea, 0x25, 0x48, 0xde, 0x49, 0x49, 0xbc, 0x52, 0xf0, 0x44, 0x73, 0x48, 0x71,
-	0x10, 0x69, 0x16, 0xb5, 0x44, 0xd4, 0x7e, 0x80, 0xc2, 0x09, 0xa1, 0x6c, 0xc0, 0x95, 0x3b, 0xf8,
-	0xcf, 0x10, 0x53, 0x86, 0x76, 0x60, 0x63, 0x46, 0xe6, 0x84, 0x99, 0x5a, 0x55, 0x3b, 0x48, 0x3b,
-	0xb2, 0x41, 0x7b, 0x90, 0xf5, 0x2e, 0x2e, 0x28, 0x66, 0x66, 0x4a, 0x8c, 0x55, 0x57, 0x7b, 0xaa,
-	0x41, 0x71, 0x89, 0x82, 0xfa, 0xde, 0x82, 0x62, 0xf4, 0x25, 0x48, 0x37, 0x4c, 0xad, 0x9a, 0x3e,
-	0x30, 0x8e, 0x8c, 0xba, 0x34, 0x8a, 0x83, 0x9a, 0xfa, 0xdd, 0x75, 0x45, 0x6e, 0x1d, 0xf9, 0x07,
-	0x7d, 0x0d, 0x06, 0xf3, 0x98, 0x3b, 0x1b, 0x8d, 0xbd, 0x70, 0xa1, 0xfe, 0x41, 0x73, 0xfb, 0xee,
-	0xba, 0xb2, 0x3c, 0x76, 0x40, 0x34, 0x2d, 0x5e, 0xa3, 0x4a, 0xa4, 0x31, 0x2d, 0xb0, 0x82, 0x52,
-	0x0c, 0x22, 0xb9, 0xb5, 0x58, 0x6e, 0x46, 0x20, 0xe0, 0xee, 0xba, 0xa2, 0x26, 0xb1, 0xf4, 0xcf,
-	0x20, 0xdf, 0xc1, 0x42, 0x78, 0x74, 0x75, 0x04, 0x99, 0x30, 0x24, 0x13, 0x71, 0x73, 0xdd, 0x11,
-	0x75, 0xed, 0x71, 0x0a, 0x8a, 0xad, 0x00, 0xbb, 0x0c, 0x2f, 0x23, 0xf3, 0x90, 0x52, 0xb8, 0x8c,
-	0x93, 0x22, 0x93, 0xf8, 0x64, 0x2a, 0x39, 0xc9, 0x8d, 0x64, 0x84, 0xcd, 0xb0, 0x10, 0xa9, 0x3b,
-	0xb2, 0x41, 0x55, 0x30, 0x26, 0x98, 0x8e, 0x03, 0xe2, 0xf3, 0xe7, 0x42, 0xc8, 0xd3, 0x9d, 0xe5,
-	0x11, 0xfa, 0x02, 0xb2, 0x94, 0xb9, 0x2c, 0xa4, 0xe6, 0x46, 0x55, 0x3b, 0xc8, 0x1f, 0x15, 0x97,
-	0xdc, 0xeb, 0x8b, 0x85, 0xa3, 0x00, 0xa8, 0x04, 0x3a, 0xf5, 0x03, 0xb2, 0x60, 0x23, 0x32, 0x31,
-	0xb3, 0x42, 0x4d, 0x4e, 0x0e, 0xba, 0x13, 0x64, 0x41, 0x0e, 0x53, 0x46, 0xe6, 0x2e, 0xc3, 0xe6,
-	0xa6, 0xdc, 0x45, 0x3d, 0xfa, 0x14, 0x3e, 0x74, 0x29, 0x25, 0xd3, 0x05, 0xc6, 0x23, 0x21, 0x3c,
-	0x27, 0x74, 0x6c, 0x45, 0xc3, 0x21, 0xbf, 0xc0, 0x27, 0xb0, 0x35, 0xe6, 0x37, 0xf7, 0x02, 0x89,
-	0xd1, 0xa5, 0x56, 0x35, 0x1b, 0x46, 0xee, 0x0c, 0xfd, 0xc9, 0x7b, 0x77, 0x1e, 0x74, 0x67, 0x1f,
-	0x8a, 0xc7, 0x78, 0x86, 0x57, 0xcd, 0x79, 0xe8, 0x21, 0x7b, 0x94, 0x86, 0x0c, 0xc7, 0xbc, 0xf3,
-	0xce, 0xed, 0x43, 0x2e, 0x32, 0x49, 0x98, 0xc6, 0xdf, 0x7d, 0x19, 0x38, 0x43, 0x8a, 0x03, 0x27,
-	0x5e, 0xa2, 0xcf, 0x61, 0x53, 0x39, 0x25, 0x8c, 0xbb, 0x87, 0x8b, 0x76, 0xe8, 0x7b, 0x00, 0x51,
-	0xe2, 0xc9, 0xc8, 0x65, 0x26, 0x08, 0xa4, 0x55, 0x97, 0x39, 0x59, 0x8f, 0xd2, 0xaf, 0x3e, 0x88,
-	0x72, 0xb2, 0x99, 0xf9, 0xef, 0x65, 0x45, 0x73, 0x74, 0x75, 0xa6, 0xc1, 0x38, 0x41, 0x28, 0x9e,
-	0x4f, 0x41, 0x60, 0xbc, 0x2d, 0x81, 0x3a, 0xd3, 0x60, 0x87, 0x3d, 0x80, 0xc4, 0x20, 0x94, 0x07,
-	0xe8, 0x9e, 0x8e, 0x9a, 0x8d, 0xd6, 0x4f, 0x27, 0xbd, 0x4e, 0xe1, 0x03, 0xb4, 0x0d, 0x46, 0xf7,
-	0x74, 0x74, 0xe6, 0xf4, 0x3a, 0x4e, 0xbb, 0xdf, 0x2f, 0x68, 0x28, 0x07, 0x99, 0x41, 0xbb, 0x3f,
-	0x28, 0xa4, 0x78, 0x75, 0xdc, 0x3b, 0x6d, 0x17, 0xd2, 0x68, 0x0b, 0x72, 0x0d, 0xa7, 0xf5, 0x63,
-	0xf7, 0x97, 0xf6, 0x71, 0x21, 0x73, 0xf4, 0x24, 0x0d, 0x86, 0x60, 0x94, 0xe1, 0x8c, 0x7e, 0x06,
-	0x3d, 0x0e, 0x50, 0xf4, 0x91, 0xfa, 0x4d, 0xee, 0xa7, 0xb2, 0x65, 0xae, 0x2f, 0x64, 0xd6, 0xd6,
-	0x8a, 0xff, 0xbe, 0x78, 0xfd, 0x7f, 0xca, 0x40, 0xba, 0x7d, 0xf9, 0x8d, 0xfc, 0x20, 0xa1, 0x0e,
-	0x6c, 0xaa, 0x64, 0x43, 0xbb, 0xea, 0xdc, 0x6a, 0xd2, 0x59, 0xcb, 0x89, 0x5c, 0x33, 0x05, 0x03,
-	0x42, 0x85, 0x98, 0xc1, 0xfe, 0x9b, 0x3f, 0x69, 0xff, 0xa0, 0x2e, 0x40, 0x92, 0x7d, 0x28, 0xd2,
-	0xb0, 0x16, 0x87, 0xab, 0x74, 0x3b, 0x82, 0x2e, 0x5f, 0x4b, 0x04, 0x7d, 0xa7, 0x1d, 0xa2, 0x33,
-	0x80, 0x24, 0x28, 0x62, 0xaa, 0xb5, 0xec, 0x58, 0xa5, 0x2a, 0x09, 0xaa, 0x5d, 0x6b, 0x4d, 0x19,
-	0x67, 0xfc, 0x15, 0x20, 0x79, 0xbb, 0x62, 0xc6, 0xb5, 0x17, 0xce, 0xda, 0x5b, 0xfb, 0xb9, 0xdb,
-	0xfc, 0xa3, 0x1b, 0x5d, 0xfb, 0x70, 0x8d, 0xbc, 0x59, 0xba, 0xba, 0x29, 0x6b, 0xcf, 0x6f, 0xca,
-	0xda, 0xab, 0x9b, 0xb2, 0xf6, 0xec, 0xb6, 0xac, 0x5d, 0xdd, 0x96, 0xb5, 0xdf, 0xe4, 0xd7, 0xea,
-	0x3c, 0x2b, 0x68, 0xbe, 0x7d, 0x13, 0x00, 0x00, 0xff, 0xff, 0xab, 0x2a, 0xf0, 0x0e, 0x12, 0x08,
-	0x00, 0x00,
+	// 829 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x55, 0x3f, 0x6f, 0x23, 0x45,
+	0x1c, 0xbd, 0xb1, 0x9d, 0xc4, 0xfb, 0xdb, 0xe0, 0xb3, 0x47, 0x77, 0xc7, 0x6a, 0x83, 0xd6, 0xc6,
+	0x80, 0x2e, 0x44, 0xe0, 0x85, 0x5c, 0x47, 0x03, 0xb6, 0x63, 0x19, 0x8b, 0x53, 0x7c, 0xac, 0x6d,
+	0x84, 0x68, 0xac, 0x8d, 0x3d, 0x31, 0x23, 0x6c, 0xef, 0xb2, 0x33, 0x7b, 0x12, 0x42, 0x48, 0x88,
+	0x4f, 0x80, 0x44, 0x83, 0x44, 0x43, 0xc9, 0x47, 0xb8, 0x92, 0x92, 0x12, 0x89, 0x86, 0x2a, 0x9c,
+	0x2d, 0xaa, 0x54, 0x94, 0x94, 0x68, 0xfe, 0xec, 0xae, 0x1d, 0xa7, 0xa0, 0x45, 0xa2, 0xca, 0xef,
+	0xcf, 0x9b, 0x97, 0x37, 0xcf, 0xbb, 0x6f, 0xa1, 0xc6, 0x48, 0xf4, 0x94, 0x4e, 0x08, 0x73, 0xb9,
+	0xcf, 0x3e, 0x63, 0x6e, 0x18, 0x05, 0x3c, 0x50, 0x75, 0x43, 0xd6, 0x78, 0x4f, 0x36, 0xf6, 0x4b,
+	0xb3, 0x20, 0x98, 0xcd, 0x89, 0xeb, 0x87, 0xd4, 0xf5, 0x97, 0xcb, 0x80, 0xfb, 0x9c, 0x06, 0x4b,
+	0x0d, 0xb2, 0x8f, 0xf4, 0x56, 0x76, 0x17, 0xf1, 0xa5, 0x4b, 0x16, 0x21, 0xff, 0x42, 0x2f, 0xab,
+	0x37, 0x97, 0x9c, 0x2e, 0x08, 0xe3, 0xfe, 0x22, 0xd4, 0x80, 0x37, 0x67, 0x94, 0x7f, 0x1a, 0x5f,
+	0x34, 0x26, 0xc1, 0xc2, 0x9d, 0x05, 0xb3, 0x20, 0x43, 0x8a, 0x4e, 0x49, 0x12, 0x95, 0x86, 0x67,
+	0x9a, 0x63, 0x46, 0xa2, 0x44, 0xb3, 0xac, 0x15, 0xa2, 0xfe, 0x1e, 0x94, 0x1f, 0x53, 0xc6, 0x87,
+	0x42, 0xb9, 0x47, 0x3e, 0x8f, 0x09, 0xe3, 0xf8, 0x1e, 0xec, 0xcd, 0xe9, 0x82, 0x72, 0x0b, 0xd5,
+	0xd0, 0x71, 0xde, 0x53, 0x0d, 0x7e, 0x00, 0xfb, 0xc1, 0xe5, 0x25, 0x23, 0xdc, 0xca, 0xc9, 0xb1,
+	0xee, 0xea, 0xcf, 0x10, 0x54, 0x36, 0x28, 0x58, 0x18, 0x2c, 0x19, 0xc1, 0x6f, 0x80, 0x72, 0xc3,
+	0x42, 0xb5, 0xfc, 0xb1, 0x79, 0x6a, 0x36, 0x94, 0x51, 0x02, 0xd4, 0x32, 0xae, 0xaf, 0xaa, 0x6a,
+	0xeb, 0xa9, 0x3f, 0xf8, 0x2d, 0x30, 0x79, 0xc0, 0xfd, 0xf9, 0x78, 0x12, 0xc4, 0x4b, 0xfd, 0x0f,
+	0x5a, 0x77, 0xaf, 0xaf, 0xaa, 0x9b, 0x63, 0x0f, 0x64, 0xd3, 0x16, 0x35, 0xae, 0x26, 0x1a, 0xf3,
+	0x12, 0x2b, 0x29, 0xe5, 0x20, 0x91, 0x5b, 0x4f, 0xe5, 0x16, 0x24, 0x02, 0xae, 0xaf, 0xaa, 0x7a,
+	0x92, 0x4a, 0x7f, 0x15, 0x4a, 0x5d, 0x22, 0x85, 0x27, 0x57, 0xc7, 0x50, 0x88, 0x63, 0x3a, 0x95,
+	0x37, 0x37, 0x3c, 0x59, 0xd7, 0x7f, 0xc8, 0x41, 0xa5, 0x1d, 0x11, 0x9f, 0x93, 0x4d, 0x64, 0x09,
+	0x72, 0x1a, 0x57, 0xf0, 0x72, 0x74, 0x9a, 0x9e, 0xcc, 0x65, 0x27, 0x85, 0x91, 0x9c, 0xf2, 0x39,
+	0x91, 0x22, 0x0d, 0x4f, 0x35, 0xb8, 0x06, 0xe6, 0x94, 0xb0, 0x49, 0x44, 0x43, 0xf1, 0x5c, 0x48,
+	0x79, 0x86, 0xb7, 0x39, 0xc2, 0xaf, 0xc3, 0x3e, 0xe3, 0x3e, 0x8f, 0x99, 0xb5, 0x57, 0x43, 0xc7,
+	0xa5, 0xd3, 0xca, 0x86, 0x7b, 0x03, 0xb9, 0xf0, 0x34, 0x00, 0x1f, 0x81, 0xc1, 0xc2, 0x88, 0x2e,
+	0xf9, 0x98, 0x4e, 0xad, 0x7d, 0xa9, 0xa6, 0xa8, 0x06, 0xbd, 0x29, 0xb6, 0xa1, 0x48, 0x18, 0xa7,
+	0x0b, 0x9f, 0x13, 0xeb, 0x40, 0xed, 0x92, 0x1e, 0xbf, 0x02, 0x2f, 0xf8, 0x8c, 0xd1, 0xd9, 0x92,
+	0x90, 0xb1, 0x14, 0x5e, 0x94, 0x3a, 0x0e, 0x93, 0xe1, 0x48, 0x5c, 0xe0, 0x65, 0x38, 0x9c, 0x88,
+	0x9b, 0x07, 0x91, 0xc2, 0x18, 0x4a, 0xab, 0x9e, 0x8d, 0x12, 0x77, 0x46, 0xe1, 0xf4, 0x7f, 0x77,
+	0x6e, 0x75, 0xe7, 0x21, 0x54, 0xce, 0xc8, 0x9c, 0x6c, 0x9b, 0x73, 0xdb, 0x43, 0xf6, 0x7d, 0x1e,
+	0x0a, 0x02, 0xf3, 0x9f, 0x77, 0xee, 0x21, 0x14, 0x13, 0x93, 0xa4, 0x69, 0xe2, 0xdd, 0x57, 0x81,
+	0x33, 0x62, 0x24, 0xf2, 0xd2, 0x25, 0x7e, 0x0d, 0x0e, 0xb4, 0x53, 0xd2, 0xb8, 0x1b, 0xb8, 0x64,
+	0x87, 0xdf, 0x05, 0x90, 0x25, 0x99, 0x8e, 0x7d, 0x6e, 0x81, 0x44, 0xda, 0x0d, 0x95, 0x93, 0x8d,
+	0x24, 0xfd, 0x1a, 0xc3, 0x24, 0x27, 0x5b, 0x85, 0x6f, 0xff, 0xa8, 0x22, 0xcf, 0xd0, 0x67, 0x9a,
+	0x5c, 0x10, 0xc4, 0xf2, 0xf9, 0x94, 0x04, 0xe6, 0xbf, 0x25, 0xd0, 0x67, 0x9a, 0xfc, 0xa4, 0x0f,
+	0x90, 0x19, 0x84, 0x4b, 0x00, 0xbd, 0xf3, 0x71, 0xab, 0xd9, 0xfe, 0xe0, 0x71, 0xbf, 0x5b, 0xbe,
+	0x83, 0xef, 0x82, 0xd9, 0x3b, 0x1f, 0x3f, 0xf1, 0xfa, 0x5d, 0xaf, 0x33, 0x18, 0x94, 0x11, 0x2e,
+	0x42, 0x61, 0xd8, 0x19, 0x0c, 0xcb, 0x39, 0x51, 0x9d, 0xf5, 0xcf, 0x3b, 0xe5, 0x3c, 0x3e, 0x84,
+	0x62, 0xd3, 0x6b, 0xbf, 0xdf, 0xfb, 0xa8, 0x73, 0x56, 0x2e, 0x9c, 0xfe, 0x98, 0x07, 0x53, 0x32,
+	0xaa, 0x70, 0xc6, 0x1f, 0x82, 0x91, 0x06, 0x28, 0x7e, 0x51, 0xff, 0x26, 0x37, 0x53, 0xd9, 0xb6,
+	0x76, 0x17, 0x2a, 0x6b, 0xeb, 0x95, 0x6f, 0x7e, 0xfb, 0xf3, 0xbb, 0x9c, 0x89, 0x0d, 0xf7, 0xe9,
+	0xdb, 0xea, 0x83, 0x84, 0xbb, 0x70, 0xa0, 0x93, 0x0d, 0xdf, 0xd7, 0xe7, 0xb6, 0x93, 0xce, 0xde,
+	0x4c, 0xe4, 0xba, 0x25, 0x19, 0x30, 0x2e, 0xa7, 0x0c, 0xee, 0x97, 0xe2, 0x49, 0xfb, 0x0a, 0xf7,
+	0x00, 0xb2, 0xec, 0xc3, 0x89, 0x86, 0x9d, 0x38, 0xdc, 0xa6, 0xbb, 0x27, 0xe9, 0x4a, 0xf5, 0x4c,
+	0xd0, 0x3b, 0xe8, 0x04, 0x3f, 0x01, 0xc8, 0x82, 0x22, 0xa5, 0xda, 0xc9, 0x8e, 0x6d, 0xaa, 0x23,
+	0x49, 0x75, 0xdf, 0xde, 0x51, 0x26, 0x18, 0x3f, 0x06, 0xc8, 0xde, 0xae, 0x94, 0x71, 0xe7, 0x85,
+	0xb3, 0x1f, 0xec, 0xfc, 0xdc, 0x1d, 0xf1, 0xd1, 0x4d, 0xae, 0x7d, 0xb2, 0x43, 0xde, 0x7a, 0xf4,
+	0xfb, 0xca, 0xb9, 0xf3, 0x7c, 0xe5, 0xa0, 0xbf, 0x56, 0x0e, 0xfa, 0x7b, 0xe5, 0xa0, 0xaf, 0xd7,
+	0x0e, 0xfa, 0x69, 0xed, 0xa0, 0x67, 0x6b, 0x07, 0xfd, 0xbc, 0x76, 0xd0, 0x2f, 0x6b, 0x07, 0xfd,
+	0xba, 0x76, 0xd0, 0xf3, 0xb5, 0x83, 0x3e, 0x51, 0x5f, 0xb1, 0x8b, 0x7d, 0x49, 0xff, 0xe8, 0x9f,
+	0x00, 0x00, 0x00, 0xff, 0xff, 0x7f, 0x7d, 0x8e, 0x6d, 0x2a, 0x08, 0x00, 0x00,
+}
+
+func (this *ListTasksRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListTasksRequest)
+	if !ok {
+		that2, ok := that.(ListTasksRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListTasksRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListTasksRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListTasksRequest but is not nil && this == nil")
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListTasksRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListTasksRequest)
+	if !ok {
+		that2, ok := that.(ListTasksRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListTasksResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListTasksResponse)
+	if !ok {
+		that2, ok := that.(ListTasksResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListTasksResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListTasksResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListTasksResponse but is not nil && this == nil")
+	}
+	if len(this.Tasks) != len(that1.Tasks) {
+		return fmt.Errorf("Tasks this(%v) Not Equal that(%v)", len(this.Tasks), len(that1.Tasks))
+	}
+	for i := range this.Tasks {
+		if !this.Tasks[i].Equal(that1.Tasks[i]) {
+			return fmt.Errorf("Tasks this[%v](%v) Not Equal that[%v](%v)", i, this.Tasks[i], i, that1.Tasks[i])
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return fmt.Errorf("TotalCount this(%v) Not Equal that(%v)", this.TotalCount, that1.TotalCount)
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListTasksResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListTasksResponse)
+	if !ok {
+		that2, ok := that.(ListTasksResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if len(this.Tasks) != len(that1.Tasks) {
+		return false
+	}
+	for i := range this.Tasks {
+		if !this.Tasks[i].Equal(that1.Tasks[i]) {
+			return false
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *GetTaskRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*GetTaskRequest)
+	if !ok {
+		that2, ok := that.(GetTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *GetTaskRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *GetTaskRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *GetTaskRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *GetTaskRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*GetTaskRequest)
+	if !ok {
+		that2, ok := that.(GetTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *CreateTaskRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*CreateTaskRequest)
+	if !ok {
+		that2, ok := that.(CreateTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *CreateTaskRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *CreateTaskRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *CreateTaskRequest but is not nil && this == nil")
+	}
+	if this.Id != that1.Id {
+		return fmt.Errorf("Id this(%v) Not Equal that(%v)", this.Id, that1.Id)
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if this.Description != that1.Description {
+		return fmt.Errorf("Description this(%v) Not Equal that(%v)", this.Description, that1.Description)
+	}
+	if this.Status != that1.Status {
+		return fmt.Errorf("Status this(%v) Not Equal that(%v)", this.Status, that1.Status)
+	}
+	if this.SprintId != that1.SprintId {
+		return fmt.Errorf("SprintId this(%v) Not Equal that(%v)", this.SprintId, that1.SprintId)
+	}
+	if this.Estimate != that1.Estimate {
+		return fmt.Errorf("Estimate this(%v) Not Equal that(%v)", this.Estimate, that1.Estimate)
+	}
+	if this.AssigneeUuid != that1.AssigneeUuid {
+		return fmt.Errorf("AssigneeUuid this(%v) Not Equal that(%v)", this.AssigneeUuid, that1.AssigneeUuid)
+	}
+	if this.CreatorUuid != that1.CreatorUuid {
+		return fmt.Errorf("CreatorUuid this(%v) Not Equal that(%v)", this.CreatorUuid, that1.CreatorUuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *CreateTaskRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*CreateTaskRequest)
+	if !ok {
+		that2, ok := that.(CreateTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if this.Description != that1.Description {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	if this.SprintId != that1.SprintId {
+		return false
+	}
+	if this.Estimate != that1.Estimate {
+		return false
+	}
+	if this.AssigneeUuid != that1.AssigneeUuid {
+		return false
+	}
+	if this.CreatorUuid != that1.CreatorUuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *UpdateTaskRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*UpdateTaskRequest)
+	if !ok {
+		that2, ok := that.(UpdateTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *UpdateTaskRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *UpdateTaskRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *UpdateTaskRequest but is not nil && this == nil")
+	}
+	if this.Id != that1.Id {
+		return fmt.Errorf("Id this(%v) Not Equal that(%v)", this.Id, that1.Id)
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if this.Description != that1.Description {
+		return fmt.Errorf("Description this(%v) Not Equal that(%v)", this.Description, that1.Description)
+	}
+	if this.Status != that1.Status {
+		return fmt.Errorf("Status this(%v) Not Equal that(%v)", this.Status, that1.Status)
+	}
+	if this.SprintId != that1.SprintId {
+		return fmt.Errorf("SprintId this(%v) Not Equal that(%v)", this.SprintId, that1.SprintId)
+	}
+	if this.Estimate != that1.Estimate {
+		return fmt.Errorf("Estimate this(%v) Not Equal that(%v)", this.Estimate, that1.Estimate)
+	}
+	if this.AssigneeUuid != that1.AssigneeUuid {
+		return fmt.Errorf("AssigneeUuid this(%v) Not Equal that(%v)", this.AssigneeUuid, that1.AssigneeUuid)
+	}
+	if this.CreatorUuid != that1.CreatorUuid {
+		return fmt.Errorf("CreatorUuid this(%v) Not Equal that(%v)", this.CreatorUuid, that1.CreatorUuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *UpdateTaskRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*UpdateTaskRequest)
+	if !ok {
+		that2, ok := that.(UpdateTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if this.Description != that1.Description {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	if this.SprintId != that1.SprintId {
+		return false
+	}
+	if this.Estimate != that1.Estimate {
+		return false
+	}
+	if this.AssigneeUuid != that1.AssigneeUuid {
+		return false
+	}
+	if this.CreatorUuid != that1.CreatorUuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *DeleteTaskRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*DeleteTaskRequest)
+	if !ok {
+		that2, ok := that.(DeleteTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *DeleteTaskRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *DeleteTaskRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *DeleteTaskRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *DeleteTaskRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*DeleteTaskRequest)
+	if !ok {
+		that2, ok := that.(DeleteTaskRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *Task) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*Task)
+	if !ok {
+		that2, ok := that.(Task)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *Task")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *Task but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *Task but is not nil && this == nil")
+	}
+	if this.Id != that1.Id {
+		return fmt.Errorf("Id this(%v) Not Equal that(%v)", this.Id, that1.Id)
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if this.Description != that1.Description {
+		return fmt.Errorf("Description this(%v) Not Equal that(%v)", this.Description, that1.Description)
+	}
+	if this.Status != that1.Status {
+		return fmt.Errorf("Status this(%v) Not Equal that(%v)", this.Status, that1.Status)
+	}
+	if this.SprintId != that1.SprintId {
+		return fmt.Errorf("SprintId this(%v) Not Equal that(%v)", this.SprintId, that1.SprintId)
+	}
+	if this.Estimate != that1.Estimate {
+		return fmt.Errorf("Estimate this(%v) Not Equal that(%v)", this.Estimate, that1.Estimate)
+	}
+	if !this.Assignee.Equal(that1.Assignee) {
+		return fmt.Errorf("Assignee this(%v) Not Equal that(%v)", this.Assignee, that1.Assignee)
+	}
+	if !this.Creator.Equal(that1.Creator) {
+		return fmt.Errorf("Creator this(%v) Not Equal that(%v)", this.Creator, that1.Creator)
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return fmt.Errorf("this.CreatedAt != nil && that1.CreatedAt == nil")
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return fmt.Errorf("CreatedAt this(%v) Not Equal that(%v)", this.CreatedAt, that1.CreatedAt)
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return fmt.Errorf("this.UpdatedAt != nil && that1.UpdatedAt == nil")
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return fmt.Errorf("UpdatedAt this(%v) Not Equal that(%v)", this.UpdatedAt, that1.UpdatedAt)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *Task) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Task)
+	if !ok {
+		that2, ok := that.(Task)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if this.Description != that1.Description {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	if this.SprintId != that1.SprintId {
+		return false
+	}
+	if this.Estimate != that1.Estimate {
+		return false
+	}
+	if !this.Assignee.Equal(that1.Assignee) {
+		return false
+	}
+	if !this.Creator.Equal(that1.Creator) {
+		return false
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return false
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return false
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return false
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListTasksRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&tasks.ListTasksRequest{")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ListTasksResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&tasks.ListTasksResponse{")
+	if this.Tasks != nil {
+		s = append(s, "Tasks: "+fmt.Sprintf("%#v", this.Tasks)+",\n")
+	}
+	s = append(s, "TotalCount: "+fmt.Sprintf("%#v", this.TotalCount)+",\n")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *GetTaskRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&tasks.GetTaskRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *CreateTaskRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 13)
+	s = append(s, "&tasks.CreateTaskRequest{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	s = append(s, "Description: "+fmt.Sprintf("%#v", this.Description)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "SprintId: "+fmt.Sprintf("%#v", this.SprintId)+",\n")
+	s = append(s, "Estimate: "+fmt.Sprintf("%#v", this.Estimate)+",\n")
+	s = append(s, "AssigneeUuid: "+fmt.Sprintf("%#v", this.AssigneeUuid)+",\n")
+	s = append(s, "CreatorUuid: "+fmt.Sprintf("%#v", this.CreatorUuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *UpdateTaskRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 13)
+	s = append(s, "&tasks.UpdateTaskRequest{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	s = append(s, "Description: "+fmt.Sprintf("%#v", this.Description)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "SprintId: "+fmt.Sprintf("%#v", this.SprintId)+",\n")
+	s = append(s, "Estimate: "+fmt.Sprintf("%#v", this.Estimate)+",\n")
+	s = append(s, "AssigneeUuid: "+fmt.Sprintf("%#v", this.AssigneeUuid)+",\n")
+	s = append(s, "CreatorUuid: "+fmt.Sprintf("%#v", this.CreatorUuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *DeleteTaskRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&tasks.DeleteTaskRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Task) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 15)
+	s = append(s, "&tasks.Task{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	s = append(s, "Description: "+fmt.Sprintf("%#v", this.Description)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "SprintId: "+fmt.Sprintf("%#v", this.SprintId)+",\n")
+	s = append(s, "Estimate: "+fmt.Sprintf("%#v", this.Estimate)+",\n")
+	if this.Assignee != nil {
+		s = append(s, "Assignee: "+fmt.Sprintf("%#v", this.Assignee)+",\n")
+	}
+	if this.Creator != nil {
+		s = append(s, "Creator: "+fmt.Sprintf("%#v", this.Creator)+",\n")
+	}
+	s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
+	s = append(s, "UpdatedAt: "+fmt.Sprintf("%#v", this.UpdatedAt)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func valueToGoStringTasks(v interface{}, typ string) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1426,6 +2145,200 @@ func encodeVarintTasks(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func NewPopulatedListTasksRequest(r randyTasks, easy bool) *ListTasksRequest {
+	this := &ListTasksRequest{}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedListTasksResponse(r randyTasks, easy bool) *ListTasksResponse {
+	this := &ListTasksResponse{}
+	if r.Intn(5) != 0 {
+		v1 := r.Intn(5)
+		this.Tasks = make([]*Task, v1)
+		for i := 0; i < v1; i++ {
+			this.Tasks[i] = NewPopulatedTask(r, easy)
+		}
+	}
+	this.TotalCount = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.TotalCount *= -1
+	}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedGetTaskRequest(r randyTasks, easy bool) *GetTaskRequest {
+	this := &GetTaskRequest{}
+	this.Uuid = string(randStringTasks(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedCreateTaskRequest(r randyTasks, easy bool) *CreateTaskRequest {
+	this := &CreateTaskRequest{}
+	this.Id = uint64(uint64(r.Uint32()))
+	this.Uuid = string(randStringTasks(r))
+	this.Title = string(randStringTasks(r))
+	this.Description = string(randStringTasks(r))
+	this.Status = TaskStatus([]int32{0, 1, 2, 3, 4}[r.Intn(5)])
+	this.SprintId = uint64(uint64(r.Uint32()))
+	this.Estimate = uint64(uint64(r.Uint32()))
+	this.AssigneeUuid = string(randStringTasks(r))
+	this.CreatorUuid = string(randStringTasks(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 10)
+	}
+	return this
+}
+
+func NewPopulatedUpdateTaskRequest(r randyTasks, easy bool) *UpdateTaskRequest {
+	this := &UpdateTaskRequest{}
+	this.Id = uint64(uint64(r.Uint32()))
+	this.Uuid = string(randStringTasks(r))
+	this.Title = string(randStringTasks(r))
+	this.Description = string(randStringTasks(r))
+	this.Status = TaskStatus([]int32{0, 1, 2, 3, 4}[r.Intn(5)])
+	this.SprintId = uint64(uint64(r.Uint32()))
+	this.Estimate = uint64(uint64(r.Uint32()))
+	this.AssigneeUuid = string(randStringTasks(r))
+	this.CreatorUuid = string(randStringTasks(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 10)
+	}
+	return this
+}
+
+func NewPopulatedDeleteTaskRequest(r randyTasks, easy bool) *DeleteTaskRequest {
+	this := &DeleteTaskRequest{}
+	this.Uuid = string(randStringTasks(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedTask(r randyTasks, easy bool) *Task {
+	this := &Task{}
+	this.Id = uint64(uint64(r.Uint32()))
+	this.Uuid = string(randStringTasks(r))
+	this.Title = string(randStringTasks(r))
+	this.Description = string(randStringTasks(r))
+	this.Status = TaskStatus([]int32{0, 1, 2, 3, 4}[r.Intn(5)])
+	this.SprintId = uint64(uint64(r.Uint32()))
+	this.Estimate = uint64(uint64(r.Uint32()))
+	if r.Intn(5) != 0 {
+		this.Assignee = proto1.NewPopulatedUser(r, easy)
+	}
+	if r.Intn(5) != 0 {
+		this.Creator = proto1.NewPopulatedUser(r, easy)
+	}
+	if r.Intn(5) != 0 {
+		this.CreatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if r.Intn(5) != 0 {
+		this.UpdatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedTasks(r, 12)
+	}
+	return this
+}
+
+type randyTasks interface {
+	Float32() float32
+	Float64() float64
+	Int63() int64
+	Int31() int32
+	Uint32() uint32
+	Intn(n int) int
+}
+
+func randUTF8RuneTasks(r randyTasks) rune {
+	ru := r.Intn(62)
+	if ru < 10 {
+		return rune(ru + 48)
+	} else if ru < 36 {
+		return rune(ru + 55)
+	}
+	return rune(ru + 61)
+}
+func randStringTasks(r randyTasks) string {
+	v2 := r.Intn(100)
+	tmps := make([]rune, v2)
+	for i := 0; i < v2; i++ {
+		tmps[i] = randUTF8RuneTasks(r)
+	}
+	return string(tmps)
+}
+func randUnrecognizedTasks(r randyTasks, maxFieldNumber int) (dAtA []byte) {
+	l := r.Intn(5)
+	for i := 0; i < l; i++ {
+		wire := r.Intn(4)
+		if wire == 3 {
+			wire = 5
+		}
+		fieldNumber := maxFieldNumber + r.Intn(100)
+		dAtA = randFieldTasks(dAtA, r, fieldNumber, wire)
+	}
+	return dAtA
+}
+func randFieldTasks(dAtA []byte, r randyTasks, fieldNumber int, wire int) []byte {
+	key := uint32(fieldNumber)<<3 | uint32(wire)
+	switch wire {
+	case 0:
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(key))
+		v3 := r.Int63()
+		if r.Intn(2) == 0 {
+			v3 *= -1
+		}
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(v3))
+	case 1:
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	case 2:
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(key))
+		ll := r.Intn(100)
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(ll))
+		for j := 0; j < ll; j++ {
+			dAtA = append(dAtA, byte(r.Intn(256)))
+		}
+	default:
+		dAtA = encodeVarintPopulateTasks(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	}
+	return dAtA
+}
+func encodeVarintPopulateTasks(dAtA []byte, v uint64) []byte {
+	for v >= 1<<7 {
+		dAtA = append(dAtA, uint8(uint64(v)&0x7f|0x80))
+		v >>= 7
+	}
+	dAtA = append(dAtA, uint8(v))
+	return dAtA
+}
 func (m *ListTasksRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1648,6 +2561,126 @@ func sovTasks(x uint64) (n int) {
 }
 func sozTasks(x uint64) (n int) {
 	return sovTasks(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *ListTasksRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListTasksRequest{`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ListTasksResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	repeatedStringForTasks := "[]*Task{"
+	for _, f := range this.Tasks {
+		repeatedStringForTasks += strings.Replace(f.String(), "Task", "Task", 1) + ","
+	}
+	repeatedStringForTasks += "}"
+	s := strings.Join([]string{`&ListTasksResponse{`,
+		`Tasks:` + repeatedStringForTasks + `,`,
+		`TotalCount:` + fmt.Sprintf("%v", this.TotalCount) + `,`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *GetTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&GetTaskRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *CreateTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&CreateTaskRequest{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`Description:` + fmt.Sprintf("%v", this.Description) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`SprintId:` + fmt.Sprintf("%v", this.SprintId) + `,`,
+		`Estimate:` + fmt.Sprintf("%v", this.Estimate) + `,`,
+		`AssigneeUuid:` + fmt.Sprintf("%v", this.AssigneeUuid) + `,`,
+		`CreatorUuid:` + fmt.Sprintf("%v", this.CreatorUuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *UpdateTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&UpdateTaskRequest{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`Description:` + fmt.Sprintf("%v", this.Description) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`SprintId:` + fmt.Sprintf("%v", this.SprintId) + `,`,
+		`Estimate:` + fmt.Sprintf("%v", this.Estimate) + `,`,
+		`AssigneeUuid:` + fmt.Sprintf("%v", this.AssigneeUuid) + `,`,
+		`CreatorUuid:` + fmt.Sprintf("%v", this.CreatorUuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *DeleteTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&DeleteTaskRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Task) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Task{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`Description:` + fmt.Sprintf("%v", this.Description) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`SprintId:` + fmt.Sprintf("%v", this.SprintId) + `,`,
+		`Estimate:` + fmt.Sprintf("%v", this.Estimate) + `,`,
+		`Assignee:` + strings.Replace(fmt.Sprintf("%v", this.Assignee), "User", "proto1.User", 1) + `,`,
+		`Creator:` + strings.Replace(fmt.Sprintf("%v", this.Creator), "User", "proto1.User", 1) + `,`,
+		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func valueToStringTasks(v interface{}) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("*%v", pv)
 }
 func (m *ListTasksRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

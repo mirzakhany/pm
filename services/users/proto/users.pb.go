@@ -4,13 +4,13 @@
 package users
 
 import (
+	bytes "bytes"
 	context "context"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
 	types "github.com/gogo/protobuf/types"
-	golang_proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -18,12 +18,13 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
 	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = golang_proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 var _ = time.Kitchen
@@ -42,9 +43,8 @@ type ListUsersRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListUsersRequest) Reset()         { *m = ListUsersRequest{} }
-func (m *ListUsersRequest) String() string { return proto.CompactTextString(m) }
-func (*ListUsersRequest) ProtoMessage()    {}
+func (m *ListUsersRequest) Reset()      { *m = ListUsersRequest{} }
+func (*ListUsersRequest) ProtoMessage() {}
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{0}
 }
@@ -89,10 +89,6 @@ func (m *ListUsersRequest) GetOffset() int64 {
 	return 0
 }
 
-func (*ListUsersRequest) XXX_MessageName() string {
-	return "users.ListUsersRequest"
-}
-
 type ListUsersResponse struct {
 	Users                []*User  `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
 	TotalCount           int64    `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
@@ -103,9 +99,8 @@ type ListUsersResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListUsersResponse) Reset()         { *m = ListUsersResponse{} }
-func (m *ListUsersResponse) String() string { return proto.CompactTextString(m) }
-func (*ListUsersResponse) ProtoMessage()    {}
+func (m *ListUsersResponse) Reset()      { *m = ListUsersResponse{} }
+func (*ListUsersResponse) ProtoMessage() {}
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{1}
 }
@@ -164,10 +159,6 @@ func (m *ListUsersResponse) GetOffset() int64 {
 	return 0
 }
 
-func (*ListUsersResponse) XXX_MessageName() string {
-	return "users.ListUsersResponse"
-}
-
 type GetUserRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -175,9 +166,8 @@ type GetUserRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetUserRequest) Reset()         { *m = GetUserRequest{} }
-func (m *GetUserRequest) String() string { return proto.CompactTextString(m) }
-func (*GetUserRequest) ProtoMessage()    {}
+func (m *GetUserRequest) Reset()      { *m = GetUserRequest{} }
+func (*GetUserRequest) ProtoMessage() {}
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{2}
 }
@@ -215,10 +205,6 @@ func (m *GetUserRequest) GetUuid() string {
 	return ""
 }
 
-func (*GetUserRequest) XXX_MessageName() string {
-	return "users.GetUserRequest"
-}
-
 type CreateUserRequest struct {
 	Username             string   `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
@@ -229,9 +215,8 @@ type CreateUserRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateUserRequest) Reset()         { *m = CreateUserRequest{} }
-func (m *CreateUserRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateUserRequest) ProtoMessage()    {}
+func (m *CreateUserRequest) Reset()      { *m = CreateUserRequest{} }
+func (*CreateUserRequest) ProtoMessage() {}
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{3}
 }
@@ -290,10 +275,6 @@ func (m *CreateUserRequest) GetEnable() bool {
 	return false
 }
 
-func (*CreateUserRequest) XXX_MessageName() string {
-	return "users.CreateUserRequest"
-}
-
 type UpdateUserRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	Username             string   `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
@@ -304,9 +285,8 @@ type UpdateUserRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *UpdateUserRequest) Reset()         { *m = UpdateUserRequest{} }
-func (m *UpdateUserRequest) String() string { return proto.CompactTextString(m) }
-func (*UpdateUserRequest) ProtoMessage()    {}
+func (m *UpdateUserRequest) Reset()      { *m = UpdateUserRequest{} }
+func (*UpdateUserRequest) ProtoMessage() {}
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{4}
 }
@@ -365,10 +345,6 @@ func (m *UpdateUserRequest) GetEnable() bool {
 	return false
 }
 
-func (*UpdateUserRequest) XXX_MessageName() string {
-	return "users.UpdateUserRequest"
-}
-
 type DeleteUserRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -376,9 +352,8 @@ type DeleteUserRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteUserRequest) Reset()         { *m = DeleteUserRequest{} }
-func (m *DeleteUserRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteUserRequest) ProtoMessage()    {}
+func (m *DeleteUserRequest) Reset()      { *m = DeleteUserRequest{} }
+func (*DeleteUserRequest) ProtoMessage() {}
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{5}
 }
@@ -416,10 +391,6 @@ func (m *DeleteUserRequest) GetUuid() string {
 	return ""
 }
 
-func (*DeleteUserRequest) XXX_MessageName() string {
-	return "users.DeleteUserRequest"
-}
-
 type User struct {
 	Id                   uint64     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uuid                 string     `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -434,9 +405,8 @@ type User struct {
 	XXX_sizecache        int32      `json:"-"`
 }
 
-func (m *User) Reset()         { *m = User{} }
-func (m *User) String() string { return proto.CompactTextString(m) }
-func (*User) ProtoMessage()    {}
+func (m *User) Reset()      { *m = User{} }
+func (*User) ProtoMessage() {}
 func (*User) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{6}
 }
@@ -523,10 +493,6 @@ func (m *User) GetUpdatedAt() *time.Time {
 	return nil
 }
 
-func (*User) XXX_MessageName() string {
-	return "users.User"
-}
-
 type LoginRequest struct {
 	Username             string   `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password             string   `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
@@ -535,9 +501,8 @@ type LoginRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
-func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
-func (*LoginRequest) ProtoMessage()    {}
+func (m *LoginRequest) Reset()      { *m = LoginRequest{} }
+func (*LoginRequest) ProtoMessage() {}
 func (*LoginRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{7}
 }
@@ -582,10 +547,6 @@ func (m *LoginRequest) GetPassword() string {
 	return ""
 }
 
-func (*LoginRequest) XXX_MessageName() string {
-	return "users.LoginRequest"
-}
-
 type LoginResponse struct {
 	AccessToken          string   `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	RefreshToken         string   `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
@@ -594,9 +555,8 @@ type LoginResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *LoginResponse) Reset()         { *m = LoginResponse{} }
-func (m *LoginResponse) String() string { return proto.CompactTextString(m) }
-func (*LoginResponse) ProtoMessage()    {}
+func (m *LoginResponse) Reset()      { *m = LoginResponse{} }
+func (*LoginResponse) ProtoMessage() {}
 func (*LoginResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{8}
 }
@@ -641,10 +601,6 @@ func (m *LoginResponse) GetRefreshToken() string {
 	return ""
 }
 
-func (*LoginResponse) XXX_MessageName() string {
-	return "users.LoginResponse"
-}
-
 type RegisterRequest struct {
 	Username             string   `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Password             string   `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
@@ -654,9 +610,8 @@ type RegisterRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RegisterRequest) Reset()         { *m = RegisterRequest{} }
-func (m *RegisterRequest) String() string { return proto.CompactTextString(m) }
-func (*RegisterRequest) ProtoMessage()    {}
+func (m *RegisterRequest) Reset()      { *m = RegisterRequest{} }
+func (*RegisterRequest) ProtoMessage() {}
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{9}
 }
@@ -708,10 +663,6 @@ func (m *RegisterRequest) GetEmail() string {
 	return ""
 }
 
-func (*RegisterRequest) XXX_MessageName() string {
-	return "users.RegisterRequest"
-}
-
 type RegisterResponse struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	Username             string   `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
@@ -721,9 +672,8 @@ type RegisterResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *RegisterResponse) Reset()         { *m = RegisterResponse{} }
-func (m *RegisterResponse) String() string { return proto.CompactTextString(m) }
-func (*RegisterResponse) ProtoMessage()    {}
+func (m *RegisterResponse) Reset()      { *m = RegisterResponse{} }
+func (*RegisterResponse) ProtoMessage() {}
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f69d90f6e4d58fb0, []int{10}
 }
@@ -775,88 +725,1075 @@ func (m *RegisterResponse) GetEmail() string {
 	return ""
 }
 
-func (*RegisterResponse) XXX_MessageName() string {
-	return "users.RegisterResponse"
-}
 func init() {
 	proto.RegisterType((*ListUsersRequest)(nil), "users.ListUsersRequest")
-	golang_proto.RegisterType((*ListUsersRequest)(nil), "users.ListUsersRequest")
 	proto.RegisterType((*ListUsersResponse)(nil), "users.ListUsersResponse")
-	golang_proto.RegisterType((*ListUsersResponse)(nil), "users.ListUsersResponse")
 	proto.RegisterType((*GetUserRequest)(nil), "users.GetUserRequest")
-	golang_proto.RegisterType((*GetUserRequest)(nil), "users.GetUserRequest")
 	proto.RegisterType((*CreateUserRequest)(nil), "users.CreateUserRequest")
-	golang_proto.RegisterType((*CreateUserRequest)(nil), "users.CreateUserRequest")
 	proto.RegisterType((*UpdateUserRequest)(nil), "users.UpdateUserRequest")
-	golang_proto.RegisterType((*UpdateUserRequest)(nil), "users.UpdateUserRequest")
 	proto.RegisterType((*DeleteUserRequest)(nil), "users.DeleteUserRequest")
-	golang_proto.RegisterType((*DeleteUserRequest)(nil), "users.DeleteUserRequest")
 	proto.RegisterType((*User)(nil), "users.User")
-	golang_proto.RegisterType((*User)(nil), "users.User")
 	proto.RegisterType((*LoginRequest)(nil), "users.LoginRequest")
-	golang_proto.RegisterType((*LoginRequest)(nil), "users.LoginRequest")
 	proto.RegisterType((*LoginResponse)(nil), "users.LoginResponse")
-	golang_proto.RegisterType((*LoginResponse)(nil), "users.LoginResponse")
 	proto.RegisterType((*RegisterRequest)(nil), "users.RegisterRequest")
-	golang_proto.RegisterType((*RegisterRequest)(nil), "users.RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "users.RegisterResponse")
-	golang_proto.RegisterType((*RegisterResponse)(nil), "users.RegisterResponse")
 }
 
 func init() { proto.RegisterFile("services/users/proto/users.proto", fileDescriptor_f69d90f6e4d58fb0) }
-func init() {
-	golang_proto.RegisterFile("services/users/proto/users.proto", fileDescriptor_f69d90f6e4d58fb0)
-}
 
 var fileDescriptor_f69d90f6e4d58fb0 = []byte{
-	// 750 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0xcb, 0x6e, 0xd3, 0x4c,
-	0x14, 0xc7, 0x65, 0xc7, 0x69, 0x93, 0x93, 0xde, 0x32, 0x5f, 0xda, 0x46, 0xee, 0xa7, 0x34, 0x18,
-	0x24, 0xaa, 0x4a, 0xc4, 0xa2, 0xec, 0xd8, 0x40, 0x5b, 0xa0, 0x42, 0xaa, 0x10, 0x98, 0x56, 0xad,
-	0xd8, 0x44, 0x4e, 0x32, 0x49, 0x2d, 0x12, 0x4f, 0xea, 0x19, 0x17, 0x55, 0x88, 0x0d, 0x12, 0x7b,
-	0x04, 0x2f, 0xc4, 0xb2, 0xec, 0x90, 0x78, 0x00, 0x50, 0xcb, 0x83, 0xa0, 0xb9, 0xd8, 0x8e, 0xe3,
-	0xb4, 0x45, 0x82, 0xdd, 0x9c, 0xcb, 0xfc, 0xe7, 0x77, 0xc6, 0x67, 0x8e, 0xa1, 0x4e, 0x71, 0x70,
-	0xe2, 0xb5, 0x31, 0xb5, 0x43, 0x8a, 0x03, 0x6a, 0x0f, 0x03, 0xc2, 0x88, 0x5c, 0x37, 0xc4, 0x1a,
-	0xe5, 0x85, 0x61, 0xfe, 0xdf, 0x23, 0xa4, 0xd7, 0xc7, 0xb6, 0x3b, 0xf4, 0x6c, 0xd7, 0xf7, 0x09,
-	0x73, 0x99, 0x47, 0x7c, 0x95, 0x64, 0xae, 0xa8, 0xa8, 0xb0, 0x5a, 0x61, 0xd7, 0xc6, 0x83, 0x21,
-	0x3b, 0x55, 0xc1, 0xd5, 0xf1, 0x20, 0xf3, 0x06, 0x98, 0x32, 0x77, 0x30, 0x54, 0x09, 0x77, 0x7a,
-	0x1e, 0x3b, 0x0a, 0x5b, 0x8d, 0x36, 0x19, 0xd8, 0x3d, 0xd2, 0x23, 0x49, 0x26, 0xb7, 0x24, 0x12,
-	0x5f, 0xc9, 0x74, 0xeb, 0x21, 0x2c, 0xec, 0x7a, 0x94, 0xed, 0x73, 0x2e, 0x07, 0x1f, 0x87, 0x98,
-	0x32, 0x54, 0x81, 0x7c, 0xdf, 0x1b, 0x78, 0xac, 0xaa, 0xd5, 0xb5, 0xb5, 0x9c, 0x23, 0x0d, 0xb4,
-	0x04, 0x53, 0xa4, 0xdb, 0xa5, 0x98, 0x55, 0x75, 0xe1, 0x56, 0x96, 0xf5, 0x41, 0x83, 0xf2, 0x88,
-	0x04, 0x1d, 0x12, 0x9f, 0x62, 0x74, 0x03, 0x64, 0xad, 0x55, 0xad, 0x9e, 0x5b, 0x2b, 0x6d, 0x94,
-	0x1a, 0xf2, 0x1a, 0x78, 0x92, 0x23, 0x23, 0x68, 0x15, 0x4a, 0x8c, 0x30, 0xb7, 0xdf, 0x6c, 0x93,
-	0xd0, 0x8f, 0x54, 0x41, 0xb8, 0xb6, 0xb9, 0x27, 0xe1, 0xc8, 0x4d, 0xe6, 0x30, 0x52, 0x1c, 0xb7,
-	0x60, 0x6e, 0x07, 0x0b, 0x8a, 0xa8, 0x0e, 0x04, 0x46, 0x18, 0x7a, 0x1d, 0x51, 0x46, 0xd1, 0x11,
-	0x6b, 0xeb, 0x14, 0xca, 0xdb, 0x01, 0x76, 0x19, 0x1e, 0x4d, 0x34, 0xa1, 0xc0, 0x91, 0x7c, 0x77,
-	0x80, 0x55, 0x72, 0x6c, 0xf3, 0xd8, 0xd0, 0xa5, 0xf4, 0x0d, 0x09, 0x3a, 0x02, 0xb1, 0xe8, 0xc4,
-	0x36, 0x07, 0xc4, 0x03, 0xd7, 0xeb, 0x0b, 0xc0, 0xa2, 0x23, 0x0d, 0x0e, 0x88, 0x7d, 0xb7, 0xd5,
-	0xc7, 0x02, 0xb0, 0xe0, 0x28, 0xcb, 0x3a, 0x86, 0xf2, 0xfe, 0xb0, 0x33, 0x76, 0xf4, 0x04, 0xc6,
-	0x14, 0x8e, 0x3e, 0x86, 0x13, 0x1f, 0x69, 0x4c, 0x3e, 0x32, 0x9f, 0x3a, 0xf2, 0x36, 0x94, 0x1f,
-	0xe1, 0x3e, 0xbe, 0xf6, 0x48, 0xeb, 0x93, 0x0e, 0x06, 0xcf, 0x41, 0x73, 0xa0, 0xab, 0x90, 0xe1,
-	0xe8, 0x5e, 0x27, 0x4e, 0xd6, 0x2f, 0xe1, 0xcb, 0x5d, 0x71, 0x5d, 0xc6, 0x65, 0xd7, 0x95, 0x9f,
-	0xcc, 0x3e, 0x35, 0xca, 0x8e, 0x1e, 0x00, 0xb4, 0xc5, 0x97, 0xea, 0x34, 0x5d, 0x56, 0x9d, 0xae,
-	0x6b, 0x6b, 0xa5, 0x0d, 0xb3, 0x21, 0xdb, 0xbf, 0x11, 0x35, 0x75, 0x63, 0x2f, 0x6a, 0xff, 0x2d,
-	0xe3, 0xe3, 0x8f, 0x55, 0xcd, 0x29, 0xaa, 0x3d, 0x9b, 0x8c, 0x0b, 0x84, 0xe2, 0xbe, 0x85, 0x40,
-	0xe1, 0x4f, 0x05, 0xd4, 0x9e, 0x4d, 0x66, 0x3d, 0x81, 0x99, 0x5d, 0xd2, 0xf3, 0xfc, 0xbf, 0x6c,
-	0x13, 0xeb, 0x00, 0x66, 0x95, 0x4e, 0xfc, 0x38, 0x66, 0xdc, 0x76, 0x1b, 0x53, 0xda, 0x64, 0xe4,
-	0x35, 0xf6, 0x95, 0x58, 0x49, 0xfa, 0xf6, 0xb8, 0x0b, 0xdd, 0x84, 0xd9, 0x00, 0x77, 0x03, 0x4c,
-	0x8f, 0x54, 0x8e, 0x14, 0x9d, 0x51, 0x4e, 0x91, 0x64, 0x35, 0x61, 0xde, 0xc1, 0x3d, 0x8f, 0xb2,
-	0xc9, 0xad, 0xac, 0x5f, 0xc1, 0x98, 0xbb, 0xec, 0xdb, 0x8c, 0xf6, 0x95, 0x75, 0x08, 0x0b, 0xc9,
-	0x01, 0x0a, 0xfe, 0x9f, 0x74, 0xec, 0xc6, 0x57, 0x03, 0x4a, 0xbc, 0xe1, 0x5e, 0xca, 0x91, 0x89,
-	0x5e, 0x40, 0x31, 0x1e, 0x22, 0x68, 0x59, 0x4d, 0x8b, 0xf1, 0xc9, 0x64, 0x56, 0xb3, 0x01, 0x49,
-	0x65, 0x95, 0xdf, 0x7f, 0xff, 0xf5, 0x59, 0x2f, 0xa1, 0xa2, 0x7d, 0x72, 0x57, 0x8e, 0x5c, 0xb4,
-	0x03, 0xd3, 0x6a, 0x20, 0xa0, 0x45, 0xb5, 0x2f, 0x3d, 0x20, 0xcc, 0xd1, 0xa9, 0x64, 0x55, 0x85,
-	0x02, 0x42, 0x0b, 0xb1, 0x82, 0xfd, 0x96, 0x17, 0xf7, 0x0e, 0x3d, 0x05, 0x48, 0x66, 0x06, 0x8a,
-	0x18, 0x32, 0x63, 0x24, 0x2d, 0x57, 0x11, 0x72, 0x73, 0x56, 0x02, 0x74, 0x5f, 0x5b, 0x47, 0xcf,
-	0x01, 0x92, 0x19, 0x10, 0x4b, 0x65, 0xc6, 0x42, 0x5a, 0x6a, 0x45, 0x48, 0x2d, 0x9a, 0x19, 0x32,
-	0xae, 0x78, 0x08, 0x90, 0x3c, 0xf1, 0x58, 0x31, 0xf3, 0xea, 0xcd, 0xa5, 0x4c, 0xe7, 0x3f, 0xe6,
-	0xbf, 0x95, 0xa8, 0xec, 0xf5, 0x6c, 0xd9, 0xcf, 0x20, 0x2f, 0xda, 0x16, 0xfd, 0x17, 0xdd, 0xfa,
-	0xc8, 0x63, 0x30, 0x2b, 0x69, 0xa7, 0xfa, 0x0c, 0xa6, 0x50, 0xab, 0x58, 0xf3, 0x89, 0x5a, 0x9f,
-	0x27, 0x70, 0xd2, 0x03, 0x28, 0x44, 0xcd, 0x84, 0x96, 0xd4, 0xee, 0xb1, 0xf6, 0x35, 0x97, 0x33,
-	0xfe, 0xeb, 0x85, 0xb7, 0x56, 0xce, 0xce, 0x6b, 0xda, 0xb7, 0xf3, 0x9a, 0xf6, 0xf3, 0xbc, 0xa6,
-	0x7d, 0xb9, 0xa8, 0x69, 0x67, 0x17, 0x35, 0xed, 0x95, 0xfc, 0xcb, 0xb4, 0xa6, 0x44, 0xbd, 0xf7,
-	0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0xc3, 0x14, 0xca, 0x2b, 0x9d, 0x07, 0x00, 0x00,
+	// 785 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0xcf, 0x6b, 0x1b, 0x47,
+	0x14, 0xc7, 0x3b, 0xab, 0x95, 0x2d, 0x3d, 0xf9, 0x97, 0xa6, 0xb2, 0x2d, 0xd6, 0x65, 0xad, 0x6e,
+	0x0b, 0x35, 0x86, 0x6a, 0xa9, 0x7d, 0xeb, 0xa5, 0xb5, 0xdd, 0xd6, 0x14, 0x4c, 0x69, 0x36, 0x36,
+	0x36, 0xb9, 0x88, 0x95, 0x34, 0x92, 0x97, 0x48, 0x3b, 0xb2, 0x66, 0xd6, 0xc1, 0x84, 0x40, 0x08,
+	0xe4, 0x1e, 0x92, 0x7f, 0x22, 0x7f, 0x42, 0x8e, 0x39, 0x26, 0xb7, 0x40, 0x2e, 0xb9, 0xc5, 0x12,
+	0xf9, 0x03, 0x72, 0xcc, 0x31, 0xcc, 0xec, 0xec, 0xae, 0xa4, 0x95, 0xed, 0x40, 0x72, 0x9b, 0xf7,
+	0x63, 0xbe, 0xf3, 0x99, 0xb7, 0x6f, 0xde, 0x42, 0x85, 0x91, 0xfe, 0xb9, 0xd7, 0x20, 0xcc, 0x0e,
+	0x18, 0xe9, 0x33, 0xbb, 0xd7, 0xa7, 0x9c, 0x86, 0xeb, 0xaa, 0x5c, 0xe3, 0xac, 0x34, 0x8c, 0x1f,
+	0xda, 0x94, 0xb6, 0x3b, 0xc4, 0x76, 0x7b, 0x9e, 0xed, 0xfa, 0x3e, 0xe5, 0x2e, 0xf7, 0xa8, 0xaf,
+	0x92, 0x8c, 0x35, 0x15, 0x95, 0x56, 0x3d, 0x68, 0xd9, 0xa4, 0xdb, 0xe3, 0x17, 0x2a, 0xb8, 0x3e,
+	0x19, 0xe4, 0x5e, 0x97, 0x30, 0xee, 0x76, 0x7b, 0x2a, 0xe1, 0xd7, 0xb6, 0xc7, 0x4f, 0x83, 0x7a,
+	0xb5, 0x41, 0xbb, 0x76, 0x9b, 0xb6, 0x69, 0x92, 0x29, 0xac, 0x10, 0x49, 0xac, 0xc2, 0x74, 0xeb,
+	0x4f, 0x58, 0x3a, 0xf0, 0x18, 0x3f, 0x12, 0x5c, 0x0e, 0x39, 0x0b, 0x08, 0xe3, 0xb8, 0x04, 0xd9,
+	0x8e, 0xd7, 0xf5, 0x78, 0x19, 0x55, 0xd0, 0x46, 0xc6, 0x09, 0x0d, 0xbc, 0x02, 0x33, 0xb4, 0xd5,
+	0x62, 0x84, 0x97, 0x35, 0xe9, 0x56, 0x96, 0xf5, 0x18, 0x41, 0x71, 0x44, 0x82, 0xf5, 0xa8, 0xcf,
+	0x08, 0xfe, 0x11, 0xc2, 0xbb, 0x96, 0x51, 0x25, 0xb3, 0x51, 0xd8, 0x2a, 0x54, 0xc3, 0x32, 0x88,
+	0x24, 0x27, 0x8c, 0xe0, 0x75, 0x28, 0x70, 0xca, 0xdd, 0x4e, 0xad, 0x41, 0x03, 0x3f, 0x52, 0x05,
+	0xe9, 0xda, 0x13, 0x9e, 0x84, 0x23, 0x33, 0x9d, 0x43, 0x1f, 0xe3, 0xf8, 0x19, 0x16, 0xf6, 0x89,
+	0xa4, 0x88, 0xee, 0x81, 0x41, 0x0f, 0x02, 0xaf, 0x29, 0xaf, 0x91, 0x77, 0xe4, 0xda, 0xba, 0x80,
+	0xe2, 0x5e, 0x9f, 0xb8, 0x9c, 0x8c, 0x26, 0x1a, 0x90, 0x13, 0x48, 0xbe, 0xdb, 0x25, 0x2a, 0x39,
+	0xb6, 0x45, 0xac, 0xe7, 0x32, 0x76, 0x8f, 0xf6, 0x9b, 0x12, 0x31, 0xef, 0xc4, 0xb6, 0x00, 0x24,
+	0x5d, 0xd7, 0xeb, 0x48, 0xc0, 0xbc, 0x13, 0x1a, 0x02, 0x90, 0xf8, 0x6e, 0xbd, 0x43, 0x24, 0x60,
+	0xce, 0x51, 0x96, 0x75, 0x06, 0xc5, 0xa3, 0x5e, 0x73, 0xe2, 0xe8, 0x29, 0x8c, 0x63, 0x38, 0xda,
+	0x04, 0x4e, 0x7c, 0xa4, 0x3e, 0xfd, 0xc8, 0xec, 0xd8, 0x91, 0xbf, 0x40, 0xf1, 0x2f, 0xd2, 0x21,
+	0x37, 0x1e, 0x69, 0x3d, 0xd5, 0x40, 0x17, 0x39, 0x78, 0x01, 0x34, 0x15, 0xd2, 0x1d, 0xcd, 0x6b,
+	0xc6, 0xc9, 0xda, 0x15, 0x7c, 0x99, 0x6b, 0xca, 0xa5, 0x5f, 0x55, 0xae, 0xec, 0x74, 0xf6, 0x99,
+	0x51, 0x76, 0xfc, 0x07, 0x40, 0x43, 0x7e, 0xa9, 0x66, 0xcd, 0xe5, 0xe5, 0xd9, 0x0a, 0xda, 0x28,
+	0x6c, 0x19, 0xd5, 0xb0, 0xfd, 0xab, 0x51, 0x53, 0x57, 0x0f, 0xa3, 0xf6, 0xdf, 0xd5, 0x9f, 0xbc,
+	0x5f, 0x47, 0x4e, 0x5e, 0xed, 0xd9, 0xe1, 0x42, 0x20, 0x90, 0xf5, 0x96, 0x02, 0xb9, 0x2f, 0x15,
+	0x50, 0x7b, 0x76, 0xb8, 0xf5, 0x0f, 0xcc, 0x1d, 0xd0, 0xb6, 0xe7, 0x7f, 0x65, 0x9b, 0x58, 0xc7,
+	0x30, 0xaf, 0x74, 0xe2, 0xc7, 0x31, 0xe7, 0x36, 0x1a, 0x84, 0xb1, 0x1a, 0xa7, 0x77, 0x89, 0xaf,
+	0xc4, 0x0a, 0xa1, 0xef, 0x50, 0xb8, 0xf0, 0x4f, 0x30, 0xdf, 0x27, 0xad, 0x3e, 0x61, 0xa7, 0x2a,
+	0x27, 0x14, 0x9d, 0x53, 0x4e, 0x99, 0x64, 0xd5, 0x60, 0xd1, 0x21, 0x6d, 0x8f, 0xf1, 0xe9, 0xad,
+	0xac, 0x5d, 0xc3, 0x98, 0xb9, 0xea, 0xdb, 0x8c, 0xf6, 0x95, 0x75, 0x02, 0x4b, 0xc9, 0x01, 0x0a,
+	0xfe, 0x9b, 0x74, 0xec, 0xd6, 0x6b, 0x1d, 0x0a, 0xa2, 0xe1, 0x6e, 0x87, 0x23, 0x13, 0xdf, 0x82,
+	0x7c, 0x3c, 0x44, 0xf0, 0xaa, 0x9a, 0x16, 0x93, 0x93, 0xc9, 0x28, 0xa7, 0x03, 0x21, 0x95, 0x55,
+	0x7c, 0xf4, 0xf6, 0xc3, 0x33, 0xad, 0x80, 0xf3, 0xf6, 0xf9, 0x6f, 0xe1, 0xc8, 0xc5, 0xfb, 0x30,
+	0xab, 0x06, 0x02, 0x5e, 0x56, 0xfb, 0xc6, 0x07, 0x84, 0x31, 0x3a, 0x95, 0xac, 0xb2, 0x54, 0xc0,
+	0x78, 0x29, 0x56, 0xb0, 0xef, 0x8b, 0xcb, 0x3d, 0xc0, 0xff, 0x02, 0x24, 0x33, 0x03, 0x47, 0x0c,
+	0xa9, 0x31, 0x32, 0x2e, 0x57, 0x92, 0x72, 0x0b, 0x56, 0x02, 0xf4, 0x3b, 0xda, 0xc4, 0xff, 0x03,
+	0x24, 0x33, 0x20, 0x96, 0x4a, 0x8d, 0x85, 0x71, 0xa9, 0x35, 0x29, 0xb5, 0x6c, 0xa4, 0xc8, 0x84,
+	0xe2, 0x09, 0x40, 0xf2, 0xc4, 0x63, 0xc5, 0xd4, 0xab, 0x37, 0x56, 0x52, 0x9d, 0xff, 0xb7, 0xf8,
+	0xad, 0x44, 0xd7, 0xde, 0x4c, 0x5f, 0xfb, 0x3f, 0xc8, 0xca, 0xb6, 0xc5, 0xdf, 0x47, 0x55, 0x1f,
+	0x79, 0x0c, 0x46, 0x69, 0xdc, 0xa9, 0x3e, 0x83, 0x21, 0xd5, 0x4a, 0xd6, 0x62, 0xa2, 0xd6, 0x11,
+	0x09, 0x82, 0xf4, 0x18, 0x72, 0x51, 0x33, 0xe1, 0x15, 0xb5, 0x7b, 0xa2, 0x7d, 0x8d, 0xd5, 0x94,
+	0xff, 0x66, 0xe1, 0xdd, 0xed, 0x77, 0x03, 0xf3, 0xbb, 0xcb, 0x81, 0x89, 0x3e, 0x0e, 0x4c, 0xf4,
+	0x69, 0x60, 0xa2, 0x87, 0x43, 0x13, 0x3d, 0x1f, 0x9a, 0xe8, 0xc5, 0xd0, 0x44, 0x2f, 0x87, 0x26,
+	0x7a, 0x35, 0x34, 0xd1, 0x9b, 0xa1, 0x89, 0x2e, 0x87, 0x26, 0xba, 0x13, 0xfe, 0x7d, 0xea, 0x33,
+	0xb2, 0x0e, 0xdb, 0x9f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x41, 0x46, 0xeb, 0x68, 0xb5, 0x07, 0x00,
+	0x00,
+}
+
+func (this *ListUsersRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListUsersRequest)
+	if !ok {
+		that2, ok := that.(ListUsersRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListUsersRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListUsersRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListUsersRequest but is not nil && this == nil")
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListUsersRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListUsersRequest)
+	if !ok {
+		that2, ok := that.(ListUsersRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListUsersResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListUsersResponse)
+	if !ok {
+		that2, ok := that.(ListUsersResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListUsersResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListUsersResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListUsersResponse but is not nil && this == nil")
+	}
+	if len(this.Users) != len(that1.Users) {
+		return fmt.Errorf("Users this(%v) Not Equal that(%v)", len(this.Users), len(that1.Users))
+	}
+	for i := range this.Users {
+		if !this.Users[i].Equal(that1.Users[i]) {
+			return fmt.Errorf("Users this[%v](%v) Not Equal that[%v](%v)", i, this.Users[i], i, that1.Users[i])
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return fmt.Errorf("TotalCount this(%v) Not Equal that(%v)", this.TotalCount, that1.TotalCount)
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListUsersResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListUsersResponse)
+	if !ok {
+		that2, ok := that.(ListUsersResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if len(this.Users) != len(that1.Users) {
+		return false
+	}
+	for i := range this.Users {
+		if !this.Users[i].Equal(that1.Users[i]) {
+			return false
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *GetUserRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*GetUserRequest)
+	if !ok {
+		that2, ok := that.(GetUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *GetUserRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *GetUserRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *GetUserRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *GetUserRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*GetUserRequest)
+	if !ok {
+		that2, ok := that.(GetUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *CreateUserRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*CreateUserRequest)
+	if !ok {
+		that2, ok := that.(CreateUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *CreateUserRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *CreateUserRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *CreateUserRequest but is not nil && this == nil")
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Password != that1.Password {
+		return fmt.Errorf("Password this(%v) Not Equal that(%v)", this.Password, that1.Password)
+	}
+	if this.Email != that1.Email {
+		return fmt.Errorf("Email this(%v) Not Equal that(%v)", this.Email, that1.Email)
+	}
+	if this.Enable != that1.Enable {
+		return fmt.Errorf("Enable this(%v) Not Equal that(%v)", this.Enable, that1.Enable)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *CreateUserRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*CreateUserRequest)
+	if !ok {
+		that2, ok := that.(CreateUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Password != that1.Password {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if this.Enable != that1.Enable {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *UpdateUserRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*UpdateUserRequest)
+	if !ok {
+		that2, ok := that.(UpdateUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *UpdateUserRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *UpdateUserRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *UpdateUserRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Email != that1.Email {
+		return fmt.Errorf("Email this(%v) Not Equal that(%v)", this.Email, that1.Email)
+	}
+	if this.Enable != that1.Enable {
+		return fmt.Errorf("Enable this(%v) Not Equal that(%v)", this.Enable, that1.Enable)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *UpdateUserRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*UpdateUserRequest)
+	if !ok {
+		that2, ok := that.(UpdateUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if this.Enable != that1.Enable {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *DeleteUserRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*DeleteUserRequest)
+	if !ok {
+		that2, ok := that.(DeleteUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *DeleteUserRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *DeleteUserRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *DeleteUserRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *DeleteUserRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*DeleteUserRequest)
+	if !ok {
+		that2, ok := that.(DeleteUserRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *User) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*User)
+	if !ok {
+		that2, ok := that.(User)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *User")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *User but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *User but is not nil && this == nil")
+	}
+	if this.Id != that1.Id {
+		return fmt.Errorf("Id this(%v) Not Equal that(%v)", this.Id, that1.Id)
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Password != that1.Password {
+		return fmt.Errorf("Password this(%v) Not Equal that(%v)", this.Password, that1.Password)
+	}
+	if this.Email != that1.Email {
+		return fmt.Errorf("Email this(%v) Not Equal that(%v)", this.Email, that1.Email)
+	}
+	if this.Enable != that1.Enable {
+		return fmt.Errorf("Enable this(%v) Not Equal that(%v)", this.Enable, that1.Enable)
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return fmt.Errorf("this.CreatedAt != nil && that1.CreatedAt == nil")
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return fmt.Errorf("CreatedAt this(%v) Not Equal that(%v)", this.CreatedAt, that1.CreatedAt)
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return fmt.Errorf("this.UpdatedAt != nil && that1.UpdatedAt == nil")
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return fmt.Errorf("UpdatedAt this(%v) Not Equal that(%v)", this.UpdatedAt, that1.UpdatedAt)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *User) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*User)
+	if !ok {
+		that2, ok := that.(User)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Password != that1.Password {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if this.Enable != that1.Enable {
+		return false
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return false
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return false
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return false
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *LoginRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*LoginRequest)
+	if !ok {
+		that2, ok := that.(LoginRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *LoginRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *LoginRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *LoginRequest but is not nil && this == nil")
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Password != that1.Password {
+		return fmt.Errorf("Password this(%v) Not Equal that(%v)", this.Password, that1.Password)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *LoginRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*LoginRequest)
+	if !ok {
+		that2, ok := that.(LoginRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Password != that1.Password {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *LoginResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*LoginResponse)
+	if !ok {
+		that2, ok := that.(LoginResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *LoginResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *LoginResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *LoginResponse but is not nil && this == nil")
+	}
+	if this.AccessToken != that1.AccessToken {
+		return fmt.Errorf("AccessToken this(%v) Not Equal that(%v)", this.AccessToken, that1.AccessToken)
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return fmt.Errorf("RefreshToken this(%v) Not Equal that(%v)", this.RefreshToken, that1.RefreshToken)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *LoginResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*LoginResponse)
+	if !ok {
+		that2, ok := that.(LoginResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.AccessToken != that1.AccessToken {
+		return false
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *RegisterRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*RegisterRequest)
+	if !ok {
+		that2, ok := that.(RegisterRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *RegisterRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *RegisterRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *RegisterRequest but is not nil && this == nil")
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Password != that1.Password {
+		return fmt.Errorf("Password this(%v) Not Equal that(%v)", this.Password, that1.Password)
+	}
+	if this.Email != that1.Email {
+		return fmt.Errorf("Email this(%v) Not Equal that(%v)", this.Email, that1.Email)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *RegisterRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*RegisterRequest)
+	if !ok {
+		that2, ok := that.(RegisterRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Password != that1.Password {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *RegisterResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*RegisterResponse)
+	if !ok {
+		that2, ok := that.(RegisterResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *RegisterResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *RegisterResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *RegisterResponse but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Username != that1.Username {
+		return fmt.Errorf("Username this(%v) Not Equal that(%v)", this.Username, that1.Username)
+	}
+	if this.Email != that1.Email {
+		return fmt.Errorf("Email this(%v) Not Equal that(%v)", this.Email, that1.Email)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *RegisterResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*RegisterResponse)
+	if !ok {
+		that2, ok := that.(RegisterResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Username != that1.Username {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListUsersRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&users.ListUsersRequest{")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ListUsersResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&users.ListUsersResponse{")
+	if this.Users != nil {
+		s = append(s, "Users: "+fmt.Sprintf("%#v", this.Users)+",\n")
+	}
+	s = append(s, "TotalCount: "+fmt.Sprintf("%#v", this.TotalCount)+",\n")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *GetUserRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&users.GetUserRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *CreateUserRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&users.CreateUserRequest{")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Password: "+fmt.Sprintf("%#v", this.Password)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	s = append(s, "Enable: "+fmt.Sprintf("%#v", this.Enable)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *UpdateUserRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&users.UpdateUserRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	s = append(s, "Enable: "+fmt.Sprintf("%#v", this.Enable)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *DeleteUserRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&users.DeleteUserRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *User) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 12)
+	s = append(s, "&users.User{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Password: "+fmt.Sprintf("%#v", this.Password)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	s = append(s, "Enable: "+fmt.Sprintf("%#v", this.Enable)+",\n")
+	s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
+	s = append(s, "UpdatedAt: "+fmt.Sprintf("%#v", this.UpdatedAt)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *LoginRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&users.LoginRequest{")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Password: "+fmt.Sprintf("%#v", this.Password)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *LoginResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&users.LoginResponse{")
+	s = append(s, "AccessToken: "+fmt.Sprintf("%#v", this.AccessToken)+",\n")
+	s = append(s, "RefreshToken: "+fmt.Sprintf("%#v", this.RefreshToken)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *RegisterRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 7)
+	s = append(s, "&users.RegisterRequest{")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Password: "+fmt.Sprintf("%#v", this.Password)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *RegisterResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 7)
+	s = append(s, "&users.RegisterResponse{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func valueToGoStringUsers(v interface{}, typ string) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1725,6 +2662,225 @@ func encodeVarintUsers(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func NewPopulatedListUsersRequest(r randyUsers, easy bool) *ListUsersRequest {
+	this := &ListUsersRequest{}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedListUsersResponse(r randyUsers, easy bool) *ListUsersResponse {
+	this := &ListUsersResponse{}
+	if r.Intn(5) != 0 {
+		v1 := r.Intn(5)
+		this.Users = make([]*User, v1)
+		for i := 0; i < v1; i++ {
+			this.Users[i] = NewPopulatedUser(r, easy)
+		}
+	}
+	this.TotalCount = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.TotalCount *= -1
+	}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedGetUserRequest(r randyUsers, easy bool) *GetUserRequest {
+	this := &GetUserRequest{}
+	this.Uuid = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedCreateUserRequest(r randyUsers, easy bool) *CreateUserRequest {
+	this := &CreateUserRequest{}
+	this.Username = string(randStringUsers(r))
+	this.Password = string(randStringUsers(r))
+	this.Email = string(randStringUsers(r))
+	this.Enable = bool(bool(r.Intn(2) == 0))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedUpdateUserRequest(r randyUsers, easy bool) *UpdateUserRequest {
+	this := &UpdateUserRequest{}
+	this.Uuid = string(randStringUsers(r))
+	this.Username = string(randStringUsers(r))
+	this.Email = string(randStringUsers(r))
+	this.Enable = bool(bool(r.Intn(2) == 0))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 6)
+	}
+	return this
+}
+
+func NewPopulatedDeleteUserRequest(r randyUsers, easy bool) *DeleteUserRequest {
+	this := &DeleteUserRequest{}
+	this.Uuid = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedUser(r randyUsers, easy bool) *User {
+	this := &User{}
+	this.Id = uint64(uint64(r.Uint32()))
+	this.Uuid = string(randStringUsers(r))
+	this.Username = string(randStringUsers(r))
+	this.Password = string(randStringUsers(r))
+	this.Email = string(randStringUsers(r))
+	this.Enable = bool(bool(r.Intn(2) == 0))
+	if r.Intn(5) != 0 {
+		this.CreatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if r.Intn(5) != 0 {
+		this.UpdatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 9)
+	}
+	return this
+}
+
+func NewPopulatedLoginRequest(r randyUsers, easy bool) *LoginRequest {
+	this := &LoginRequest{}
+	this.Username = string(randStringUsers(r))
+	this.Password = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedLoginResponse(r randyUsers, easy bool) *LoginResponse {
+	this := &LoginResponse{}
+	this.AccessToken = string(randStringUsers(r))
+	this.RefreshToken = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedRegisterRequest(r randyUsers, easy bool) *RegisterRequest {
+	this := &RegisterRequest{}
+	this.Username = string(randStringUsers(r))
+	this.Password = string(randStringUsers(r))
+	this.Email = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedRegisterResponse(r randyUsers, easy bool) *RegisterResponse {
+	this := &RegisterResponse{}
+	this.Uuid = string(randStringUsers(r))
+	this.Username = string(randStringUsers(r))
+	this.Email = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 5)
+	}
+	return this
+}
+
+type randyUsers interface {
+	Float32() float32
+	Float64() float64
+	Int63() int64
+	Int31() int32
+	Uint32() uint32
+	Intn(n int) int
+}
+
+func randUTF8RuneUsers(r randyUsers) rune {
+	ru := r.Intn(62)
+	if ru < 10 {
+		return rune(ru + 48)
+	} else if ru < 36 {
+		return rune(ru + 55)
+	}
+	return rune(ru + 61)
+}
+func randStringUsers(r randyUsers) string {
+	v2 := r.Intn(100)
+	tmps := make([]rune, v2)
+	for i := 0; i < v2; i++ {
+		tmps[i] = randUTF8RuneUsers(r)
+	}
+	return string(tmps)
+}
+func randUnrecognizedUsers(r randyUsers, maxFieldNumber int) (dAtA []byte) {
+	l := r.Intn(5)
+	for i := 0; i < l; i++ {
+		wire := r.Intn(4)
+		if wire == 3 {
+			wire = 5
+		}
+		fieldNumber := maxFieldNumber + r.Intn(100)
+		dAtA = randFieldUsers(dAtA, r, fieldNumber, wire)
+	}
+	return dAtA
+}
+func randFieldUsers(dAtA []byte, r randyUsers, fieldNumber int, wire int) []byte {
+	key := uint32(fieldNumber)<<3 | uint32(wire)
+	switch wire {
+	case 0:
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(key))
+		v3 := r.Int63()
+		if r.Intn(2) == 0 {
+			v3 *= -1
+		}
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(v3))
+	case 1:
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	case 2:
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(key))
+		ll := r.Intn(100)
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(ll))
+		for j := 0; j < ll; j++ {
+			dAtA = append(dAtA, byte(r.Intn(256)))
+		}
+	default:
+		dAtA = encodeVarintPopulateUsers(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	}
+	return dAtA
+}
+func encodeVarintPopulateUsers(dAtA []byte, v uint64) []byte {
+	for v >= 1<<7 {
+		dAtA = append(dAtA, uint8(uint64(v)&0x7f|0x80))
+		v >>= 7
+	}
+	dAtA = append(dAtA, uint8(v))
+	return dAtA
+}
 func (m *ListUsersRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1991,6 +3147,163 @@ func sovUsers(x uint64) (n int) {
 }
 func sozUsers(x uint64) (n int) {
 	return sovUsers(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *ListUsersRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListUsersRequest{`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ListUsersResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	repeatedStringForUsers := "[]*User{"
+	for _, f := range this.Users {
+		repeatedStringForUsers += strings.Replace(f.String(), "User", "User", 1) + ","
+	}
+	repeatedStringForUsers += "}"
+	s := strings.Join([]string{`&ListUsersResponse{`,
+		`Users:` + repeatedStringForUsers + `,`,
+		`TotalCount:` + fmt.Sprintf("%v", this.TotalCount) + `,`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *GetUserRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&GetUserRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *CreateUserRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&CreateUserRequest{`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Password:` + fmt.Sprintf("%v", this.Password) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`Enable:` + fmt.Sprintf("%v", this.Enable) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *UpdateUserRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&UpdateUserRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`Enable:` + fmt.Sprintf("%v", this.Enable) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *DeleteUserRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&DeleteUserRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *User) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&User{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Password:` + fmt.Sprintf("%v", this.Password) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`Enable:` + fmt.Sprintf("%v", this.Enable) + `,`,
+		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *LoginRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&LoginRequest{`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Password:` + fmt.Sprintf("%v", this.Password) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *LoginResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&LoginResponse{`,
+		`AccessToken:` + fmt.Sprintf("%v", this.AccessToken) + `,`,
+		`RefreshToken:` + fmt.Sprintf("%v", this.RefreshToken) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *RegisterRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&RegisterRequest{`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Password:` + fmt.Sprintf("%v", this.Password) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *RegisterResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&RegisterResponse{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func valueToStringUsers(v interface{}) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("*%v", pv)
 }
 func (m *ListUsersRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
