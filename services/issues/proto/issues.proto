@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package tasks;
+package issues;
 
-option go_package = "tasks";
+option go_package = "issues";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -22,7 +22,7 @@ option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 
-enum TaskStatus {
+enum IssueStatus {
     IN_BACKLOG = 0;
     IN_PROGRESS = 1;
     TEST = 2;
@@ -30,56 +30,56 @@ enum TaskStatus {
     ARCHIVED = 4;
 }
 
-message ListTasksRequest {
+message ListIssuesRequest {
     int64 limit = 1;
     int64 offset = 2;
 }
 
-message ListTasksResponse {
-    repeated Task tasks = 1 [(gogoproto.jsontag) = "tasks"];
+message ListIssuesResponse {
+    repeated Issue issues = 1 [(gogoproto.jsontag) = "issues"];
     int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
     int64 limit = 3 [(gogoproto.jsontag) = "limit"];
     int64 offset = 4 [(gogoproto.jsontag) = "offset"];
 }
 
-message GetTaskRequest {
+message GetIssueRequest {
     string uuid = 1;
 }
 
-message CreateTaskRequest {
+message CreateIssueRequest {
     uint64 id = 1;
     string uuid = 2;
     string title = 3;
     string description = 4;
-    TaskStatus status = 5;
+    IssueStatus status = 5;
     uint64 sprint_id = 6;
     uint64 estimate = 7;
     string assignee_uuid = 8;
     string creator_uuid = 9;
 }
 
-message UpdateTaskRequest {
+message UpdateIssueRequest {
     uint64 id = 1;
     string uuid = 2;
     string title = 3;
     string description = 4;
-    TaskStatus status = 5;
+    IssueStatus status = 5;
     uint64 sprint_id = 6;
     uint64 estimate = 7;
     string assignee_uuid = 8;
     string creator_uuid = 9;
 }
 
-message DeleteTaskRequest {
+message DeleteIssueRequest {
     string uuid = 1;
 }
 
-message Task {
+message Issue {
     uint64 id = 1;
     string uuid = 2;
     string title = 3;
     string description = 4;
-    TaskStatus status = 5;
+    IssueStatus status = 5;
     uint64 sprint_id = 6;
     uint64 estimate = 7;
     users.User assignee = 8;
@@ -88,41 +88,41 @@ message Task {
     google.protobuf.Timestamp updated_at = 11 [(gogoproto.stdtime) = true];
 }
 
-service TaskService {
+service IssueService {
 
-    // List Tasks
-    rpc ListTasks (ListTasksRequest) returns (ListTasksResponse) {
+    // List Issues
+    rpc ListIssues (ListIssuesRequest) returns (ListIssuesResponse) {
         option (google.api.http) = {
-            get: "/v1/tasks"
+            get: "/v1/issues"
         };
     }
-    // Get Task
-    rpc GetTask (GetTaskRequest) returns (Task) {
+    // Get Issue
+    rpc GetIssue (GetIssueRequest) returns (Issue) {
         option (google.api.http) = {
-          get: "/v1/tasks/{uuid}"
+          get: "/v1/issues/{uuid}"
         };
     }
 
-    // Create Task object request
-    rpc CreateTask (CreateTaskRequest) returns (Task) {
+    // Create Issue object request
+    rpc CreateIssue (CreateIssueRequest) returns (Issue) {
         option (google.api.http) = {
-            post: "/v1/tasks"
+            post: "/v1/issues"
             body: "*"
         };
     }
 
-    // Update Task object request
-    rpc UpdateTask (UpdateTaskRequest) returns (Task) {
+    // Update Issue object request
+    rpc UpdateIssue (UpdateIssueRequest) returns (Issue) {
         option (google.api.http) = {
-            put: "/v1/tasks/{uuid}"
+            put: "/v1/issues/{uuid}"
             body: "*"
         };
     }
 
-    // Delete Task object request
-    rpc DeleteTask (DeleteTaskRequest) returns (google.protobuf.Empty) {
+    // Delete Issue object request
+    rpc DeleteIssue (DeleteIssueRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-          delete: "/v1/tasks/{uuid}"
+          delete: "/v1/issues/{uuid}"
         };
     }
 }

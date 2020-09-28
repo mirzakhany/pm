@@ -1,4 +1,4 @@
-package tasks
+package issues
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/go-pg/pg/v10"
-	tasks "github.com/mirzakhany/pm/services/tasks/proto"
+	issues "github.com/mirzakhany/pm/services/issues/proto"
 	userSrv "github.com/mirzakhany/pm/services/users"
 	usersProto "github.com/mirzakhany/pm/services/users/proto"
 	"github.com/stretchr/testify/assert"
@@ -14,27 +14,27 @@ import (
 
 var errCRUD = errors.New("error crud")
 
-func TestCreateTaskRequest_Validate(t *testing.T) {
+func TestCreateIssueRequest_Validate(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     tasks.CreateTaskRequest
+		model     issues.CreateIssueRequest
 		wantError bool
 	}{
-		{"success", tasks.CreateTaskRequest{
+		{"success", issues.CreateIssueRequest{
 			Title:       "test",
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
 			Estimate:    0,
 		}, false},
-		{"required", tasks.CreateTaskRequest{
+		{"required", issues.CreateIssueRequest{
 			Title:       "",
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
 			Estimate:    0,
 		}, true},
-		{"too long", tasks.CreateTaskRequest{
+		{"too long", issues.CreateIssueRequest{
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
@@ -50,27 +50,27 @@ func TestCreateTaskRequest_Validate(t *testing.T) {
 	}
 }
 
-func TestUpdateTaskRequest_Validate(t *testing.T) {
+func TestUpdateIssueRequest_Validate(t *testing.T) {
 	tests := []struct {
 		name      string
-		model     tasks.UpdateTaskRequest
+		model     issues.UpdateIssueRequest
 		wantError bool
 	}{
-		{"success", tasks.UpdateTaskRequest{
+		{"success", issues.UpdateIssueRequest{
 			Title:       "test",
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
 			Estimate:    0,
 		}, false},
-		{"required", tasks.UpdateTaskRequest{
+		{"required", issues.UpdateIssueRequest{
 			Title:       "",
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
 			Estimate:    0,
 		}, true},
-		{"too long", tasks.UpdateTaskRequest{
+		{"too long", issues.UpdateIssueRequest{
 			Description: "this is a test",
 			Status:      0,
 			SprintId:    0,
@@ -105,7 +105,7 @@ func Test_service_CRUD(t *testing.T) {
 	})
 	assert.Nil(t, err)
 	// successful creation
-	task, err := s.Create(ctx, &tasks.CreateTaskRequest{
+	issue, err := s.Create(ctx, &issues.CreateIssueRequest{
 		Title:        "test",
 		Description:  "this is a test",
 		CreatorUuid:  user1.Uuid,
@@ -116,16 +116,16 @@ func Test_service_CRUD(t *testing.T) {
 	})
 
 	assert.Nil(t, err)
-	assert.NotEmpty(t, task.Uuid)
-	id := task.Uuid
-	assert.Equal(t, "test", task.Title)
-	assert.NotEmpty(t, task.CreatedAt)
-	assert.NotEmpty(t, task.UpdatedAt)
+	assert.NotEmpty(t, issue.Uuid)
+	id := issue.Uuid
+	assert.Equal(t, "test", issue.Title)
+	assert.NotEmpty(t, issue.CreatedAt)
+	assert.NotEmpty(t, issue.UpdatedAt)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(1), count)
 
 	// validation error in creation
-	_, err = s.Create(ctx, &tasks.CreateTaskRequest{
+	_, err = s.Create(ctx, &issues.CreateIssueRequest{
 		Title:       "",
 		Description: "this is a test",
 		Status:      0,
@@ -137,7 +137,7 @@ func Test_service_CRUD(t *testing.T) {
 	assert.Equal(t, int64(1), count)
 
 	// unexpected error in creation
-	_, err = s.Create(ctx, &tasks.CreateTaskRequest{
+	_, err = s.Create(ctx, &issues.CreateIssueRequest{
 		Title:        "error",
 		Description:  "this is a test",
 		CreatorUuid:  user1.Uuid,
@@ -150,7 +150,7 @@ func Test_service_CRUD(t *testing.T) {
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(1), count)
 
-	_, _ = s.Create(ctx, &tasks.CreateTaskRequest{
+	_, _ = s.Create(ctx, &issues.CreateIssueRequest{
 		Title:        "test2",
 		Description:  "this is a test",
 		CreatorUuid:  user1.Uuid,
@@ -161,7 +161,7 @@ func Test_service_CRUD(t *testing.T) {
 	})
 
 	// update
-	task, err = s.Update(ctx, &tasks.UpdateTaskRequest{
+	issue, err = s.Update(ctx, &issues.UpdateIssueRequest{
 		Uuid:         id,
 		Title:        "test-updated",
 		Description:  "this is a test",
@@ -172,8 +172,8 @@ func Test_service_CRUD(t *testing.T) {
 		Estimate:     0,
 	})
 	assert.Nil(t, err)
-	assert.Equal(t, "test-updated", task.Title)
-	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
+	assert.Equal(t, "test-updated", issue.Title)
+	_, err = s.Update(ctx, &issues.UpdateIssueRequest{
 		Uuid:         "none",
 		Title:        "test-updated",
 		Description:  "this is a test",
@@ -186,7 +186,7 @@ func Test_service_CRUD(t *testing.T) {
 	assert.NotNil(t, err)
 
 	// validation error in update
-	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
+	_, err = s.Update(ctx, &issues.UpdateIssueRequest{
 		Uuid:         id,
 		Title:        "",
 		Description:  "this is a test",
@@ -201,7 +201,7 @@ func Test_service_CRUD(t *testing.T) {
 	assert.Equal(t, int64(2), count)
 
 	// unexpected error in update
-	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
+	_, err = s.Update(ctx, &issues.UpdateIssueRequest{
 		Uuid:         id,
 		Title:        "error",
 		Description:  "this is a test",
@@ -218,61 +218,61 @@ func Test_service_CRUD(t *testing.T) {
 	// get
 	_, err = s.Get(ctx, "none")
 	assert.NotNil(t, err)
-	task, err = s.Get(ctx, id)
+	issue, err = s.Get(ctx, id)
 	assert.Nil(t, err)
-	assert.Equal(t, "test-updated", task.Title)
-	assert.Equal(t, id, task.Uuid)
+	assert.Equal(t, "test-updated", issue.Title)
+	assert.Equal(t, id, issue.Uuid)
 
 	// query
-	_tasks, _ := s.Query(ctx, 0, 0)
-	assert.Equal(t, 2, int(_tasks.TotalCount))
+	_issues, _ := s.Query(ctx, 0, 0)
+	assert.Equal(t, 2, int(_issues.TotalCount))
 
 	// delete
 	_, err = s.Delete(ctx, "none")
 	assert.NotNil(t, err)
-	task, err = s.Delete(ctx, id)
+	issue, err = s.Delete(ctx, id)
 	assert.Nil(t, err)
-	assert.Equal(t, id, task.Uuid)
+	assert.Equal(t, id, issue.Uuid)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(1), count)
 }
 
 type mockRepository struct {
-	items []TaskModel
+	items []IssueModel
 }
 
-func (m mockRepository) Get(ctx context.Context, id string) (TaskModel, error) {
+func (m mockRepository) Get(ctx context.Context, id string) (IssueModel, error) {
 	for _, item := range m.items {
 		if item.UUID == id {
 			return item, nil
 		}
 	}
-	return TaskModel{}, pg.ErrNoRows
+	return IssueModel{}, pg.ErrNoRows
 }
 
 func (m mockRepository) Count(ctx context.Context) (int64, error) {
 	return int64(len(m.items)), nil
 }
 
-func (m mockRepository) Query(ctx context.Context, offset, limit int64) ([]TaskModel, int, error) {
+func (m mockRepository) Query(ctx context.Context, offset, limit int64) ([]IssueModel, int, error) {
 	return m.items, len(m.items), nil
 }
 
-func (m *mockRepository) Create(ctx context.Context, task TaskModel) error {
-	if task.Title == "error" {
+func (m *mockRepository) Create(ctx context.Context, issue IssueModel) error {
+	if issue.Title == "error" {
 		return errCRUD
 	}
-	m.items = append(m.items, task)
+	m.items = append(m.items, issue)
 	return nil
 }
 
-func (m *mockRepository) Update(ctx context.Context, task TaskModel) error {
-	if task.Title == "error" {
+func (m *mockRepository) Update(ctx context.Context, issue IssueModel) error {
+	if issue.Title == "error" {
 		return errCRUD
 	}
 	for i, item := range m.items {
-		if item.UUID == task.UUID {
-			m.items[i] = task
+		if item.UUID == issue.UUID {
+			m.items[i] = issue
 			break
 		}
 	}

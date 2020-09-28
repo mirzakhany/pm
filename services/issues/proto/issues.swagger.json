@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "services/tasks/proto/tasks.proto",
+    "title": "services/issues/proto/issues.proto",
     "version": "version not set"
   },
   "consumes": [
@@ -11,15 +11,15 @@
     "application/json"
   ],
   "paths": {
-    "/v1/tasks": {
+    "/v1/issues": {
       "get": {
-        "summary": "List Tasks",
-        "operationId": "TaskService_ListTasks",
+        "summary": "List Issues",
+        "operationId": "IssueService_ListIssues",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/tasksListTasksResponse"
+              "$ref": "#/definitions/issuesListIssuesResponse"
             }
           },
           "default": {
@@ -46,17 +46,17 @@
           }
         ],
         "tags": [
-          "TaskService"
+          "IssueService"
         ]
       },
       "post": {
-        "summary": "Create Task object request",
-        "operationId": "TaskService_CreateTask",
+        "summary": "Create Issue object request",
+        "operationId": "IssueService_CreateIssue",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/tasksTask"
+              "$ref": "#/definitions/issuesIssue"
             }
           },
           "default": {
@@ -72,24 +72,24 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/tasksCreateTaskRequest"
+              "$ref": "#/definitions/issuesCreateIssueRequest"
             }
           }
         ],
         "tags": [
-          "TaskService"
+          "IssueService"
         ]
       }
     },
-    "/v1/tasks/{uuid}": {
+    "/v1/issues/{uuid}": {
       "get": {
-        "summary": "Get Task",
-        "operationId": "TaskService_GetTask",
+        "summary": "Get Issue",
+        "operationId": "IssueService_GetIssue",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/tasksTask"
+              "$ref": "#/definitions/issuesIssue"
             }
           },
           "default": {
@@ -108,12 +108,12 @@
           }
         ],
         "tags": [
-          "TaskService"
+          "IssueService"
         ]
       },
       "delete": {
-        "summary": "Delete Task object request",
-        "operationId": "TaskService_DeleteTask",
+        "summary": "Delete Issue object request",
+        "operationId": "IssueService_DeleteIssue",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -137,17 +137,17 @@
           }
         ],
         "tags": [
-          "TaskService"
+          "IssueService"
         ]
       },
       "put": {
-        "summary": "Update Task object request",
-        "operationId": "TaskService_UpdateTask",
+        "summary": "Update Issue object request",
+        "operationId": "IssueService_UpdateIssue",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/tasksTask"
+              "$ref": "#/definitions/issuesIssue"
             }
           },
           "default": {
@@ -169,17 +169,164 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/tasksUpdateTaskRequest"
+              "$ref": "#/definitions/issuesUpdateIssueRequest"
             }
           }
         ],
         "tags": [
-          "TaskService"
+          "IssueService"
         ]
       }
     }
   },
   "definitions": {
+    "issuesCreateIssueRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/issuesIssueStatus"
+        },
+        "sprint_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "estimate": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "assignee_uuid": {
+          "type": "string"
+        },
+        "creator_uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "issuesIssue": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/issuesIssueStatus"
+        },
+        "sprint_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "estimate": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "assignee": {
+          "$ref": "#/definitions/usersUser"
+        },
+        "creator": {
+          "$ref": "#/definitions/usersUser"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "issuesIssueStatus": {
+      "type": "string",
+      "enum": [
+        "IN_BACKLOG",
+        "IN_PROGRESS",
+        "TEST",
+        "DONE",
+        "ARCHIVED"
+      ],
+      "default": "IN_BACKLOG"
+    },
+    "issuesListIssuesResponse": {
+      "type": "object",
+      "properties": {
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/issuesIssue"
+          }
+        },
+        "total_count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "issuesUpdateIssueRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/issuesIssueStatus"
+        },
+        "sprint_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "estimate": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "assignee_uuid": {
+          "type": "string"
+        },
+        "creator_uuid": {
+          "type": "string"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -210,153 +357,6 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
-        }
-      }
-    },
-    "tasksCreateTaskRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "uuid": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/tasksTaskStatus"
-        },
-        "sprint_id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "estimate": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "assignee_uuid": {
-          "type": "string"
-        },
-        "creator_uuid": {
-          "type": "string"
-        }
-      }
-    },
-    "tasksListTasksResponse": {
-      "type": "object",
-      "properties": {
-        "tasks": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/tasksTask"
-          }
-        },
-        "total_count": {
-          "type": "string",
-          "format": "int64"
-        },
-        "limit": {
-          "type": "string",
-          "format": "int64"
-        },
-        "offset": {
-          "type": "string",
-          "format": "int64"
-        }
-      }
-    },
-    "tasksTask": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "uuid": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/tasksTaskStatus"
-        },
-        "sprint_id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "estimate": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "assignee": {
-          "$ref": "#/definitions/usersUser"
-        },
-        "creator": {
-          "$ref": "#/definitions/usersUser"
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "tasksTaskStatus": {
-      "type": "string",
-      "enum": [
-        "IN_BACKLOG",
-        "IN_PROGRESS",
-        "TEST",
-        "DONE",
-        "ARCHIVED"
-      ],
-      "default": "IN_BACKLOG"
-    },
-    "tasksUpdateTaskRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "uuid": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/tasksTaskStatus"
-        },
-        "sprint_id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "estimate": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "assignee_uuid": {
-          "type": "string"
-        },
-        "creator_uuid": {
-          "type": "string"
         }
       }
     },

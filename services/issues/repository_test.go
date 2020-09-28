@@ -1,4 +1,4 @@
-package tasks
+package issues
 
 import (
 	"context"
@@ -8,13 +8,13 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"github.com/mirzakhany/pm/pkg/db"
-	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
+	issuesProto "github.com/mirzakhany/pm/services/issues/proto"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRepository(t *testing.T) {
-	database := db.NewForTest(t, []interface{}{(*TaskModel)(nil)})
-	db.ResetTables(t, database, "tasks")
+	database := db.NewForTest(t, []interface{}{(*IssueModel)(nil)})
+	db.ResetTables(t, database, "issues")
 	repo := NewRepository(database)
 
 	ctx := context.Background()
@@ -25,11 +25,11 @@ func TestRepository(t *testing.T) {
 	testUuid := uuid.New().String()
 	// create
 	now := time.Now()
-	err = repo.Create(ctx, TaskModel{
+	err = repo.Create(ctx, IssueModel{
 		UUID:        testUuid,
-		Title:       "task1",
-		Description: "task1",
-		Status:      tasksProto.TaskStatus_IN_BACKLOG,
+		Title:       "issue1",
+		Description: "issue1",
+		Status:      issuesProto.IssueStatus_IN_BACKLOG,
 		SprintID:    0,
 		Estimate:    4,
 		AssigneeID:  0,
@@ -42,30 +42,30 @@ func TestRepository(t *testing.T) {
 	assert.Equal(t, int64(1), count2-count)
 
 	// get
-	task, err := repo.Get(ctx, testUuid)
+	issue, err := repo.Get(ctx, testUuid)
 	assert.Nil(t, err)
-	assert.Equal(t, "task1", task.Title)
+	assert.Equal(t, "issue1", issue.Title)
 	_, err = repo.Get(ctx, "test0")
 	assert.EqualError(t, pg.ErrNoRows, err.Error())
 
 	// update
-	updatedTask := TaskModel{
-		ID:          task.ID,
-		UUID:        task.UUID,
-		Title:       "task2",
-		Description: task.Description,
-		Status:      task.Status,
-		SprintID:    task.SprintID,
-		Estimate:    task.Estimate,
-		AssigneeID:  task.AssigneeID,
-		CreatorID:   task.CreatorID,
-		CreatedAt:   task.CreatedAt,
+	updatedIssue := IssueModel{
+		ID:          issue.ID,
+		UUID:        issue.UUID,
+		Title:       "issue2",
+		Description: issue.Description,
+		Status:      issue.Status,
+		SprintID:    issue.SprintID,
+		Estimate:    issue.Estimate,
+		AssigneeID:  issue.AssigneeID,
+		CreatorID:   issue.CreatorID,
+		CreatedAt:   issue.CreatedAt,
 		UpdatedAt:   now,
 	}
-	err = repo.Update(ctx, updatedTask)
+	err = repo.Update(ctx, updatedIssue)
 	assert.Nil(t, err)
-	task2, _ := repo.Get(ctx, task.UUID)
-	assert.Equal(t, "task2", task2.Title)
+	issue2, _ := repo.Get(ctx, issue.UUID)
+	assert.Equal(t, "issue2", issue2.Title)
 
 	// query
 	_, count3, err := repo.Query(ctx, 0, count2)
