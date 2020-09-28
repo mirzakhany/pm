@@ -2,14 +2,10 @@ package users
 
 import (
 	"context"
-	"database/sql"
-	"errors"
+	"github.com/mirzakhany/pm/services/users/proto"
 	"github.com/stretchr/testify/assert"
-	"proj/services/users/proto"
 	"testing"
 )
-
-var errCRUD = errors.New("error crud")
 
 func TestCreateUserRequest_Validate(t *testing.T) {
 	tests := []struct {
@@ -37,7 +33,7 @@ func TestUpdateUserRequest_Validate(t *testing.T) {
 	}{
 		{"success", users.UpdateUserRequest{Username: "test", Email: "test@test.com", Enable: true}, false},
 		{"required", users.UpdateUserRequest{Username: "", Email: "test@test.com", Enable: true}, true},
-		{"too long", users.UpdateUserRequest{Email: "test@test.com", Enable: true, Username:"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"}, true},
+		{"too long", users.UpdateUserRequest{Email: "test@test.com", Enable: true, Username: "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -88,13 +84,13 @@ func Test_service_CRUD(t *testing.T) {
 	assert.NotNil(t, err)
 
 	// validation error in update
-	_, err = s.Update(ctx, &users.UpdateUserRequest{Username: "", Email: "test@test.com", Enable: true,  Uuid: id})
+	_, err = s.Update(ctx, &users.UpdateUserRequest{Username: "", Email: "test@test.com", Enable: true, Uuid: id})
 	assert.NotNil(t, err)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(2), count)
 
 	// unexpected error in update
-	_, err = s.Update(ctx, &users.UpdateUserRequest{Username: "error", Email: "test@test.com", Enable: true,  Uuid: id})
+	_, err = s.Update(ctx, &users.UpdateUserRequest{Username: "error", Email: "test@test.com", Enable: true, Uuid: id})
 	assert.Equal(t, errCRUD, err)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(2), count)
@@ -119,57 +115,4 @@ func Test_service_CRUD(t *testing.T) {
 	assert.Equal(t, id, user.Uuid)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(1), count)
-}
-
-type mockRepository struct {
-	items []UserModel
-}
-
-func (m mockRepository) Get(ctx context.Context, id string) (UserModel, error) {
-	for _, item := range m.items {
-		if item.UUID == id {
-			return item, nil
-		}
-	}
-	return UserModel{}, sql.ErrNoRows
-}
-
-func (m mockRepository) Count(ctx context.Context) (int64, error) {
-	return int64(len(m.items)), nil
-}
-
-func (m mockRepository) Query(ctx context.Context, offset, limit int64) ([]UserModel, error) {
-	return m.items, nil
-}
-
-func (m *mockRepository) Create(ctx context.Context, user UserModel) error {
-	if user.Username == "error" {
-		return errCRUD
-	}
-	m.items = append(m.items, user)
-	return nil
-}
-
-func (m *mockRepository) Update(ctx context.Context, user UserModel) error {
-	if user.Username == "error" {
-		return errCRUD
-	}
-	for i, item := range m.items {
-		if item.UUID == user.UUID {
-			m.items[i] = user
-			break
-		}
-	}
-	return nil
-}
-
-func (m *mockRepository) Delete(ctx context.Context, id string) error {
-	for i, item := range m.items {
-		if item.UUID == id {
-			m.items[i] = m.items[len(m.items)-1]
-			m.items = m.items[:len(m.items)-1]
-			break
-		}
-	}
-	return nil
 }

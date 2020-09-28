@@ -6,6 +6,20 @@ option go_package = "tasks";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "services/users/proto/users.proto";
+
+// Enable custom Marshal method.
+option (gogoproto.marshaler_all) = true;
+// Enable custom Unmarshal method.
+option (gogoproto.unmarshaler_all) = true;
+// Enable custom Size method (Required by Marshal and Unmarshal).
+option (gogoproto.sizer_all) = true;
+// Enable registration with golang/protobuf for the grpc-gateway.
+option (gogoproto.goproto_registration) = true;
+// Enable generation of XXX_MessageName methods for grpc-go/status.
+option (gogoproto.messagename_all) = true;
 
 enum TaskStatus {
     IN_BACKLOG = 0;
@@ -16,14 +30,15 @@ enum TaskStatus {
 }
 
 message ListTasksRequest {
-    int32 page_size = 1;
-    string page_token = 2;
+    int64 limit = 1;
+    int64 offset = 2;
 }
 
 message ListTasksResponse {
-    repeated Task tasks = 1;
-    int32 total_size = 2;
-    string next_page_token = 3;
+    repeated Task tasks = 1 [(gogoproto.jsontag) = "tasks"];
+    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
+    int64 limit = 3 [(gogoproto.jsontag) = "limit"];
+    int64 offset = 4 [(gogoproto.jsontag) = "offset"];
 }
 
 message GetTaskRequest {
@@ -31,19 +46,27 @@ message GetTaskRequest {
 }
 
 message CreateTaskRequest {
-    string title = 1;
-    TaskStatus status = 2;
-    int64 sprint_id = 3;
-    int32 estimate = 4;
-    int64 assignee_id = 5;
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    TaskStatus status = 5;
+    uint64 sprint_id = 6;
+    uint64 estimate = 7;
+    string assignee_uuid = 8;
+    string creator_uuid = 9;
 }
 
 message UpdateTaskRequest {
-    string uuid = 1;
-    TaskStatus status = 2;
-    int64 sprint_id = 3;
-    int32 estimate = 4;
-    int64 assignee_id = 5;
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    TaskStatus status = 5;
+    uint64 sprint_id = 6;
+    uint64 estimate = 7;
+    string assignee_uuid = 8;
+    string creator_uuid = 9;
 }
 
 message DeleteTaskRequest {
@@ -51,12 +74,17 @@ message DeleteTaskRequest {
 }
 
 message Task {
-    string uuid = 1;
-    string title = 2;
-    TaskStatus status = 3;
-    int64 sprint_id = 4;
-    int32 estimate = 5;
-    int64 assignee_id = 6;
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    TaskStatus status = 5;
+    uint64 sprint_id = 6;
+    uint64 estimate = 7;
+    users.User assignee = 8;
+    users.User creator = 9;
+    google.protobuf.Timestamp created_at = 10 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp updated_at = 11 [(gogoproto.stdtime) = true];
 }
 
 service TaskService {
@@ -64,15 +92,16 @@ service TaskService {
     // List Tasks
     rpc ListTasks (ListTasksRequest) returns (ListTasksResponse) {
         option (google.api.http) = {
-          get: "/tasks"
+            get: "/v1/tasks"
         };
     }
     // Get Task
     rpc GetTask (GetTaskRequest) returns (Task) {
         option (google.api.http) = {
-          get: "/tasks/{uuid}"
+          get: "/v1/tasks/{uuid}"
         };
     }
+
     // Create Task object request
     rpc CreateTask (CreateTaskRequest) returns (Task) {
         option (google.api.http) = {

@@ -1,21 +1,41 @@
 package services
 
 import (
-	"projectmanager/services/auth"
-	"projectmanager/services/projects"
-
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
+	"github.com/mirzakhany/pm/pkg/db"
+	rolesSrv "github.com/mirzakhany/pm/services/roles"
+	tasksSrv "github.com/mirzakhany/pm/services/tasks"
+	usersSrv "github.com/mirzakhany/pm/services/users"
 )
 
-func Setup(db *gorm.DB, router *gin.Engine, logger *zap.Logger) error {
+func Setup(db *db.DB) error {
 
-	err := projects.Setup(db, router, logger)
+	err := createSchema(db.DB())
 	if err != nil {
 		return err
 	}
 
-	err = auth.Setup(db, router, logger)
-	return err
+	rolesSrv.New(rolesSrv.NewService(rolesSrv.NewRepository(db)))
+	userService := usersSrv.NewService(usersSrv.NewRepository(db))
+	usersSrv.New(userService)
+	tasksSrv.New(tasksSrv.NewService(tasksSrv.NewRepository(db), userService))
+	return nil
+}
+
+// createSchema creates database schema
+func createSchema(db *pg.DB) error {
+	models := []interface{}{
+		(*usersSrv.UserModel)(nil),
+		(*rolesSrv.RoleModel)(nil),
+		(*tasksSrv.TaskModel)(nil),
+	}
+
+	for _, model := range models {
+		err := db.Model(model).CreateTable(&orm.CreateTableOptions{IfNotExists: true})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

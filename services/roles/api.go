@@ -2,13 +2,14 @@ package roles
 
 import (
 	"context"
+	"fmt"
 	"github.com/gogo/protobuf/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/mirzakhany/pm/pkg/grpcgw"
+	roles "github.com/mirzakhany/pm/services/roles/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"proj/pkg/grpcgw"
-	roles "proj/services/roles/proto"
 )
 
 type API interface {
@@ -32,6 +33,7 @@ func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
 func (a api) ListRoles(ctx context.Context, request *roles.ListRolesRequest) (*roles.ListRolesResponse, error) {
 	offset, limit := grpcgw.GetOffsetAndLimit(request.Limit, request.Offset)
 	res, err := a.service.Query(ctx, offset, limit)
+	fmt.Println(err)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -47,7 +49,7 @@ func (a api) GetRole(ctx context.Context, request *roles.GetRoleRequest) (*roles
 }
 
 func (a api) CreateRole(ctx context.Context, request *roles.CreateRoleRequest) (*roles.Role, error) {
-	res,err := a.service.Create(ctx, request)
+	res, err := a.service.Create(ctx, request)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
