@@ -2,7 +2,7 @@ package roles
 
 import (
 	"context"
-	"fmt"
+
 	"github.com/gogo/protobuf/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
@@ -33,7 +33,6 @@ func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
 func (a api) ListRoles(ctx context.Context, request *roles.ListRolesRequest) (*roles.ListRolesResponse, error) {
 	offset, limit := grpcgw.GetOffsetAndLimit(request.Limit, request.Offset)
 	res, err := a.service.Query(ctx, offset, limit)
-	fmt.Println(err)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}

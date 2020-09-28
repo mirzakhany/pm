@@ -2,12 +2,13 @@ package roles
 
 import (
 	"context"
-	"github.com/mirzakhany/pm/pkg/db"
 	"time"
+
+	"github.com/mirzakhany/pm/pkg/db"
 )
 
 type RoleModel struct {
-	tableName struct{} `pg:"roles,alias:r"`
+	tableName struct{} `pg:"roles,alias:r"` //nolint
 	ID        uint64   `pg:",pk"`
 	UUID      string
 	Title     string

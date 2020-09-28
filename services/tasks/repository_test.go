@@ -2,13 +2,14 @@ package tasks
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"github.com/mirzakhany/pm/pkg/db"
 	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestRepository(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 )
 
 type UserModel struct {
-	tableName struct{} `pg:"users,alias:u"`
+	tableName struct{} `pg:"users,alias:u"` //nolint
 	ID        uint64   `pg:",pk"`
 	UUID      string
 	Username  string

@@ -10,10 +10,7 @@ const (
 
 func IsBadRequestErr(err error) bool {
 	if pgErr, isPGErr := err.(pg.Error); isPGErr {
-		if pgErr.Code != uniqueViolation {
-			return true
-		}
-		return false
+		return pgErr.Code != uniqueViolation
 	}
 	return false
 }

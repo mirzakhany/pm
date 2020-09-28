@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"errors"
+
 	"github.com/go-pg/pg/v10"
 )
 

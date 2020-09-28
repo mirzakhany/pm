@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"flag"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/mirzakhany/pm/pkg/config"
 	"github.com/mirzakhany/pm/pkg/db"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	"github.com/mirzakhany/pm/pkg/log"
 	"github.com/mirzakhany/pm/services"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 var (

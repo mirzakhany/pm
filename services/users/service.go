@@ -2,10 +2,11 @@ package users
 
 import (
 	"context"
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	usersProto "github.com/mirzakhany/pm/services/users/proto"
-	"time"
 )
 
 // Service encapsulates use case logic for users.

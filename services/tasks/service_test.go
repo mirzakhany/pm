@@ -3,12 +3,13 @@ package tasks
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/go-pg/pg/v10"
-	"github.com/mirzakhany/pm/services/tasks/proto"
+	tasks "github.com/mirzakhany/pm/services/tasks/proto"
 	userSrv "github.com/mirzakhany/pm/services/users"
 	usersProto "github.com/mirzakhany/pm/services/users/proto"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var errCRUD = errors.New("error crud")
@@ -99,20 +100,19 @@ func Test_service_CRUD(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-
 	user2, err := userServices.Create(ctx, &usersProto.CreateUserRequest{
 		Username: "test", Password: "test", Email: "test@test.com", Enable: true,
 	})
 	assert.Nil(t, err)
 	// successful creation
 	task, err := s.Create(ctx, &tasks.CreateTaskRequest{
-		Title:       "test",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Title:        "test",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 
 	assert.Nil(t, err)
@@ -138,63 +138,63 @@ func Test_service_CRUD(t *testing.T) {
 
 	// unexpected error in creation
 	_, err = s.Create(ctx, &tasks.CreateTaskRequest{
-		Title:       "error",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Title:        "error",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 	assert.Equal(t, errCRUD, err)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(1), count)
 
 	_, _ = s.Create(ctx, &tasks.CreateTaskRequest{
-		Title:       "test2",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Title:        "test2",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 
 	// update
 	task, err = s.Update(ctx, &tasks.UpdateTaskRequest{
-		Uuid: id,
-		Title:       "test-updated",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Uuid:         id,
+		Title:        "test-updated",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 	assert.Nil(t, err)
 	assert.Equal(t, "test-updated", task.Title)
 	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
-		Uuid: "none",
-		Title:       "test-updated",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Uuid:         "none",
+		Title:        "test-updated",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 	assert.NotNil(t, err)
 
 	// validation error in update
 	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
-		Uuid: id,
-		Title:       "",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Uuid:         id,
+		Title:        "",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 	assert.NotNil(t, err)
 	count, _ = s.Count(ctx)
@@ -202,14 +202,14 @@ func Test_service_CRUD(t *testing.T) {
 
 	// unexpected error in update
 	_, err = s.Update(ctx, &tasks.UpdateTaskRequest{
-		Uuid: id,
-		Title:       "error",
-		Description: "this is a test",
-		CreatorUuid: user1.Uuid,
+		Uuid:         id,
+		Title:        "error",
+		Description:  "this is a test",
+		CreatorUuid:  user1.Uuid,
 		AssigneeUuid: user2.Uuid,
-		Status:      0,
-		SprintId:    0,
-		Estimate:    0,
+		Status:       0,
+		SprintId:     0,
+		Estimate:     0,
 	})
 	assert.Equal(t, errCRUD, err)
 	count, _ = s.Count(ctx)

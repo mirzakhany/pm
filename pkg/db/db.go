@@ -3,9 +3,9 @@ package db
 import (
 	"context"
 	"fmt"
+
 	"github.com/go-pg/pg/v10"
 
-	//dbx "github.com/go-ozzo/ozzo-dbx"
 	"github.com/mirzakhany/pm/pkg/config"
 	"github.com/mirzakhany/pm/pkg/log"
 )
