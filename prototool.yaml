@@ -1,8 +1,19 @@
-protoc:
-  version: 3.11.0
+# Paths to exclude when searching for Protobuf files.
+excludes:
+  - ./third_party
+  - ./tmp
+  - ./vendor
 
+protoc:
+  # The Protobuf version to use from https://github.com/protocolbuffers/protobuf/releases.
+  # By default use 3.6.1.
+  # You probably want to set this to make your builds completely reproducible.
+  version: 3.12.1
+  # Additional paths to include with -I to protoc.
+  # By default, the directory of the config file is included,
+  # or the current directory if there is no config file.
   includes:
-    - /usr/local/include
+    - ./third_party
 
 # Code generation directives.
 generate:
@@ -10,7 +21,7 @@ generate:
   go_options:
     # The base import path. This should be the go path of the prototool.yaml file.
     # This is required if you have any go plugins.
-    import_path: github.com/mirzakhany/proj
+    import_path: github.com/mirzakhany/pm
 
   # The list of plugins.
   plugins:
