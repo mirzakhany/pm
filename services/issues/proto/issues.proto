@@ -8,7 +8,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "services/users/proto/users.proto";
+import "services/users/proto/model.proto";
 
 option (gogoproto.gostring_all) = true;
 option (gogoproto.equal_all) = true;

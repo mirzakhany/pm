@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package users;
+
+option go_package = "users";
+
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+option (gogoproto.gostring_all) = true;
+option (gogoproto.equal_all) = true;
+option (gogoproto.verbose_equal_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+option (gogoproto.populate_all) = true;
+option (gogoproto.testgen_all) = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+
+message User {
+    uint64 id = 1;
+    string uuid = 2;
+    string username = 3;
+    string password = 4;
+    string email = 5;
+    bool enable = 6;
+    google.protobuf.Timestamp created_at = 7 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp updated_at = 8 [(gogoproto.stdtime) = true];
+}

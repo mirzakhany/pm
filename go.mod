@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9
-	github.com/go-ozzo/ozzo-dbx v1.5.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.2
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-pg/pg/v10 v10.3.1
@@ -22,4 +21,5 @@ require (
 	go.uber.org/zap v1.16.0
 	google.golang.org/genproto v0.0.0-20200925023002-c2d885f95484
 	google.golang.org/grpc v1.32.0
+	google.golang.org/protobuf v1.25.0
 )
