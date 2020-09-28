@@ -3,17 +3,18 @@ package grpcgw
 import (
 	"context"
 	"fmt"
+	"github.com/gogo/gateway"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/mirzakhany/pm/pkg/config"
+	"github.com/mirzakhany/pm/pkg/log"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"net"
 	"net/http"
-	"proj/pkg/config"
-	"proj/pkg/log"
 	"sync"
 	"time"
 )
@@ -88,9 +89,18 @@ func gRPCClient() (*grpc.ClientConn, error) {
 
 // Serve start the server and wait
 func serveHTTP(ctx context.Context) (func() error, error) {
+
+	jsonpb := &gateway.JSONPb{
+		EmitDefaults: false,
+		Indent:       "  ",
+		OrigName:     true,
+	}
 	var (
 		normalMux = http.NewServeMux()
-		mux       = runtime.NewServeMux()
+		mux       = runtime.NewServeMux(
+			runtime.WithMarshalerOption(runtime.MIMEWildcard, jsonpb),
+			runtime.WithProtoErrorHandler(runtime.DefaultHTTPProtoErrorHandler),
+		)
 	)
 	c, err := gRPCClient()
 	if err != nil {
