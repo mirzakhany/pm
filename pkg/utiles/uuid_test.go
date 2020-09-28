@@ -8,14 +8,14 @@ import (
 func TestIsValidUUID(t *testing.T) {
 
 	tests := []struct {
-		name string
-		uuid string
+		name    string
+		uuid    string
 		isValid bool
-	}{ {
-		name: "test valid uuid4",
-		uuid: uuid.New().String(),
+	}{{
+		name:    "test valid uuid4",
+		uuid:    uuid.New().String(),
 		isValid: true,
-	   },
+	},
 	}
 
 	for _, tt := range tests {
