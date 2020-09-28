@@ -5,13 +5,12 @@ server:
   grpcPort: 9090
 
 db:
-  engine: postgres
   host: localhost
   port: 5432
   db: task_manager
   user: postgres
   password: postgres
-  timeZone: Europe/Stockholm
+  testDSN: ""
 
 redis:
   host: 127.0.0.1
