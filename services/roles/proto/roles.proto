@@ -9,16 +9,17 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 
-// Enable custom Marshal method.
+option (gogoproto.gostring_all) = true;
+option (gogoproto.equal_all) = true;
+option (gogoproto.verbose_equal_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+option (gogoproto.populate_all) = true;
+option (gogoproto.testgen_all) = true;
+option (gogoproto.benchgen_all) = true;
 option (gogoproto.marshaler_all) = true;
-// Enable custom Unmarshal method.
-option (gogoproto.unmarshaler_all) = true;
-// Enable custom Size method (Required by Marshal and Unmarshal).
 option (gogoproto.sizer_all) = true;
-// Enable registration with golang/protobuf for the grpc-gateway.
-option (gogoproto.goproto_registration) = true;
-// Enable generation of XXX_MessageName methods for grpc-go/status.
-option (gogoproto.messagename_all) = true;
+option (gogoproto.unmarshaler_all) = true;
 
 
 message ListRolesRequest {

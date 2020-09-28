@@ -4,13 +4,13 @@
 package roles
 
 import (
+	bytes "bytes"
 	context "context"
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
 	types "github.com/gogo/protobuf/types"
-	golang_proto "github.com/golang/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -18,12 +18,13 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	reflect "reflect"
+	strings "strings"
 	time "time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
-var _ = golang_proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 var _ = time.Kitchen
@@ -42,9 +43,8 @@ type ListRolesRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListRolesRequest) Reset()         { *m = ListRolesRequest{} }
-func (m *ListRolesRequest) String() string { return proto.CompactTextString(m) }
-func (*ListRolesRequest) ProtoMessage()    {}
+func (m *ListRolesRequest) Reset()      { *m = ListRolesRequest{} }
+func (*ListRolesRequest) ProtoMessage() {}
 func (*ListRolesRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{0}
 }
@@ -89,10 +89,6 @@ func (m *ListRolesRequest) GetOffset() int64 {
 	return 0
 }
 
-func (*ListRolesRequest) XXX_MessageName() string {
-	return "roles.ListRolesRequest"
-}
-
 type ListRolesResponse struct {
 	Roles                []*Role  `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles"`
 	TotalCount           int64    `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count"`
@@ -103,9 +99,8 @@ type ListRolesResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ListRolesResponse) Reset()         { *m = ListRolesResponse{} }
-func (m *ListRolesResponse) String() string { return proto.CompactTextString(m) }
-func (*ListRolesResponse) ProtoMessage()    {}
+func (m *ListRolesResponse) Reset()      { *m = ListRolesResponse{} }
+func (*ListRolesResponse) ProtoMessage() {}
 func (*ListRolesResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{1}
 }
@@ -164,10 +159,6 @@ func (m *ListRolesResponse) GetOffset() int64 {
 	return 0
 }
 
-func (*ListRolesResponse) XXX_MessageName() string {
-	return "roles.ListRolesResponse"
-}
-
 type GetRoleRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -175,9 +166,8 @@ type GetRoleRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetRoleRequest) Reset()         { *m = GetRoleRequest{} }
-func (m *GetRoleRequest) String() string { return proto.CompactTextString(m) }
-func (*GetRoleRequest) ProtoMessage()    {}
+func (m *GetRoleRequest) Reset()      { *m = GetRoleRequest{} }
+func (*GetRoleRequest) ProtoMessage() {}
 func (*GetRoleRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{2}
 }
@@ -215,10 +205,6 @@ func (m *GetRoleRequest) GetUuid() string {
 	return ""
 }
 
-func (*GetRoleRequest) XXX_MessageName() string {
-	return "roles.GetRoleRequest"
-}
-
 type CreateRoleRequest struct {
 	Title                string   `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -226,9 +212,8 @@ type CreateRoleRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *CreateRoleRequest) Reset()         { *m = CreateRoleRequest{} }
-func (m *CreateRoleRequest) String() string { return proto.CompactTextString(m) }
-func (*CreateRoleRequest) ProtoMessage()    {}
+func (m *CreateRoleRequest) Reset()      { *m = CreateRoleRequest{} }
+func (*CreateRoleRequest) ProtoMessage() {}
 func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{3}
 }
@@ -266,10 +251,6 @@ func (m *CreateRoleRequest) GetTitle() string {
 	return ""
 }
 
-func (*CreateRoleRequest) XXX_MessageName() string {
-	return "roles.CreateRoleRequest"
-}
-
 type UpdateRoleRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
@@ -278,9 +259,8 @@ type UpdateRoleRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *UpdateRoleRequest) Reset()         { *m = UpdateRoleRequest{} }
-func (m *UpdateRoleRequest) String() string { return proto.CompactTextString(m) }
-func (*UpdateRoleRequest) ProtoMessage()    {}
+func (m *UpdateRoleRequest) Reset()      { *m = UpdateRoleRequest{} }
+func (*UpdateRoleRequest) ProtoMessage() {}
 func (*UpdateRoleRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{4}
 }
@@ -325,10 +305,6 @@ func (m *UpdateRoleRequest) GetTitle() string {
 	return ""
 }
 
-func (*UpdateRoleRequest) XXX_MessageName() string {
-	return "roles.UpdateRoleRequest"
-}
-
 type DeleteRoleRequest struct {
 	Uuid                 string   `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -336,9 +312,8 @@ type DeleteRoleRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *DeleteRoleRequest) Reset()         { *m = DeleteRoleRequest{} }
-func (m *DeleteRoleRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteRoleRequest) ProtoMessage()    {}
+func (m *DeleteRoleRequest) Reset()      { *m = DeleteRoleRequest{} }
+func (*DeleteRoleRequest) ProtoMessage() {}
 func (*DeleteRoleRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{5}
 }
@@ -376,10 +351,6 @@ func (m *DeleteRoleRequest) GetUuid() string {
 	return ""
 }
 
-func (*DeleteRoleRequest) XXX_MessageName() string {
-	return "roles.DeleteRoleRequest"
-}
-
 type Role struct {
 	Id                   uint64     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uuid                 string     `protobuf:"bytes,2,opt,name=uuid,proto3" json:"uuid,omitempty"`
@@ -391,9 +362,8 @@ type Role struct {
 	XXX_sizecache        int32      `json:"-"`
 }
 
-func (m *Role) Reset()         { *m = Role{} }
-func (m *Role) String() string { return proto.CompactTextString(m) }
-func (*Role) ProtoMessage()    {}
+func (m *Role) Reset()      { *m = Role{} }
+func (*Role) ProtoMessage() {}
 func (*Role) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a385908be3e62237, []int{6}
 }
@@ -459,69 +429,669 @@ func (m *Role) GetUpdatedAt() *time.Time {
 	return nil
 }
 
-func (*Role) XXX_MessageName() string {
-	return "roles.Role"
-}
 func init() {
 	proto.RegisterType((*ListRolesRequest)(nil), "roles.ListRolesRequest")
-	golang_proto.RegisterType((*ListRolesRequest)(nil), "roles.ListRolesRequest")
 	proto.RegisterType((*ListRolesResponse)(nil), "roles.ListRolesResponse")
-	golang_proto.RegisterType((*ListRolesResponse)(nil), "roles.ListRolesResponse")
 	proto.RegisterType((*GetRoleRequest)(nil), "roles.GetRoleRequest")
-	golang_proto.RegisterType((*GetRoleRequest)(nil), "roles.GetRoleRequest")
 	proto.RegisterType((*CreateRoleRequest)(nil), "roles.CreateRoleRequest")
-	golang_proto.RegisterType((*CreateRoleRequest)(nil), "roles.CreateRoleRequest")
 	proto.RegisterType((*UpdateRoleRequest)(nil), "roles.UpdateRoleRequest")
-	golang_proto.RegisterType((*UpdateRoleRequest)(nil), "roles.UpdateRoleRequest")
 	proto.RegisterType((*DeleteRoleRequest)(nil), "roles.DeleteRoleRequest")
-	golang_proto.RegisterType((*DeleteRoleRequest)(nil), "roles.DeleteRoleRequest")
 	proto.RegisterType((*Role)(nil), "roles.Role")
-	golang_proto.RegisterType((*Role)(nil), "roles.Role")
 }
 
 func init() { proto.RegisterFile("services/roles/proto/roles.proto", fileDescriptor_a385908be3e62237) }
-func init() {
-	golang_proto.RegisterFile("services/roles/proto/roles.proto", fileDescriptor_a385908be3e62237)
-}
 
 var fileDescriptor_a385908be3e62237 = []byte{
-	// 576 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0xdf, 0x8a, 0xd3, 0x4e,
-	0x14, 0x66, 0xd2, 0x76, 0x7f, 0xf4, 0x04, 0xfa, 0xdb, 0x0e, 0xdd, 0xb5, 0xa4, 0xd2, 0x96, 0x20,
-	0xb8, 0x2e, 0x9a, 0x68, 0xbd, 0x13, 0x44, 0xb7, 0xab, 0x2c, 0x82, 0x17, 0x1a, 0x15, 0xc4, 0x9b,
-	0x25, 0x6d, 0xa7, 0x75, 0x20, 0xcd, 0xc4, 0x66, 0xb2, 0x20, 0xe2, 0x8d, 0x4f, 0x20, 0xf8, 0x02,
-	0xfa, 0x26, 0xe2, 0xd5, 0x5e, 0x0a, 0xde, 0xaf, 0xd2, 0xf5, 0x6a, 0x9f, 0x42, 0xe6, 0x4f, 0xfe,
-	0xb4, 0x29, 0xe8, 0x55, 0xce, 0x99, 0xf3, 0x9d, 0x6f, 0xbe, 0x33, 0xf3, 0x4d, 0xa0, 0x1f, 0x93,
-	0xc5, 0x09, 0x1d, 0x93, 0xd8, 0x5d, 0xb0, 0x80, 0xc4, 0x6e, 0xb4, 0x60, 0x9c, 0xa9, 0xd8, 0x91,
-	0x31, 0xae, 0xc9, 0xc4, 0xba, 0x3c, 0x63, 0x6c, 0x16, 0x10, 0xd7, 0x8f, 0xa8, 0xeb, 0x87, 0x21,
-	0xe3, 0x3e, 0xa7, 0x2c, 0xd4, 0x20, 0xab, 0xa3, 0xab, 0x32, 0x1b, 0x25, 0x53, 0x97, 0xcc, 0x23,
-	0xfe, 0x56, 0x17, 0x7b, 0xeb, 0x45, 0x4e, 0xe7, 0x24, 0xe6, 0xfe, 0x3c, 0xd2, 0x80, 0x1b, 0x33,
-	0xca, 0x5f, 0x27, 0x23, 0x67, 0xcc, 0xe6, 0xee, 0x8c, 0xcd, 0x58, 0x8e, 0x14, 0x99, 0x92, 0x24,
-	0x22, 0x05, 0xb7, 0xef, 0xc3, 0xf6, 0x63, 0x1a, 0x73, 0x4f, 0xe8, 0xf2, 0xc8, 0x9b, 0x84, 0xc4,
-	0x1c, 0xb7, 0xa0, 0x16, 0xd0, 0x39, 0xe5, 0x6d, 0xd4, 0x47, 0x7b, 0x15, 0x4f, 0x25, 0x78, 0x17,
-	0xb6, 0xd8, 0x74, 0x1a, 0x13, 0xde, 0x36, 0xe4, 0xb2, 0xce, 0xec, 0x2f, 0x08, 0x9a, 0x05, 0x8a,
-	0x38, 0x62, 0x61, 0x4c, 0xf0, 0x75, 0x50, 0xb3, 0xb6, 0x51, 0xbf, 0xb2, 0x67, 0x0e, 0x4c, 0x47,
-	0x1d, 0x83, 0x00, 0x0d, 0xeb, 0x17, 0x67, 0x3d, 0x55, 0xf5, 0xd4, 0x07, 0xdf, 0x04, 0x93, 0x33,
-	0xee, 0x07, 0xc7, 0x63, 0x96, 0x84, 0x7a, 0x83, 0xe1, 0xff, 0x17, 0x67, 0xbd, 0xe2, 0xb2, 0x07,
-	0x32, 0x39, 0x14, 0x71, 0xae, 0xb1, 0xb2, 0x59, 0x63, 0x75, 0x45, 0xe3, 0x15, 0x68, 0x1c, 0x11,
-	0xa9, 0x30, 0x9d, 0x11, 0x43, 0x35, 0x49, 0xe8, 0x44, 0x8e, 0x58, 0xf7, 0x64, 0x6c, 0x5f, 0x83,
-	0xe6, 0xe1, 0x82, 0xf8, 0x9c, 0x14, 0x81, 0x2d, 0xa8, 0x71, 0xca, 0x03, 0xa2, 0x91, 0x2a, 0xb1,
-	0xef, 0x42, 0xf3, 0x45, 0x34, 0x59, 0x83, 0x6e, 0xe0, 0xcc, 0xdb, 0x8d, 0x62, 0xfb, 0x55, 0x68,
-	0x3e, 0x20, 0x01, 0xf9, 0x6b, 0xbb, 0xfd, 0x0d, 0x41, 0x55, 0x60, 0x70, 0x03, 0x0c, 0x5d, 0xaa,
-	0x7a, 0x06, 0x9d, 0x64, 0x60, 0x63, 0xd3, 0x5e, 0x95, 0xc2, 0x5e, 0xf8, 0x1e, 0xc0, 0x58, 0x4e,
-	0x35, 0x39, 0xf6, 0xd5, 0xb9, 0x98, 0x03, 0xcb, 0x51, 0x36, 0x72, 0x52, 0x73, 0x38, 0xcf, 0x53,
-	0x1b, 0x0d, 0xab, 0x1f, 0x7f, 0xf6, 0x90, 0x57, 0xd7, 0x3d, 0x07, 0x5c, 0x10, 0x24, 0x72, 0x56,
-	0x49, 0x50, 0xfb, 0x57, 0x02, 0xdd, 0x73, 0xc0, 0x07, 0x9f, 0x2b, 0x60, 0x8a, 0x21, 0x9e, 0xa9,
-	0xe7, 0x81, 0x9f, 0x42, 0x3d, 0x33, 0x0c, 0xbe, 0xa4, 0x9d, 0xb1, 0xee, 0x42, 0xab, 0x5d, 0x2e,
-	0x28, 0x6f, 0xd9, 0xcd, 0x0f, 0x3f, 0x7e, 0x7f, 0x32, 0x4c, 0x5c, 0x77, 0x4f, 0x6e, 0xa9, 0xe7,
-	0x85, 0x8f, 0xe0, 0x3f, 0x7d, 0xc1, 0x78, 0x47, 0xf7, 0xad, 0x5e, 0xb8, 0x55, 0x74, 0xa0, 0xdd,
-	0x96, 0x0c, 0x18, 0x6f, 0x67, 0x0c, 0xee, 0x3b, 0x71, 0x84, 0xef, 0xf1, 0x23, 0x80, 0xdc, 0x03,
-	0x38, 0xd5, 0x50, 0xb2, 0xc5, 0x2a, 0x5d, 0x4b, 0xd2, 0x35, 0xec, 0x5c, 0xd0, 0x1d, 0xb4, 0x8f,
-	0x9f, 0x00, 0xe4, 0x1e, 0xc9, 0xa8, 0x4a, 0xb6, 0x59, 0xa5, 0xea, 0x48, 0xaa, 0x1d, 0xab, 0xa4,
-	0x4c, 0x30, 0xbe, 0x04, 0xc8, 0x6d, 0x93, 0x31, 0x96, 0x9c, 0x64, 0xed, 0x96, 0x6e, 0xe7, 0xa1,
-	0xf8, 0x85, 0xa4, 0x63, 0xef, 0x97, 0xc8, 0x87, 0x9d, 0xd3, 0x65, 0x17, 0x7d, 0x5f, 0x76, 0xd1,
-	0xaf, 0x65, 0x17, 0x7d, 0x3d, 0xef, 0xa2, 0xd3, 0xf3, 0x2e, 0x7a, 0xa5, 0x5e, 0xe7, 0x68, 0x4b,
-	0xd2, 0xdc, 0xfe, 0x13, 0x00, 0x00, 0xff, 0xff, 0xdf, 0xde, 0x45, 0x8a, 0xe0, 0x04, 0x00, 0x00,
+	// 604 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0x4f, 0x8b, 0xd3, 0x4e,
+	0x18, 0xfe, 0x4d, 0xda, 0xee, 0x8f, 0xbe, 0x81, 0x75, 0x3b, 0xec, 0xae, 0x25, 0x2b, 0x69, 0x09,
+	0x82, 0xeb, 0xa2, 0x89, 0x76, 0x6f, 0x82, 0xe8, 0x76, 0x95, 0x45, 0xf0, 0xa0, 0x51, 0x41, 0xbc,
+	0x2c, 0x69, 0x3b, 0xad, 0x03, 0x69, 0x27, 0x36, 0x93, 0x05, 0x11, 0x41, 0xfc, 0x04, 0x82, 0x5f,
+	0x40, 0x6f, 0x7e, 0x04, 0x8f, 0xe2, 0xc9, 0xa3, 0xe0, 0xc5, 0xd3, 0xba, 0x0d, 0x9e, 0xf6, 0xe4,
+	0xd1, 0xa3, 0xcc, 0x9f, 0x36, 0x69, 0x53, 0xd0, 0x53, 0xde, 0x77, 0xde, 0xe7, 0x7d, 0xe6, 0x79,
+	0x67, 0x9e, 0x09, 0x34, 0x63, 0x32, 0x3e, 0xa2, 0x5d, 0x12, 0x7b, 0x63, 0x16, 0x92, 0xd8, 0x8b,
+	0xc6, 0x8c, 0x33, 0x15, 0xbb, 0x32, 0xc6, 0x15, 0x99, 0x58, 0xe7, 0x06, 0x8c, 0x0d, 0x42, 0xe2,
+	0x05, 0x11, 0xf5, 0x82, 0xd1, 0x88, 0xf1, 0x80, 0x53, 0x36, 0xd2, 0x20, 0x6b, 0x4b, 0x57, 0x65,
+	0xd6, 0x49, 0xfa, 0x1e, 0x19, 0x46, 0xfc, 0xb9, 0x2e, 0x36, 0x16, 0x8b, 0x9c, 0x0e, 0x49, 0xcc,
+	0x83, 0x61, 0xa4, 0x01, 0x97, 0x07, 0x94, 0x3f, 0x4d, 0x3a, 0x6e, 0x97, 0x0d, 0xbd, 0x01, 0x1b,
+	0xb0, 0x0c, 0x29, 0x32, 0x25, 0x49, 0x44, 0x0a, 0xee, 0xdc, 0x84, 0xb5, 0xbb, 0x34, 0xe6, 0xbe,
+	0xd0, 0xe5, 0x93, 0x67, 0x09, 0x89, 0x39, 0x5e, 0x87, 0x4a, 0x48, 0x87, 0x94, 0xd7, 0x51, 0x13,
+	0x6d, 0x97, 0x7c, 0x95, 0xe0, 0x4d, 0x58, 0x61, 0xfd, 0x7e, 0x4c, 0x78, 0xdd, 0x90, 0xcb, 0x3a,
+	0x73, 0xde, 0x23, 0xa8, 0xe5, 0x28, 0xe2, 0x88, 0x8d, 0x62, 0x82, 0x2f, 0x81, 0x9a, 0xb5, 0x8e,
+	0x9a, 0xa5, 0x6d, 0xb3, 0x65, 0xba, 0xea, 0x18, 0x04, 0xa8, 0x5d, 0x3d, 0x3d, 0x6e, 0xa8, 0xaa,
+	0xaf, 0x3e, 0xf8, 0x0a, 0x98, 0x9c, 0xf1, 0x20, 0x3c, 0xec, 0xb2, 0x64, 0xa4, 0x37, 0x68, 0x9f,
+	0x39, 0x3d, 0x6e, 0xe4, 0x97, 0x7d, 0x90, 0xc9, 0xbe, 0x88, 0x33, 0x8d, 0xa5, 0xe5, 0x1a, 0xcb,
+	0x73, 0x1a, 0xcf, 0xc3, 0xea, 0x01, 0x91, 0x0a, 0xa7, 0x33, 0x62, 0x28, 0x27, 0x09, 0xed, 0xc9,
+	0x11, 0xab, 0xbe, 0x8c, 0x9d, 0x8b, 0x50, 0xdb, 0x1f, 0x93, 0x80, 0x93, 0x3c, 0x70, 0x1d, 0x2a,
+	0x9c, 0xf2, 0x90, 0x68, 0xa4, 0x4a, 0x9c, 0xeb, 0x50, 0x7b, 0x14, 0xf5, 0x16, 0xa0, 0x4b, 0x38,
+	0xb3, 0x76, 0x23, 0xdf, 0x7e, 0x01, 0x6a, 0xb7, 0x48, 0x48, 0xfe, 0xda, 0xee, 0x7c, 0x46, 0x50,
+	0x16, 0x18, 0xbc, 0x0a, 0x86, 0x2e, 0x95, 0x7d, 0x83, 0xf6, 0x66, 0x60, 0x63, 0xd9, 0x5e, 0xa5,
+	0xdc, 0x5e, 0xf8, 0x06, 0x40, 0x57, 0x4e, 0xd5, 0x3b, 0x0c, 0xd4, 0xb9, 0x98, 0x2d, 0xcb, 0x55,
+	0x36, 0x72, 0xa7, 0xe6, 0x70, 0x1f, 0x4e, 0x6d, 0xd4, 0x2e, 0xbf, 0xf9, 0xd1, 0x40, 0x7e, 0x55,
+	0xf7, 0xec, 0x71, 0x41, 0x90, 0xc8, 0x59, 0x25, 0x41, 0xe5, 0x5f, 0x09, 0x74, 0xcf, 0x1e, 0x6f,
+	0xbd, 0x2b, 0x81, 0x29, 0x86, 0x78, 0xa0, 0x9e, 0x07, 0xbe, 0x0f, 0xd5, 0x99, 0x61, 0xf0, 0x59,
+	0xed, 0x8c, 0x45, 0x17, 0x5a, 0xf5, 0x62, 0x41, 0x79, 0xcb, 0xa9, 0xbd, 0xfe, 0xf6, 0xf3, 0xad,
+	0x61, 0xe2, 0xaa, 0x77, 0x74, 0x55, 0x3d, 0x2f, 0x7c, 0x00, 0xff, 0xeb, 0x0b, 0xc6, 0x1b, 0xba,
+	0x6f, 0xfe, 0xc2, 0xad, 0xbc, 0x03, 0x9d, 0xba, 0x64, 0xc0, 0x78, 0x6d, 0xc6, 0xe0, 0xbd, 0x10,
+	0x47, 0xf8, 0x12, 0xdf, 0x01, 0xc8, 0x3c, 0x80, 0xa7, 0x1a, 0x0a, 0xb6, 0x98, 0xa7, 0x5b, 0x97,
+	0x74, 0xab, 0x4e, 0x26, 0xe8, 0x1a, 0xda, 0xc1, 0xf7, 0x00, 0x32, 0x8f, 0xcc, 0xa8, 0x0a, 0xb6,
+	0x99, 0xa7, 0xda, 0x92, 0x54, 0x1b, 0x56, 0x41, 0x99, 0x60, 0x7c, 0x0c, 0x90, 0xd9, 0x66, 0xc6,
+	0x58, 0x70, 0x92, 0xb5, 0x59, 0xb8, 0x9d, 0xdb, 0xe2, 0x17, 0x32, 0x1d, 0x7b, 0xa7, 0x40, 0xde,
+	0xde, 0xfd, 0x3e, 0xb1, 0xff, 0x3b, 0x99, 0xd8, 0xe8, 0xd7, 0xc4, 0x46, 0xbf, 0x27, 0x36, 0x7a,
+	0x95, 0xda, 0xe8, 0x43, 0x6a, 0xa3, 0x8f, 0xa9, 0x8d, 0x3e, 0xa5, 0x36, 0xfa, 0x92, 0xda, 0xe8,
+	0x6b, 0x6a, 0xa3, 0x93, 0xd4, 0x46, 0x4f, 0xd4, 0xab, 0xed, 0xac, 0x48, 0xfa, 0xdd, 0x3f, 0x01,
+	0x00, 0x00, 0xff, 0xff, 0x8f, 0xba, 0x13, 0x6e, 0xf8, 0x04, 0x00, 0x00,
+}
+
+func (this *ListRolesRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListRolesRequest)
+	if !ok {
+		that2, ok := that.(ListRolesRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListRolesRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListRolesRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListRolesRequest but is not nil && this == nil")
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListRolesRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListRolesRequest)
+	if !ok {
+		that2, ok := that.(ListRolesRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListRolesResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*ListRolesResponse)
+	if !ok {
+		that2, ok := that.(ListRolesResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *ListRolesResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *ListRolesResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *ListRolesResponse but is not nil && this == nil")
+	}
+	if len(this.Roles) != len(that1.Roles) {
+		return fmt.Errorf("Roles this(%v) Not Equal that(%v)", len(this.Roles), len(that1.Roles))
+	}
+	for i := range this.Roles {
+		if !this.Roles[i].Equal(that1.Roles[i]) {
+			return fmt.Errorf("Roles this[%v](%v) Not Equal that[%v](%v)", i, this.Roles[i], i, that1.Roles[i])
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return fmt.Errorf("TotalCount this(%v) Not Equal that(%v)", this.TotalCount, that1.TotalCount)
+	}
+	if this.Limit != that1.Limit {
+		return fmt.Errorf("Limit this(%v) Not Equal that(%v)", this.Limit, that1.Limit)
+	}
+	if this.Offset != that1.Offset {
+		return fmt.Errorf("Offset this(%v) Not Equal that(%v)", this.Offset, that1.Offset)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *ListRolesResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*ListRolesResponse)
+	if !ok {
+		that2, ok := that.(ListRolesResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if len(this.Roles) != len(that1.Roles) {
+		return false
+	}
+	for i := range this.Roles {
+		if !this.Roles[i].Equal(that1.Roles[i]) {
+			return false
+		}
+	}
+	if this.TotalCount != that1.TotalCount {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *GetRoleRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*GetRoleRequest)
+	if !ok {
+		that2, ok := that.(GetRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *GetRoleRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *GetRoleRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *GetRoleRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *GetRoleRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*GetRoleRequest)
+	if !ok {
+		that2, ok := that.(GetRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *CreateRoleRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*CreateRoleRequest)
+	if !ok {
+		that2, ok := that.(CreateRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *CreateRoleRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *CreateRoleRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *CreateRoleRequest but is not nil && this == nil")
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *CreateRoleRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*CreateRoleRequest)
+	if !ok {
+		that2, ok := that.(CreateRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *UpdateRoleRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*UpdateRoleRequest)
+	if !ok {
+		that2, ok := that.(UpdateRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *UpdateRoleRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *UpdateRoleRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *UpdateRoleRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *UpdateRoleRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*UpdateRoleRequest)
+	if !ok {
+		that2, ok := that.(UpdateRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *DeleteRoleRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*DeleteRoleRequest)
+	if !ok {
+		that2, ok := that.(DeleteRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *DeleteRoleRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *DeleteRoleRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *DeleteRoleRequest but is not nil && this == nil")
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *DeleteRoleRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*DeleteRoleRequest)
+	if !ok {
+		that2, ok := that.(DeleteRoleRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *Role) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*Role)
+	if !ok {
+		that2, ok := that.(Role)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *Role")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *Role but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *Role but is not nil && this == nil")
+	}
+	if this.Id != that1.Id {
+		return fmt.Errorf("Id this(%v) Not Equal that(%v)", this.Id, that1.Id)
+	}
+	if this.Uuid != that1.Uuid {
+		return fmt.Errorf("Uuid this(%v) Not Equal that(%v)", this.Uuid, that1.Uuid)
+	}
+	if this.Title != that1.Title {
+		return fmt.Errorf("Title this(%v) Not Equal that(%v)", this.Title, that1.Title)
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return fmt.Errorf("this.CreatedAt != nil && that1.CreatedAt == nil")
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return fmt.Errorf("CreatedAt this(%v) Not Equal that(%v)", this.CreatedAt, that1.CreatedAt)
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return fmt.Errorf("this.UpdatedAt != nil && that1.UpdatedAt == nil")
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return fmt.Errorf("UpdatedAt this(%v) Not Equal that(%v)", this.UpdatedAt, that1.UpdatedAt)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *Role) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Role)
+	if !ok {
+		that2, ok := that.(Role)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Id != that1.Id {
+		return false
+	}
+	if this.Uuid != that1.Uuid {
+		return false
+	}
+	if this.Title != that1.Title {
+		return false
+	}
+	if that1.CreatedAt == nil {
+		if this.CreatedAt != nil {
+			return false
+		}
+	} else if !this.CreatedAt.Equal(*that1.CreatedAt) {
+		return false
+	}
+	if that1.UpdatedAt == nil {
+		if this.UpdatedAt != nil {
+			return false
+		}
+	} else if !this.UpdatedAt.Equal(*that1.UpdatedAt) {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *ListRolesRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&roles.ListRolesRequest{")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *ListRolesResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 8)
+	s = append(s, "&roles.ListRolesResponse{")
+	if this.Roles != nil {
+		s = append(s, "Roles: "+fmt.Sprintf("%#v", this.Roles)+",\n")
+	}
+	s = append(s, "TotalCount: "+fmt.Sprintf("%#v", this.TotalCount)+",\n")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *GetRoleRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&roles.GetRoleRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *CreateRoleRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&roles.CreateRoleRequest{")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *UpdateRoleRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&roles.UpdateRoleRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *DeleteRoleRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&roles.DeleteRoleRequest{")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Role) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 9)
+	s = append(s, "&roles.Role{")
+	s = append(s, "Id: "+fmt.Sprintf("%#v", this.Id)+",\n")
+	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
+	s = append(s, "Title: "+fmt.Sprintf("%#v", this.Title)+",\n")
+	s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
+	s = append(s, "UpdatedAt: "+fmt.Sprintf("%#v", this.UpdatedAt)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func valueToGoStringRoles(v interface{}, typ string) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1071,6 +1641,175 @@ func encodeVarintRoles(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func NewPopulatedListRolesRequest(r randyRoles, easy bool) *ListRolesRequest {
+	this := &ListRolesRequest{}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedListRolesResponse(r randyRoles, easy bool) *ListRolesResponse {
+	this := &ListRolesResponse{}
+	if r.Intn(5) != 0 {
+		v1 := r.Intn(5)
+		this.Roles = make([]*Role, v1)
+		for i := 0; i < v1; i++ {
+			this.Roles[i] = NewPopulatedRole(r, easy)
+		}
+	}
+	this.TotalCount = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.TotalCount *= -1
+	}
+	this.Limit = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Limit *= -1
+	}
+	this.Offset = int64(r.Int63())
+	if r.Intn(2) == 0 {
+		this.Offset *= -1
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedGetRoleRequest(r randyRoles, easy bool) *GetRoleRequest {
+	this := &GetRoleRequest{}
+	this.Uuid = string(randStringRoles(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedCreateRoleRequest(r randyRoles, easy bool) *CreateRoleRequest {
+	this := &CreateRoleRequest{}
+	this.Title = string(randStringRoles(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedUpdateRoleRequest(r randyRoles, easy bool) *UpdateRoleRequest {
+	this := &UpdateRoleRequest{}
+	this.Uuid = string(randStringRoles(r))
+	this.Title = string(randStringRoles(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 3)
+	}
+	return this
+}
+
+func NewPopulatedDeleteRoleRequest(r randyRoles, easy bool) *DeleteRoleRequest {
+	this := &DeleteRoleRequest{}
+	this.Uuid = string(randStringRoles(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedRole(r randyRoles, easy bool) *Role {
+	this := &Role{}
+	this.Id = uint64(uint64(r.Uint32()))
+	this.Uuid = string(randStringRoles(r))
+	this.Title = string(randStringRoles(r))
+	if r.Intn(5) != 0 {
+		this.CreatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if r.Intn(5) != 0 {
+		this.UpdatedAt = github_com_gogo_protobuf_types.NewPopulatedStdTime(r, easy)
+	}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedRoles(r, 6)
+	}
+	return this
+}
+
+type randyRoles interface {
+	Float32() float32
+	Float64() float64
+	Int63() int64
+	Int31() int32
+	Uint32() uint32
+	Intn(n int) int
+}
+
+func randUTF8RuneRoles(r randyRoles) rune {
+	ru := r.Intn(62)
+	if ru < 10 {
+		return rune(ru + 48)
+	} else if ru < 36 {
+		return rune(ru + 55)
+	}
+	return rune(ru + 61)
+}
+func randStringRoles(r randyRoles) string {
+	v2 := r.Intn(100)
+	tmps := make([]rune, v2)
+	for i := 0; i < v2; i++ {
+		tmps[i] = randUTF8RuneRoles(r)
+	}
+	return string(tmps)
+}
+func randUnrecognizedRoles(r randyRoles, maxFieldNumber int) (dAtA []byte) {
+	l := r.Intn(5)
+	for i := 0; i < l; i++ {
+		wire := r.Intn(4)
+		if wire == 3 {
+			wire = 5
+		}
+		fieldNumber := maxFieldNumber + r.Intn(100)
+		dAtA = randFieldRoles(dAtA, r, fieldNumber, wire)
+	}
+	return dAtA
+}
+func randFieldRoles(dAtA []byte, r randyRoles, fieldNumber int, wire int) []byte {
+	key := uint32(fieldNumber)<<3 | uint32(wire)
+	switch wire {
+	case 0:
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(key))
+		v3 := r.Int63()
+		if r.Intn(2) == 0 {
+			v3 *= -1
+		}
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(v3))
+	case 1:
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	case 2:
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(key))
+		ll := r.Intn(100)
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(ll))
+		for j := 0; j < ll; j++ {
+			dAtA = append(dAtA, byte(r.Intn(256)))
+		}
+	default:
+		dAtA = encodeVarintPopulateRoles(dAtA, uint64(key))
+		dAtA = append(dAtA, byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)), byte(r.Intn(256)))
+	}
+	return dAtA
+}
+func encodeVarintPopulateRoles(dAtA []byte, v uint64) []byte {
+	for v >= 1<<7 {
+		dAtA = append(dAtA, uint8(uint64(v)&0x7f|0x80))
+		v >>= 7
+	}
+	dAtA = append(dAtA, uint8(v))
+	return dAtA
+}
 func (m *ListRolesRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1220,6 +1959,105 @@ func sovRoles(x uint64) (n int) {
 }
 func sozRoles(x uint64) (n int) {
 	return sovRoles(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (this *ListRolesRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListRolesRequest{`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ListRolesResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	repeatedStringForRoles := "[]*Role{"
+	for _, f := range this.Roles {
+		repeatedStringForRoles += strings.Replace(f.String(), "Role", "Role", 1) + ","
+	}
+	repeatedStringForRoles += "}"
+	s := strings.Join([]string{`&ListRolesResponse{`,
+		`Roles:` + repeatedStringForRoles + `,`,
+		`TotalCount:` + fmt.Sprintf("%v", this.TotalCount) + `,`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *GetRoleRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&GetRoleRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *CreateRoleRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&CreateRoleRequest{`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *UpdateRoleRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&UpdateRoleRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *DeleteRoleRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&DeleteRoleRequest{`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Role) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Role{`,
+		`Id:` + fmt.Sprintf("%v", this.Id) + `,`,
+		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
+		`Title:` + fmt.Sprintf("%v", this.Title) + `,`,
+		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func valueToStringRoles(v interface{}) string {
+	rv := reflect.ValueOf(v)
+	if rv.IsNil() {
+		return "nil"
+	}
+	pv := reflect.Indirect(rv).Interface()
+	return fmt.Sprintf("*%v", pv)
 }
 func (m *ListRolesRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
