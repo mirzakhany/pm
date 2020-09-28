@@ -39,7 +39,7 @@ func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
 }
 
 func (a api) ListUsers(ctx context.Context, request *users.ListUsersRequest) (*users.ListUsersResponse, error) {
-	offset, limit := grpcgw.GetOffsetAndLimit(request.Limit, request.Offset)
+	offset, limit := grpcgw.GetOffsetAndLimit(request.Offset, request.Limit)
 	res, err := a.service.Query(ctx, offset, limit)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
