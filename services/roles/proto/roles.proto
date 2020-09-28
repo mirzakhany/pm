@@ -27,8 +27,8 @@ message ListRolesRequest {
 }
 
 message ListRolesResponse {
-    repeated Role roles = 1;
-    int64 total_count = 2;
+    repeated Role roles = 1 [json_name = "roles", (gogoproto.jsontag) = "roles"];
+    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
     int64 limit = 3;
     int64 offset = 4;
 }

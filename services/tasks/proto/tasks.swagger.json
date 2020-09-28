@@ -11,7 +11,7 @@
     "application/json"
   ],
   "paths": {
-    "/tasks": {
+    "/v1/tasks": {
       "get": {
         "summary": "List Tasks",
         "operationId": "TaskService_ListTasks",
@@ -31,56 +31,24 @@
         },
         "parameters": [
           {
-            "name": "page_size",
+            "name": "limit",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "int64"
           },
           {
-            "name": "page_token",
+            "name": "offset",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
           "TaskService"
         ]
-      }
-    },
-    "/tasks/{uuid}": {
-      "get": {
-        "summary": "Get Task",
-        "operationId": "TaskService_GetTask",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/tasksTask"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "TaskService"
-        ]
-      }
-    },
-    "/v1/tasks": {
+      },
       "post": {
         "summary": "Create Task object request",
         "operationId": "TaskService_CreateTask",
@@ -114,6 +82,35 @@
       }
     },
     "/v1/tasks/{uuid}": {
+      "get": {
+        "summary": "Get Task",
+        "operationId": "TaskService_GetTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/tasksTask"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TaskService"
+        ]
+      },
       "delete": {
         "summary": "Delete Task object request",
         "operationId": "TaskService_DeleteTask",
@@ -219,7 +216,17 @@
     "tasksCreateTaskRequest": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
         "title": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "status": {
@@ -227,15 +234,17 @@
         },
         "sprint_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "estimate": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "assignee_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
+        },
+        "assignee_uuid": {
+          "type": "string"
+        },
+        "creator_uuid": {
+          "type": "string"
         }
       }
     },
@@ -248,22 +257,34 @@
             "$ref": "#/definitions/tasksTask"
           }
         },
-        "total_size": {
-          "type": "integer",
-          "format": "int32"
+        "total_count": {
+          "type": "string",
+          "format": "int64"
         },
-        "next_page_token": {
-          "type": "string"
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
     "tasksTask": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "uuid": {
           "type": "string"
         },
         "title": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "status": {
@@ -271,15 +292,25 @@
         },
         "sprint_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "estimate": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "assignee_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
+        },
+        "assignee": {
+          "$ref": "#/definitions/usersUser"
+        },
+        "creator": {
+          "$ref": "#/definitions/usersUser"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -297,7 +328,17 @@
     "tasksUpdateTaskRequest": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
         "uuid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "status": {
@@ -305,15 +346,49 @@
         },
         "sprint_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
         },
         "estimate": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "assignee_id": {
           "type": "string",
-          "format": "int64"
+          "format": "uint64"
+        },
+        "assignee_uuid": {
+          "type": "string"
+        },
+        "creator_uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "usersUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "enable": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }

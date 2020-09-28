@@ -4,11 +4,11 @@ import (
 	"context"
 	"github.com/gogo/protobuf/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/mirzakhany/pm/pkg/grpcgw"
+	users "github.com/mirzakhany/pm/services/users/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"proj/pkg/grpcgw"
-	users "proj/services/users/proto"
 )
 
 type API interface {
@@ -55,7 +55,7 @@ func (a api) GetUser(ctx context.Context, request *users.GetUserRequest) (*users
 }
 
 func (a api) CreateUser(ctx context.Context, request *users.CreateUserRequest) (*users.User, error) {
-	res,err := a.service.Create(ctx, request)
+	res, err := a.service.Create(ctx, request)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}

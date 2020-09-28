@@ -2,16 +2,16 @@ package roles
 
 import (
 	"context"
-	"database/sql"
+	"github.com/go-pg/pg"
 	"github.com/google/uuid"
+	"github.com/mirzakhany/pm/pkg/db"
 	"github.com/stretchr/testify/assert"
-	"proj/pkg/db"
 	"testing"
 	"time"
 )
 
 func TestRepository(t *testing.T) {
-	database := db.NewForTest(t)
+	database := db.NewForTest(t, []interface{}{(*RoleModel)(nil)})
 	db.ResetTables(t, database, "roles")
 	repo := NewRepository(database)
 
@@ -38,11 +38,11 @@ func TestRepository(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "admin", role.Title)
 	_, err = repo.Get(ctx, "test0")
-	assert.Equal(t, sql.ErrNoRows, err)
+	assert.EqualError(t, pg.ErrNoRows, err.Error())
 
 	// update
 	err = repo.Update(ctx, RoleModel{
-		ID: 	   role.ID,
+		ID:        role.ID,
 		UUID:      testUuid,
 		Title:     "manager",
 		CreatedAt: now,
@@ -53,15 +53,15 @@ func TestRepository(t *testing.T) {
 	assert.Equal(t, "manager", role.Title)
 
 	// query
-	roles, err := repo.Query(ctx, 0, count2)
+	_, count3, err := repo.Query(ctx, 0, count2)
 	assert.Nil(t, err)
-	assert.Equal(t, count2, int64(len(roles)))
+	assert.Equal(t, count2, int64(count3))
 
 	// delete
 	err = repo.Delete(ctx, testUuid)
 	assert.Nil(t, err)
 	_, err = repo.Get(ctx, testUuid)
-	assert.Equal(t, sql.ErrNoRows, err)
+	assert.EqualError(t, pg.ErrNoRows, err.Error())
 	err = repo.Delete(ctx, testUuid)
-	assert.Equal(t, sql.ErrNoRows, err)
+	assert.EqualError(t, pg.ErrNoRows, err.Error())
 }

@@ -1,18 +1,19 @@
-package users
+package tasks
 
 import (
 	"context"
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"github.com/mirzakhany/pm/pkg/db"
+	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
 
 func TestRepository(t *testing.T) {
-	database := db.NewForTest(t, []interface{}{(*UserModel)(nil)})
-	db.ResetTables(t, database, "users")
+	database := db.NewForTest(t, []interface{}{(*TaskModel)(nil)})
+	db.ResetTables(t, database, "tasks")
 	repo := NewRepository(database)
 
 	ctx := context.Background()
@@ -23,39 +24,47 @@ func TestRepository(t *testing.T) {
 	testUuid := uuid.New().String()
 	// create
 	now := time.Now()
-	err = repo.Create(ctx, UserModel{
-		UUID:      testUuid,
-		Username:  "admin",
-		Password:  "admin",
-		Email:     "admin@admin.com",
-		Enable:    true,
-		CreatedAt: now,
-		UpdatedAt: now,
+	err = repo.Create(ctx, TaskModel{
+		UUID:        testUuid,
+		Title:       "task1",
+		Description: "task1",
+		Status:      tasksProto.TaskStatus_IN_BACKLOG,
+		SprintID:    0,
+		Estimate:    4,
+		AssigneeID:  0,
+		CreatorID:   0,
+		CreatedAt:   now,
+		UpdatedAt:   now,
 	})
 	assert.Nil(t, err)
 	count2, _ := repo.Count(ctx)
 	assert.Equal(t, int64(1), count2-count)
 
 	// get
-	user, err := repo.Get(ctx, testUuid)
+	task, err := repo.Get(ctx, testUuid)
 	assert.Nil(t, err)
-	assert.Equal(t, "admin", user.Username)
+	assert.Equal(t, "task1", task.Title)
 	_, err = repo.Get(ctx, "test0")
 	assert.EqualError(t, pg.ErrNoRows, err.Error())
 
 	// update
-	err = repo.Update(ctx, UserModel{
-		ID:        user.ID,
-		UUID:      testUuid,
-		Username:  "owner",
-		Email:     "admin@admin.com",
-		Enable:    true,
-		CreatedAt: now,
-		UpdatedAt: now,
-	})
+	updatedTask := TaskModel{
+		ID:          task.ID,
+		UUID:        task.UUID,
+		Title:       "task2",
+		Description: task.Description,
+		Status:      task.Status,
+		SprintID:    task.SprintID,
+		Estimate:    task.Estimate,
+		AssigneeID:  task.AssigneeID,
+		CreatorID:   task.CreatorID,
+		CreatedAt:   task.CreatedAt,
+		UpdatedAt:   now,
+	}
+	err = repo.Update(ctx, updatedTask)
 	assert.Nil(t, err)
-	user, _ = repo.Get(ctx, testUuid)
-	assert.Equal(t, "owner", user.Username)
+	task2, _ := repo.Get(ctx, task.UUID)
+	assert.Equal(t, "task2", task2.Title)
 
 	// query
 	_, count3, err := repo.Query(ctx, 0, count2)

@@ -4,7 +4,7 @@ import (
 	"context"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
-	rolesProto "proj/services/roles/proto"
+	rolesProto "github.com/mirzakhany/pm/services/roles/proto"
 	"time"
 )
 
@@ -123,14 +123,13 @@ func (s service) Count(ctx context.Context) (int64, error) {
 
 // Query returns the roles with the specified offset and limit.
 func (s service) Query(ctx context.Context, offset, limit int64) (*rolesProto.ListRolesResponse, error) {
-	items, err := s.repo.Query(ctx, offset, limit)
+	items, count, err := s.repo.Query(ctx, offset, limit)
 	if err != nil {
 		return nil, err
 	}
 	var result []*rolesProto.Role
 	for _, item := range items {
 		result = append(result, &rolesProto.Role{
-			Id:        item.ID,
 			Uuid:      item.UUID,
 			Title:     item.Title,
 			CreatedAt: &item.CreatedAt,
@@ -139,7 +138,7 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*rolesProto.Li
 	}
 	return &rolesProto.ListRolesResponse{
 		Roles:      result,
-		TotalCount: int64(len(items)),
+		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,
 	}, nil

@@ -2,10 +2,10 @@ package roles
 
 import (
 	"context"
-	"database/sql"
 	"errors"
+	"github.com/go-pg/pg/v10"
+	"github.com/mirzakhany/pm/services/roles/proto"
 	"github.com/stretchr/testify/assert"
-	"proj/services/roles/proto"
 	"testing"
 )
 
@@ -88,13 +88,13 @@ func Test_service_CRUD(t *testing.T) {
 	assert.NotNil(t, err)
 
 	// validation error in update
-	_, err = s.Update(ctx, &roles.UpdateRoleRequest{Title: "",  Uuid: id})
+	_, err = s.Update(ctx, &roles.UpdateRoleRequest{Title: "", Uuid: id})
 	assert.NotNil(t, err)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(2), count)
 
 	// unexpected error in update
-	_, err = s.Update(ctx, &roles.UpdateRoleRequest{Title: "error",  Uuid: id})
+	_, err = s.Update(ctx, &roles.UpdateRoleRequest{Title: "error", Uuid: id})
 	assert.Equal(t, errCRUD, err)
 	count, _ = s.Count(ctx)
 	assert.Equal(t, int64(2), count)
@@ -131,15 +131,15 @@ func (m mockRepository) Get(ctx context.Context, id string) (RoleModel, error) {
 			return item, nil
 		}
 	}
-	return RoleModel{}, sql.ErrNoRows
+	return RoleModel{}, pg.ErrNoRows
 }
 
 func (m mockRepository) Count(ctx context.Context) (int64, error) {
 	return int64(len(m.items)), nil
 }
 
-func (m mockRepository) Query(ctx context.Context, offset, limit int64) ([]RoleModel, error) {
-	return m.items, nil
+func (m mockRepository) Query(ctx context.Context, offset, limit int64) ([]RoleModel, int, error) {
+	return m.items, len(m.items), nil
 }
 
 func (m *mockRepository) Create(ctx context.Context, role RoleModel) error {

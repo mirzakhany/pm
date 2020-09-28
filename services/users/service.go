@@ -4,7 +4,7 @@ import (
 	"context"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
-	usersProto "proj/services/users/proto"
+	usersProto "github.com/mirzakhany/pm/services/users/proto"
 	"time"
 )
 
@@ -45,6 +45,11 @@ func NewService(repo Repository) Service {
 	return service{repo}
 }
 
+// NewServiceForTest creates a new user service for test.
+func NewServiceForTest() Service {
+	return NewService(&mockRepository{})
+}
+
 // Get returns the user with the specified the user UUID.
 func (s service) Get(ctx context.Context, UUID string) (*usersProto.User, error) {
 	user, err := s.repo.Get(ctx, UUID)
@@ -52,7 +57,6 @@ func (s service) Get(ctx context.Context, UUID string) (*usersProto.User, error)
 		return nil, err
 	}
 	return &usersProto.User{
-		Id:        user.ID,
 		Uuid:      user.UUID,
 		Username:  user.Username,
 		Email:     user.Email,
@@ -95,6 +99,7 @@ func (s service) Update(ctx context.Context, req *usersProto.UpdateUserRequest) 
 	}
 	now := time.Now()
 
+	user.Id = 0
 	user.Username = req.Username
 	user.Email = req.Email
 	user.Enable = req.Enable
@@ -136,14 +141,13 @@ func (s service) Count(ctx context.Context) (int64, error) {
 
 // Query returns the users with the specified offset and limit.
 func (s service) Query(ctx context.Context, offset, limit int64) (*usersProto.ListUsersResponse, error) {
-	items, err := s.repo.Query(ctx, offset, limit)
+	items, count, err := s.repo.Query(ctx, offset, limit)
 	if err != nil {
 		return nil, err
 	}
 	var result []*usersProto.User
 	for _, item := range items {
 		result = append(result, &usersProto.User{
-			Id:        item.ID,
 			Uuid:      item.UUID,
 			Username:  item.Username,
 			Email:     item.Email,
@@ -154,7 +158,7 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*usersProto.Li
 	}
 	return &usersProto.ListUsersResponse{
 		Users:      result,
-		TotalCount: int64(len(items)),
+		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,
 	}, nil
