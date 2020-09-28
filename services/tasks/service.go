@@ -2,12 +2,13 @@ package tasks
 
 import (
 	"context"
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
 	"github.com/mirzakhany/pm/services/users"
 	usersProto "github.com/mirzakhany/pm/services/users/proto"
-	"time"
 )
 
 // Service encapsulates use case logic for tasks.
@@ -106,7 +107,7 @@ func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) 
 		Estimate:    req.Estimate,
 		AssigneeID:  assignee.Id,
 		CreatorID:   creator.Id,
-		Assignee:    &users.UserModel{
+		Assignee: &users.UserModel{
 			ID:        assignee.Id,
 			UUID:      assignee.Uuid,
 			Username:  assignee.Username,
@@ -116,7 +117,7 @@ func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) 
 			CreatedAt: *assignee.CreatedAt,
 			UpdatedAt: *assignee.UpdatedAt,
 		},
-		Creator:    &users.UserModel{
+		Creator: &users.UserModel{
 			ID:        creator.Id,
 			UUID:      creator.Uuid,
 			Username:  creator.Username,
@@ -126,8 +127,8 @@ func (s service) Create(ctx context.Context, req *tasksProto.CreateTaskRequest) 
 			CreatedAt: *creator.CreatedAt,
 			UpdatedAt: *creator.UpdatedAt,
 		},
-		CreatedAt:   now,
-		UpdatedAt:   now,
+		CreatedAt: now,
+		UpdatedAt: now,
 	})
 	if err != nil {
 		return nil, err
@@ -167,7 +168,7 @@ func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) 
 		Estimate:    req.Estimate,
 		AssigneeID:  assignee.Id,
 		CreatorID:   creator.Id,
-		Assignee:    &users.UserModel{
+		Assignee: &users.UserModel{
 			ID:        assignee.Id,
 			UUID:      assignee.Uuid,
 			Username:  assignee.Username,
@@ -177,7 +178,7 @@ func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) 
 			CreatedAt: *assignee.CreatedAt,
 			UpdatedAt: *assignee.UpdatedAt,
 		},
-		Creator:    &users.UserModel{
+		Creator: &users.UserModel{
 			ID:        creator.Id,
 			UUID:      creator.Uuid,
 			Username:  creator.Username,
@@ -187,8 +188,8 @@ func (s service) Update(ctx context.Context, req *tasksProto.UpdateTaskRequest) 
 			CreatedAt: *creator.CreatedAt,
 			UpdatedAt: *creator.UpdatedAt,
 		},
-		CreatedAt:   *task.CreatedAt,
-		UpdatedAt:   now,
+		CreatedAt: *task.CreatedAt,
+		UpdatedAt: now,
 	}
 
 	if err := s.repo.Update(ctx, taskModel); err != nil {

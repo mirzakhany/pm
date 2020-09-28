@@ -2,14 +2,15 @@ package tasks
 
 import (
 	"context"
+	"time"
+
 	"github.com/mirzakhany/pm/pkg/db"
 	tasksProto "github.com/mirzakhany/pm/services/tasks/proto"
 	"github.com/mirzakhany/pm/services/users"
-	"time"
 )
 
 type TaskModel struct {
-	tableName   struct{} `pg:"tasks,alias:t"`
+	tableName   struct{} `pg:"tasks,alias:t"` //nolint
 	ID          uint64   `pg:",pk"`
 	UUID        string
 	Title       string

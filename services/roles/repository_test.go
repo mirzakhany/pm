@@ -2,12 +2,13 @@ package roles
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/go-pg/pg"
 	"github.com/google/uuid"
 	"github.com/mirzakhany/pm/pkg/db"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestRepository(t *testing.T) {

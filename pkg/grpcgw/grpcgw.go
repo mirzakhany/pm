@@ -3,20 +3,21 @@ package grpcgw
 import (
 	"context"
 	"fmt"
+	"net"
+	"net/http"
+	"sync"
+	"time"
+
 	"github.com/gogo/gateway"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
-	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcZap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpcRecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpcCtxTags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/config"
 	"github.com/mirzakhany/pm/pkg/log"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
-	"net"
-	"net/http"
-	"sync"
-	"time"
 )
 
 type Controller interface {
@@ -55,15 +56,15 @@ func RegisterInterceptor(i Interceptor) {
 
 func newGrpcServer() *grpc.Server {
 	unaryMiddlewares := []grpc.UnaryServerInterceptor{
-		grpc_recovery.UnaryServerInterceptor(),
-		grpc_ctxtags.UnaryServerInterceptor(),
-		grpc_zap.UnaryServerInterceptor(log.Logger()),
+		grpcRecovery.UnaryServerInterceptor(),
+		grpcCtxTags.UnaryServerInterceptor(),
+		grpcZap.UnaryServerInterceptor(log.Logger()),
 	}
 
 	streamMiddlewares := []grpc.StreamServerInterceptor{
-		grpc_recovery.StreamServerInterceptor(),
-		grpc_ctxtags.StreamServerInterceptor(),
-		grpc_zap.StreamServerInterceptor(log.Logger()),
+		grpcRecovery.StreamServerInterceptor(),
+		grpcCtxTags.StreamServerInterceptor(),
+		grpcZap.StreamServerInterceptor(log.Logger()),
 	}
 
 	for i := range interceptors {
@@ -75,8 +76,8 @@ func newGrpcServer() *grpc.Server {
 		}
 	}
 	c := grpc.NewServer(
-		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(unaryMiddlewares...)),
-		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(streamMiddlewares...)),
+		grpc.UnaryInterceptor(grpcMiddleware.ChainUnaryServer(unaryMiddlewares...)),
+		grpc.StreamInterceptor(grpcMiddleware.ChainStreamServer(streamMiddlewares...)),
 	)
 
 	return c

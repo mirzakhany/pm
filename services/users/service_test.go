@@ -2,9 +2,10 @@ package users
 
 import (
 	"context"
-	"github.com/mirzakhany/pm/services/users/proto"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	users "github.com/mirzakhany/pm/services/users/proto"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateUserRequest_Validate(t *testing.T) {

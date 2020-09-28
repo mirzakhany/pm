@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -14,18 +15,6 @@ func getViperString(key string, defaultValue interface{}) (string, error) {
 			return s, nil
 		}
 		return "", fmt.Errorf("convert key %s to string is failed", key)
-	}
-	return v, nil
-}
-
-func getViperInt(key string, defaultValue interface{}) (int, error) {
-	v := viper.GetInt(key)
-	if v == 0 {
-		s, ok := defaultValue.(int)
-		if ok {
-			return s, nil
-		}
-		return 0, fmt.Errorf("convert key %s to int is failed", key)
 	}
 	return v, nil
 }
@@ -68,7 +57,7 @@ func getViperFloat64(key string, defaultValue interface{}) (float64, error) {
 
 func getViperBool(key string, defaultValue interface{}) (bool, error) {
 	v := viper.GetBool(key)
-	if v == false {
+	if !v {
 		s, ok := defaultValue.(bool)
 		if ok {
 			return s, nil

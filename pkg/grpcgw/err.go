@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"io"
 	"net/http"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/pkg/errors"
