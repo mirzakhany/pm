@@ -3,12 +3,12 @@ package log
 import (
 	"context"
 	"go.uber.org/zap"
-	"moul.io/zapgorm2"
+	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap/zaptest/observer"
 )
 
 var (
-	logger   *zap.Logger
-	dbLogger zapgorm2.Logger
+	logger *zap.Logger
 )
 
 func Init(ctx context.Context, debug bool) error {
@@ -26,17 +26,11 @@ func Init(ctx context.Context, debug bool) error {
 		<-ctx.Done()
 		_ = logger.Sync()
 	}()
-	dbLogger = zapgorm2.New(logger)
-	dbLogger.SetAsDefault()
 	return nil
 }
 
 func Logger() *zap.Logger {
 	return logger
-}
-
-func DbLogger() zapgorm2.Logger {
-	return dbLogger
 }
 
 // Debug logs a message at DebugLevel. The message includes any fields passed
@@ -72,4 +66,19 @@ func Fatal(msg string, f ...zap.Field) {
 // The logger then panics, even if logging at PanicLevel is disabled.
 func Panic(msg string, f ...zap.Field) {
 	logger.Panic(msg, f...)
+}
+
+// With creates a child logger and adds structured context to it. Fields added
+// to the child don't affect the parent, and vice versa.
+func With(f ...zap.Field) *zap.Logger {
+	if len(f) == 0 {
+		return logger
+	}
+	return logger.With(f...)
+}
+
+// NewForTest returns a new logger and the corresponding observed logs which can be used in unit tests to verify log entries.
+func NewForTest() (*zap.Logger, *observer.ObservedLogs) {
+	core, recorded := observer.New(zapcore.InfoLevel)
+	return zap.New(core), recorded
 }
