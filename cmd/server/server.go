@@ -3,18 +3,18 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/mirzakhany/pm/pkg/config"
+	"github.com/mirzakhany/pm/pkg/db"
+	"github.com/mirzakhany/pm/pkg/grpcgw"
+	"github.com/mirzakhany/pm/pkg/log"
+	"github.com/mirzakhany/pm/services"
 	"os"
 	"os/signal"
-	"proj/pkg/config"
-	"proj/pkg/db"
-	"proj/pkg/grpcgw"
-	"proj/pkg/log"
-	"proj/services"
 	"syscall"
 )
 
 var (
-	debugMode bool
+	debugMode = flag.Bool("config", false, "run in debug mode")
 )
 
 func cliContext() context.Context {
@@ -30,11 +30,10 @@ func cliContext() context.Context {
 }
 
 func main() {
-
-	flag.BoolVar(&debugMode, "debug", false, "run in debug mode")
+	flag.Parse()
 
 	ctx := cliContext()
-	err := log.Init(ctx, debugMode)
+	err := log.Init(ctx, *debugMode)
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +43,7 @@ func main() {
 		panic(err)
 	}
 
-	database, err := db.Init()
+	database, err := db.Init(ctx)
 	if err != nil {
 		panic(err)
 	}
