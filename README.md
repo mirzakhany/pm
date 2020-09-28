@@ -1,7 +1,8 @@
 ### Project Manager
 
-this project will be a project manager with golang backend and reactjs frontend ( will be in another repository)
+this project will be a project manager (PM) with golang backend and reactjs frontend ( will be in another repository)
 
+**_this repo is under heavy development. every thing can change before first stable release_**
 #### Goals are:
 
 * [ ] manage tasks
