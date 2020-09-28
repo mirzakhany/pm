@@ -1,60 +1,78 @@
 package db
 
 import (
+	"context"
 	"fmt"
-	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-	"proj/pkg/config"
-	"proj/pkg/log"
+	"github.com/go-pg/pg/v10"
+
+	//dbx "github.com/go-ozzo/ozzo-dbx"
+	"github.com/mirzakhany/pm/pkg/config"
+	"github.com/mirzakhany/pm/pkg/log"
+)
+
+// DB represents a DB connection that can be used to run SQL queries.
+type DB struct {
+	db *pg.DB
+}
+
+// TransactionFunc represents a function that will start a transaction and run the given function.
+type TransactionFunc func(ctx context.Context, f func(ctx context.Context) error) error
+
+type contextKey int
+
+const (
+	txKey contextKey = iota
 )
 
 var (
-	engine   config.String
 	host     config.String
 	port     config.Int
 	db       config.String
 	password config.String
 	user     config.String
-	timeZone config.String
 )
 
-func postgresEngine() (*gorm.DB, error) {
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=%s",
-		host.String(), user.String(), password.String(), db.String(), port.Int(), timeZone.String(),
-	)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: log.DbLogger()})
-	if err != nil {
-		log.Fatal("unable to connect to postgres database", log.Err(err))
-		return nil, err
-	}
-	return db, err
+// DB returns the dbx.DB wrapped by this object.
+func (db *DB) DB() *pg.DB {
+	return db.db
 }
 
-func Init() (*gorm.DB, error) {
+// With returns a Builder that can be used to build and execute SQL queries.
+// With will return the transaction if it is found in the given context.
+// Otherwise it will return a DB connection associated with the context.
+func (db *DB) With(ctx context.Context) *pg.DB {
+	if tx, ok := ctx.Value(txKey).(*pg.DB); ok {
+		return tx
+	}
+	return db.db.WithContext(ctx)
+}
 
-	engine = config.RegisterString("db.engine", "postgres")
+func Init(ctx context.Context) (*DB, error) {
+
 	host = config.RegisterString("db.host", "localhost")
 	port = config.RegisterInt("db.port", 5432)
 	db = config.RegisterString("db.db", "postgres")
 	password = config.RegisterString("db.password", "postgres")
 	user = config.RegisterString("db.user", "postgres")
-	timeZone = config.RegisterString("db.timeZone", "Europe/Stockholm")
 
 	if err := config.Load(); err != nil {
 		log.Panic("load database settings failed")
 		return nil, err
 	}
 
-	if engine.String() == "postgres" {
-		return postgresEngine()
-	}
+	database := pg.Connect(&pg.Options{
+		Addr:     fmt.Sprintf("%s:%d", host.String(), port.Int()),
+		User:     user.String(),
+		Password: password.String(),
+		Database: db.String(),
+	})
 
-	db, err := gorm.Open(sqlite.Open(host.String()), &gorm.Config{Logger: log.DbLogger()})
-	if err != nil {
-		log.Fatal("unable to connect to sqlite database", log.Err(err))
-		return nil, err
-	}
-	return db, nil
+	go func() {
+		<-ctx.Done()
+		if err := database.Close(); err != nil {
+			log.Error("error in close database", log.Err(err))
+		}
+	}()
+
+	return &DB{database}, nil
 }
