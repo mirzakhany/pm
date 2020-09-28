@@ -6,8 +6,8 @@ option go_package = "users";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "services/users/proto/model.proto";
 
 option (gogoproto.gostring_all) = true;
 option (gogoproto.equal_all) = true;
@@ -54,17 +54,6 @@ message UpdateUserRequest {
 
 message DeleteUserRequest {
     string uuid = 1;
-}
-
-message User {
-    uint64 id = 1;
-    string uuid = 2;
-    string username = 3;
-    string password = 4;
-    string email = 5;
-    bool enable = 6;
-    google.protobuf.Timestamp created_at = 7 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp updated_at = 8 [(gogoproto.stdtime) = true];
 }
 
 message LoginRequest {

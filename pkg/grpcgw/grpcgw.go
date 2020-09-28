@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"google.golang.org/grpc/reflection"
+
 	"github.com/gogo/gateway"
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpcZap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -79,6 +81,7 @@ func newGrpcServer() *grpc.Server {
 		grpc.UnaryInterceptor(grpcMiddleware.ChainUnaryServer(unaryMiddlewares...)),
 		grpc.StreamInterceptor(grpcMiddleware.ChainStreamServer(streamMiddlewares...)),
 	)
+	reflection.Register(c)
 
 	return c
 }
