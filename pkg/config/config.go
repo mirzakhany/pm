@@ -76,7 +76,6 @@ func (cc *configHolder) handleChange() error {
 	for _, configItem := range cc.confItems {
 		switch configItem.defValue.(type) {
 		case string:
-
 			v, err := getViperString(configItem.key, configItem.defValue)
 			if err != nil {
 				return err
