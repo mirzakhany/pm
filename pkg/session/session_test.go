@@ -9,11 +9,10 @@ import (
 	"time"
 )
 
-
 func TestMain(m *testing.M) {
 	ctx := context.Background()
 	_, err := kv.InitMock(ctx)
-	if err!= nil{
+	if err != nil {
 		panic(err)
 	}
 
@@ -33,7 +32,7 @@ func TestSession(t *testing.T) {
 		Password: "test1",
 	}
 
-	err := Set("test1", test1, time.Minute * 1)
+	err := Set("test1", test1, time.Minute*1)
 	assert.Nil(t, err)
 
 	var test1Val test
