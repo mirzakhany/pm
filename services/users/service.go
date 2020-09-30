@@ -17,6 +17,8 @@ type Service interface {
 	Create(ctx context.Context, input *usersProto.CreateUserRequest) (*usersProto.User, error)
 	Update(ctx context.Context, input *usersProto.UpdateUserRequest) (*usersProto.User, error)
 	Delete(ctx context.Context, uuid string) (*usersProto.User, error)
+	// GetByUsername returns the users if username found
+	GetByUsername(ctx context.Context, username string) (*usersProto.User, error)
 }
 
 // ValidateCreateRequest validates the CreateUserRequest fields.
@@ -162,5 +164,23 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*usersProto.Li
 		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,
+	}, nil
+}
+
+// GetByUsername returns the users if username found
+func (s service) GetByUsername(ctx context.Context, username string) (*usersProto.User, error) {
+	user, err := s.repo.WhereOne(ctx, "username = ?", username)
+	if err != nil {
+		return nil, err
+	}
+	return &usersProto.User{
+		Id:        user.ID,
+		Uuid:      user.UUID,
+		Username:  user.Username,
+		Password:  user.Password,
+		Email:     user.Email,
+		Enable:    user.Enable,
+		CreatedAt: &user.CreatedAt,
+		UpdatedAt: &user.UpdatedAt,
 	}, nil
 }
