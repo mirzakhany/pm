@@ -61,3 +61,10 @@ func (m *mockRepository) Delete(ctx context.Context, id string) error {
 	}
 	return nil
 }
+
+func (m mockRepository) Where(ctx context.Context, condition string, params ...interface{}) ([]UserModel, int, error) {
+	return m.items, len(m.items), nil
+}
+func (m mockRepository) WhereOne(ctx context.Context, condition string, params ...interface{}) (UserModel, error) {
+	return m.items[0], nil
+}

@@ -11,9 +11,9 @@ type UserModel struct {
 	tableName struct{} `pg:"users,alias:u"` //nolint
 	ID        uint64   `pg:",pk"`
 	UUID      string
-	Username  string
+	Username  string `pg:",unique"`
 	Password  string
-	Email     string
+	Email     string `pg:",unique"`
 	Enable    bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -33,6 +33,10 @@ type Repository interface {
 	Update(ctx context.Context, user UserModel) error
 	// Delete removes the user with given UUID from the storage.
 	Delete(ctx context.Context, uuid string) error
+	// Where returns the list of users with the given condition
+	Where(ctx context.Context, condition string, params ...interface{}) ([]UserModel, int, error)
+	// WhereOne returns the one of users with the given condition
+	WhereOne(ctx context.Context, condition string, params ...interface{}) (UserModel, error)
 }
 
 // repository persists users in database
@@ -92,4 +96,18 @@ func (r repository) Query(ctx context.Context, offset, limit int64) ([]UserModel
 		Offset(int(offset)).
 		SelectAndCount()
 	return _users, count, err
+}
+
+// Where returns the list of users with the given condition
+func (r repository) Where(ctx context.Context, condition string, params ...interface{}) ([]UserModel, int, error) {
+	var _users []UserModel
+	count, err := r.db.With(ctx).Model(&_users).Where(condition, params).SelectAndCount()
+	return _users, count, err
+}
+
+// WhereOne returns the one of users with the given condition
+func (r repository) WhereOne(ctx context.Context, condition string, params ...interface{}) (UserModel, error) {
+	var user UserModel
+	err := r.db.With(ctx).Model(&user).Where(condition, params...).First()
+	return user, err
 }
