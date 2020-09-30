@@ -32,7 +32,7 @@ func (c *Client) With(ctx context.Context) *redis.Client {
 	return c.client.WithContext(ctx)
 }
 
-// Conn will return redis connection
+// Get will return redis connection
 func Get() *Client {
 	return client
 }

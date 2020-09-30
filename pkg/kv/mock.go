@@ -2,9 +2,10 @@ package kv
 
 import (
 	"context"
+	"strconv"
+
 	"github.com/alicebob/miniredis/v2"
 	"github.com/mirzakhany/pm/pkg/config"
-	"strconv"
 )
 
 var redisServer *miniredis.Miniredis

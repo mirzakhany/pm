@@ -12,7 +12,6 @@ import (
 	"time"
 )
 
-
 func TestMain(m *testing.M) {
 	var err error
 	redisServer, err = miniredis.Run()
@@ -79,7 +78,7 @@ func TestSet(t *testing.T) {
 	client, err := Init(ctx)
 	assert.Nil(t, err)
 
-	err = client.Set("test", "test-value", time.Minute * 1)
+	err = client.Set("test", "test-value", time.Minute*1)
 	assert.Nil(t, err)
 
 	testVal, err := client.client.Get(ctx, "test").Result()
@@ -92,7 +91,7 @@ func TestGetString(t *testing.T) {
 	client, err := Init(ctx)
 	assert.Nil(t, err)
 
-	err = client.Set("test", "test-value", time.Minute * 1)
+	err = client.Set("test", "test-value", time.Minute*1)
 	assert.Nil(t, err)
 
 	testVal, err := client.GetString("test")
