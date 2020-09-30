@@ -55,7 +55,6 @@ func (c *Client) Set(key string, val interface{}, alive time.Duration) error {
 func (c *Client) GetString(key string) (string, error) {
 	val, err := c.client.Get(c.ctx, key).Result()
 	if err != nil {
-		log.Error("kv: get string error", log.Err(err))
 		return "", err
 	}
 	return val, err
@@ -73,6 +72,7 @@ func (c *Client) Delete(key string) error {
 
 // Init will initialize the key value store
 func Init(ctx context.Context) (*Client, error) {
+
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", host.String(), port.Int()),
 		Password: password.String(),
