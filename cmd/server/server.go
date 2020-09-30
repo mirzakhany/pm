@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/mirzakhany/pm/pkg/kv"
 	"os"
 	"os/signal"
 	"syscall"
@@ -40,6 +41,11 @@ func main() {
 	}
 
 	err = config.Init("config", "yaml", "")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = kv.Init(ctx)
 	if err != nil {
 		panic(err)
 	}
