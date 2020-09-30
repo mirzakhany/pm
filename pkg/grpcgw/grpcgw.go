@@ -50,7 +50,7 @@ func RegisterController(c Controller) {
 	controllers = append(controllers, c)
 }
 
-func RegisterInterceptor(i Interceptor) {
+func RegisterInterceptors(i Interceptor) {
 	lock.Lock()
 	defer lock.Unlock()
 	interceptors = append(interceptors, i)

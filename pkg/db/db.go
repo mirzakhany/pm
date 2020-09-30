@@ -15,9 +15,6 @@ type DB struct {
 	db *pg.DB
 }
 
-// TransactionFunc represents a function that will start a transaction and run the given function.
-type TransactionFunc func(ctx context.Context, f func(ctx context.Context) error) error
-
 type contextKey int
 
 const (
