@@ -2,6 +2,8 @@ package users
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/gogo/protobuf/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
@@ -21,6 +23,68 @@ type API interface {
 
 type api struct {
 	service Service
+}
+
+func (a api) Logout(ctx context.Context, req *users.LogoutRequest) (*users.LogoutResponse, error) {
+	token, err := auth.ExtractToken(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+	err = auth.DeleteToken(token, true /* isAccessToken */)
+	if err != nil {
+		log.Error("failed to remove token", log.Err(err))
+		return nil, status.Errorf(codes.Internal, "logout failed")
+	}
+	return nil, nil
+}
+
+func (a api) VerifyToken(ctx context.Context, request *users.VerifyTokenRequest) (*users.VerifyTokenResponse, error) {
+	vTokens, err := auth.VerifyToken(request.AccessToken)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+	return &users.VerifyTokenResponse{AccessToken: vTokens}, nil
+}
+
+func (a api) RefreshToken(ctx context.Context, request *users.RefreshTokenRequest) (*users.RefreshTokenResponse, error) {
+
+	vToken, err := auth.VerifyToken(request.RefreshToken)
+	if err != nil {
+		fmt.Println(err)
+		return nil, status.Errorf(codes.Unauthenticated, "invalid refresh token")
+	}
+
+	user, err := auth.ExtractSessionUser(request.RefreshToken)
+	if err != nil {
+		fmt.Println(err)
+		return nil, status.Errorf(codes.Unauthenticated, "session expired")
+	}
+
+	dbUser, err := a.service.GetByUsername(ctx, user.Username)
+	if err != nil {
+		fmt.Println(err)
+		return nil, status.Errorf(codes.Unauthenticated, "invalid user")
+	}
+
+	if !dbUser.Enable {
+		return nil, status.Errorf(codes.Unauthenticated, "user is not active")
+	}
+	err = auth.DeleteToken(vToken, false /* isAccessToken */)
+	if err != nil {
+		log.Error("failed to remove token", log.Err(err))
+		return nil, status.Errorf(codes.Internal, "logout failed")
+	}
+
+	tokens, err := auth.CreateToken(dbUser)
+	if err != nil {
+		log.Error("error on create user token", log.String("user", dbUser.Username), log.Err(err))
+		return nil, status.Errorf(codes.Internal, "internal server error, create token")
+	}
+
+	return &users.RefreshTokenResponse{
+		AccessToken:  tokens.AccessToken,
+		RefreshToken: tokens.RefreshToken,
+	}, nil
 }
 
 func (a api) Login(ctx context.Context, request *users.LoginRequest) (*users.LoginResponse, error) {
@@ -128,4 +192,6 @@ func New(srv Service) API {
 func init() {
 	kv.Memory().SetString("/users.UserService/Login", "open")
 	kv.Memory().SetString("/users.UserService/Register", "open")
+	kv.Memory().SetString("/users.UserService/VerifyToken", "open")
+	kv.Memory().SetString("/users.UserService/RefreshToken", "open")
 }

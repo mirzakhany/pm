@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"errors"
+
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/mirzakhany/pm/pkg/kv"
 	"github.com/mirzakhany/pm/pkg/session"
@@ -50,6 +52,24 @@ func authHandler(ctx context.Context) (context.Context, error) {
 		return ctx, status.Errorf(codes.Unauthenticated, "invalid token")
 	}
 	return context.WithValue(context.WithValue(ctx, user, userKey), tokenKey, token), nil
+}
+
+// ExtractUser try to extract the current user from the context
+func ExtractUser(ctx context.Context) (*users.User, error) {
+	u, ok := ctx.Value(userKey).(*users.User)
+	if !ok {
+		return nil, errors.New("no user in context")
+	}
+	return u, nil
+}
+
+// ExtractToken try to extract token from context
+func ExtractToken(ctx context.Context) (string, error) {
+	tok, ok := ctx.Value(tokenKey).(string)
+	if !ok {
+		return "", errors.New("no token in context")
+	}
+	return tok, nil
 }
 
 func init() {
