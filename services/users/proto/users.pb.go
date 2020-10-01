@@ -496,6 +496,82 @@ func (m *LoginResponse) GetRefreshToken() string {
 	return ""
 }
 
+type LogoutRequest struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LogoutRequest) Reset()      { *m = LogoutRequest{} }
+func (*LogoutRequest) ProtoMessage() {}
+func (*LogoutRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{8}
+}
+func (m *LogoutRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LogoutRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LogoutRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *LogoutRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LogoutRequest.Merge(m, src)
+}
+func (m *LogoutRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *LogoutRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_LogoutRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LogoutRequest proto.InternalMessageInfo
+
+type LogoutResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LogoutResponse) Reset()      { *m = LogoutResponse{} }
+func (*LogoutResponse) ProtoMessage() {}
+func (*LogoutResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{9}
+}
+func (m *LogoutResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LogoutResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LogoutResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *LogoutResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LogoutResponse.Merge(m, src)
+}
+func (m *LogoutResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *LogoutResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_LogoutResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LogoutResponse proto.InternalMessageInfo
+
 type RegisterRequest struct {
 	Username             string   `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	Password             string   `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
@@ -508,7 +584,7 @@ type RegisterRequest struct {
 func (m *RegisterRequest) Reset()      { *m = RegisterRequest{} }
 func (*RegisterRequest) ProtoMessage() {}
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f69d90f6e4d58fb0, []int{8}
+	return fileDescriptor_f69d90f6e4d58fb0, []int{10}
 }
 func (m *RegisterRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -570,7 +646,7 @@ type RegisterResponse struct {
 func (m *RegisterResponse) Reset()      { *m = RegisterResponse{} }
 func (*RegisterResponse) ProtoMessage() {}
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f69d90f6e4d58fb0, []int{9}
+	return fileDescriptor_f69d90f6e4d58fb0, []int{11}
 }
 func (m *RegisterResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -620,6 +696,198 @@ func (m *RegisterResponse) GetEmail() string {
 	return ""
 }
 
+type VerifyTokenRequest struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *VerifyTokenRequest) Reset()      { *m = VerifyTokenRequest{} }
+func (*VerifyTokenRequest) ProtoMessage() {}
+func (*VerifyTokenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{12}
+}
+func (m *VerifyTokenRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VerifyTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VerifyTokenRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VerifyTokenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VerifyTokenRequest.Merge(m, src)
+}
+func (m *VerifyTokenRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *VerifyTokenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_VerifyTokenRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VerifyTokenRequest proto.InternalMessageInfo
+
+func (m *VerifyTokenRequest) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+type VerifyTokenResponse struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *VerifyTokenResponse) Reset()      { *m = VerifyTokenResponse{} }
+func (*VerifyTokenResponse) ProtoMessage() {}
+func (*VerifyTokenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{13}
+}
+func (m *VerifyTokenResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *VerifyTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_VerifyTokenResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *VerifyTokenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VerifyTokenResponse.Merge(m, src)
+}
+func (m *VerifyTokenResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *VerifyTokenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_VerifyTokenResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VerifyTokenResponse proto.InternalMessageInfo
+
+func (m *VerifyTokenResponse) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+type RefreshTokenRequest struct {
+	RefreshToken         string   `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RefreshTokenRequest) Reset()      { *m = RefreshTokenRequest{} }
+func (*RefreshTokenRequest) ProtoMessage() {}
+func (*RefreshTokenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{14}
+}
+func (m *RefreshTokenRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RefreshTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RefreshTokenRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RefreshTokenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshTokenRequest.Merge(m, src)
+}
+func (m *RefreshTokenRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *RefreshTokenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshTokenRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshTokenRequest proto.InternalMessageInfo
+
+func (m *RefreshTokenRequest) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
+
+type RefreshTokenResponse struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken         string   `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RefreshTokenResponse) Reset()      { *m = RefreshTokenResponse{} }
+func (*RefreshTokenResponse) ProtoMessage() {}
+func (*RefreshTokenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f69d90f6e4d58fb0, []int{15}
+}
+func (m *RefreshTokenResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *RefreshTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_RefreshTokenResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *RefreshTokenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RefreshTokenResponse.Merge(m, src)
+}
+func (m *RefreshTokenResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *RefreshTokenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_RefreshTokenResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RefreshTokenResponse proto.InternalMessageInfo
+
+func (m *RefreshTokenResponse) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *RefreshTokenResponse) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*ListUsersRequest)(nil), "users.ListUsersRequest")
 	proto.RegisterType((*ListUsersResponse)(nil), "users.ListUsersResponse")
@@ -629,58 +897,73 @@ func init() {
 	proto.RegisterType((*DeleteUserRequest)(nil), "users.DeleteUserRequest")
 	proto.RegisterType((*LoginRequest)(nil), "users.LoginRequest")
 	proto.RegisterType((*LoginResponse)(nil), "users.LoginResponse")
+	proto.RegisterType((*LogoutRequest)(nil), "users.LogoutRequest")
+	proto.RegisterType((*LogoutResponse)(nil), "users.LogoutResponse")
 	proto.RegisterType((*RegisterRequest)(nil), "users.RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "users.RegisterResponse")
+	proto.RegisterType((*VerifyTokenRequest)(nil), "users.VerifyTokenRequest")
+	proto.RegisterType((*VerifyTokenResponse)(nil), "users.VerifyTokenResponse")
+	proto.RegisterType((*RefreshTokenRequest)(nil), "users.RefreshTokenRequest")
+	proto.RegisterType((*RefreshTokenResponse)(nil), "users.RefreshTokenResponse")
 }
 
 func init() { proto.RegisterFile("services/users/proto/users.proto", fileDescriptor_f69d90f6e4d58fb0) }
 
 var fileDescriptor_f69d90f6e4d58fb0 = []byte{
-	// 692 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xcb, 0x6e, 0xd3, 0x4c,
-	0x14, 0xfe, 0x27, 0x97, 0xfe, 0xcd, 0x49, 0x6f, 0x99, 0x3f, 0x6d, 0x23, 0xf7, 0x97, 0x29, 0x06,
-	0x89, 0xaa, 0x12, 0xb1, 0x68, 0x77, 0xac, 0x10, 0x05, 0x2a, 0xa4, 0x0a, 0x81, 0xa1, 0x6a, 0xc5,
-	0xa6, 0x72, 0x92, 0x49, 0x6a, 0xe1, 0x78, 0xd2, 0xcc, 0xb8, 0xa8, 0x42, 0x48, 0x08, 0x89, 0x27,
-	0xe0, 0x25, 0x78, 0x04, 0x96, 0x2c, 0x61, 0x87, 0xc4, 0x86, 0x65, 0x63, 0xf1, 0x00, 0x2c, 0x59,
-	0xa2, 0xb9, 0xd8, 0x8e, 0xe3, 0x40, 0x17, 0xb0, 0x9b, 0x73, 0x99, 0xef, 0x7c, 0xe7, 0xcc, 0xf9,
-	0x06, 0xd6, 0x19, 0x19, 0x9e, 0x7a, 0x6d, 0xc2, 0xec, 0x90, 0x91, 0x21, 0xb3, 0x07, 0x43, 0xca,
-	0xa9, 0x3a, 0x37, 0xe5, 0x19, 0x97, 0xa5, 0x61, 0xfc, 0xdf, 0xa3, 0xb4, 0xe7, 0x13, 0xdb, 0x1d,
-	0x78, 0xb6, 0x1b, 0x04, 0x94, 0xbb, 0xdc, 0xa3, 0x81, 0x4e, 0x32, 0xd6, 0x74, 0x54, 0x5a, 0xad,
-	0xb0, 0x6b, 0x93, 0xfe, 0x80, 0x9f, 0xe9, 0xe0, 0xf5, 0x9e, 0xc7, 0x8f, 0xc3, 0x56, 0xb3, 0x4d,
-	0xfb, 0x76, 0x8f, 0xf6, 0x68, 0x9a, 0x25, 0x2c, 0x55, 0x51, 0x9c, 0x74, 0xfa, 0x74, 0x4a, 0x7d,
-	0xda, 0x21, 0xbe, 0xca, 0xb0, 0x6e, 0xc1, 0xd2, 0x9e, 0xc7, 0xf8, 0xbe, 0x08, 0x3b, 0xe4, 0x24,
-	0x24, 0x8c, 0xe3, 0x3a, 0x94, 0x7d, 0xaf, 0xef, 0xf1, 0x06, 0x5a, 0x47, 0x1b, 0x45, 0x47, 0x19,
-	0x78, 0x05, 0x66, 0x68, 0xb7, 0xcb, 0x08, 0x6f, 0x14, 0xa4, 0x5b, 0x5b, 0xd6, 0x1b, 0x04, 0xb5,
-	0x31, 0x08, 0x36, 0xa0, 0x01, 0x23, 0xf8, 0x32, 0xa8, 0x66, 0x1b, 0x68, 0xbd, 0xb8, 0x51, 0xdd,
-	0xaa, 0x36, 0xd5, 0x1c, 0x44, 0x92, 0xa3, 0x22, 0xf8, 0x12, 0x54, 0x39, 0xe5, 0xae, 0x7f, 0xd4,
-	0xa6, 0x61, 0x10, 0xa3, 0x82, 0x74, 0xed, 0x08, 0x4f, 0xca, 0xa3, 0x38, 0x9d, 0x47, 0x29, 0xc3,
-	0xe3, 0x2a, 0x2c, 0xec, 0x12, 0xc9, 0x22, 0xee, 0x03, 0x43, 0x29, 0x0c, 0xbd, 0x8e, 0x6c, 0xa3,
-	0xe2, 0xc8, 0xb3, 0x75, 0x06, 0xb5, 0x9d, 0x21, 0x71, 0x39, 0x19, 0x4f, 0x34, 0x60, 0x56, 0x50,
-	0x0a, 0xdc, 0x3e, 0xd1, 0xc9, 0x89, 0x2d, 0x62, 0x03, 0x97, 0xb1, 0xe7, 0x74, 0xd8, 0x91, 0x14,
-	0x2b, 0x4e, 0x62, 0x0b, 0x82, 0xa4, 0xef, 0x7a, 0xbe, 0x24, 0x58, 0x71, 0x94, 0x21, 0x08, 0x92,
-	0xc0, 0x6d, 0xf9, 0x44, 0x12, 0x9c, 0x75, 0xb4, 0x65, 0x9d, 0x40, 0x6d, 0x7f, 0xd0, 0x99, 0x28,
-	0x3d, 0x85, 0x63, 0x86, 0x4e, 0x61, 0x82, 0x4e, 0x52, 0xb2, 0x34, 0xbd, 0x64, 0x39, 0x53, 0xf2,
-	0x1a, 0xd4, 0xee, 0x10, 0x9f, 0x5c, 0x58, 0xd2, 0xba, 0x07, 0x73, 0x7b, 0xb4, 0xe7, 0x05, 0x7f,
-	0x38, 0x11, 0xeb, 0x00, 0xe6, 0x35, 0x4e, 0xb2, 0x07, 0x73, 0x6e, 0xbb, 0x4d, 0x18, 0x3b, 0xe2,
-	0xf4, 0x19, 0x09, 0x34, 0x58, 0x55, 0xf9, 0x9e, 0x08, 0x17, 0xbe, 0x02, 0xf3, 0x43, 0xd2, 0x1d,
-	0x12, 0x76, 0xac, 0x73, 0x14, 0xe8, 0x9c, 0x76, 0xca, 0x24, 0xeb, 0x08, 0x16, 0x1d, 0xd2, 0xf3,
-	0x18, 0x9f, 0xfe, 0x6a, 0x85, 0xdf, 0x70, 0x2c, 0xfe, 0xea, 0xd5, 0xc6, 0x47, 0x68, 0x1d, 0xc2,
-	0x52, 0x5a, 0x40, 0x93, 0xff, 0x2b, 0x8f, 0xb3, 0xf5, 0xa9, 0x04, 0x55, 0x31, 0xff, 0xc7, 0x4a,
-	0x8b, 0xf8, 0x11, 0x54, 0x12, 0xbd, 0xe0, 0x55, 0x2d, 0x8c, 0x49, 0x11, 0x1a, 0x8d, 0x7c, 0x40,
-	0xb1, 0xb2, 0x6a, 0xaf, 0xbf, 0x7c, 0x7b, 0x5b, 0xa8, 0xe2, 0x8a, 0x7d, 0x7a, 0x43, 0xe9, 0x1a,
-	0xef, 0xc2, 0xbf, 0x7a, 0xf7, 0xf1, 0xb2, 0xbe, 0x97, 0xd5, 0x82, 0x31, 0x2e, 0x40, 0xab, 0x21,
-	0x11, 0x30, 0x5e, 0x4a, 0x10, 0xec, 0x17, 0xa2, 0xb9, 0x97, 0xf8, 0x3e, 0x40, 0x2a, 0x0f, 0x1c,
-	0x73, 0xc8, 0x29, 0x26, 0x0b, 0x57, 0x97, 0x70, 0x0b, 0x56, 0x4a, 0xe8, 0x26, 0xda, 0xc4, 0x0f,
-	0x01, 0xd2, 0x75, 0x4f, 0xa0, 0x72, 0x0a, 0xc8, 0x42, 0xad, 0x49, 0xa8, 0x65, 0x23, 0xc7, 0x4c,
-	0x20, 0x1e, 0x02, 0xa4, 0xdb, 0x9c, 0x20, 0xe6, 0x16, 0xdc, 0x58, 0x69, 0xaa, 0x2f, 0xb4, 0x19,
-	0x7f, 0x8e, 0xcd, 0xbb, 0xe2, 0x0b, 0x8d, 0xdb, 0xde, 0xcc, 0xb7, 0xfd, 0x00, 0xca, 0x72, 0x6d,
-	0xf1, 0x7f, 0xf1, 0xd4, 0xc7, 0xc4, 0x60, 0xd4, 0xb3, 0x4e, 0xfd, 0x0c, 0x86, 0x44, 0xab, 0x5b,
-	0x8b, 0x29, 0x9a, 0x2f, 0x12, 0x04, 0xd3, 0x03, 0x98, 0x8d, 0x97, 0x09, 0xaf, 0xe8, 0xdb, 0x13,
-	0xeb, 0x6b, 0xac, 0xe6, 0xfc, 0x17, 0x03, 0xdf, 0xde, 0xfe, 0x3a, 0x32, 0xff, 0x39, 0x1f, 0x99,
-	0xe8, 0xfb, 0xc8, 0x44, 0x3f, 0x46, 0x26, 0x7a, 0x15, 0x99, 0xe8, 0x5d, 0x64, 0xa2, 0xf7, 0x91,
-	0x89, 0x3e, 0x44, 0x26, 0xfa, 0x18, 0x99, 0xe8, 0x73, 0x64, 0xa2, 0xf3, 0xc8, 0x44, 0x4f, 0xd5,
-	0x47, 0xdb, 0x9a, 0x91, 0x73, 0xd8, 0xfe, 0x19, 0x00, 0x00, 0xff, 0xff, 0x57, 0xfd, 0x49, 0xb0,
-	0xa1, 0x06, 0x00, 0x00,
+	// 843 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xe3, 0x54,
+	0x14, 0xe6, 0x26, 0x4d, 0x68, 0x4e, 0x32, 0x6d, 0x72, 0x9b, 0xa6, 0xc1, 0x19, 0x99, 0xce, 0x05,
+	0x89, 0x51, 0x25, 0x62, 0x31, 0xb3, 0x00, 0x75, 0x85, 0x18, 0x60, 0x84, 0x34, 0x42, 0x60, 0x18,
+	0x66, 0xc4, 0x82, 0xca, 0x49, 0x6e, 0x5c, 0xab, 0x8e, 0x6f, 0x6a, 0x5f, 0x17, 0x55, 0x08, 0x09,
+	0x21, 0xf1, 0x04, 0xbc, 0x04, 0x8f, 0xc0, 0x92, 0x25, 0x4b, 0x24, 0x36, 0x2c, 0x9b, 0x88, 0x07,
+	0x40, 0x62, 0xc3, 0x12, 0xdd, 0x1f, 0xff, 0xc5, 0x86, 0x56, 0x9a, 0xee, 0x7c, 0xce, 0x3d, 0xfe,
+	0xbe, 0xef, 0x9e, 0xe3, 0xf3, 0x19, 0x0e, 0x23, 0x1a, 0x5e, 0x78, 0x53, 0x1a, 0x59, 0x71, 0x44,
+	0xc3, 0xc8, 0x5a, 0x86, 0x8c, 0x33, 0xf5, 0x3c, 0x96, 0xcf, 0xb8, 0x21, 0x03, 0xe3, 0xae, 0xcb,
+	0x98, 0xeb, 0x53, 0xcb, 0x59, 0x7a, 0x96, 0x13, 0x04, 0x8c, 0x3b, 0xdc, 0x63, 0x81, 0x2e, 0x32,
+	0x46, 0xfa, 0x54, 0x46, 0x93, 0x78, 0x6e, 0xd1, 0xc5, 0x92, 0x5f, 0xea, 0xc3, 0x37, 0x5d, 0x8f,
+	0x9f, 0xc6, 0x93, 0xf1, 0x94, 0x2d, 0x2c, 0x97, 0xb9, 0x2c, 0xab, 0x12, 0x91, 0x62, 0x14, 0x4f,
+	0xba, 0xbc, 0x5a, 0xd2, 0x82, 0xcd, 0xa8, 0xaf, 0x2a, 0xc8, 0xbb, 0xd0, 0x7d, 0xe2, 0x45, 0xfc,
+	0xa9, 0x38, 0xb6, 0xe9, 0x79, 0x4c, 0x23, 0x8e, 0xfb, 0xd0, 0xf0, 0xbd, 0x85, 0xc7, 0x87, 0xe8,
+	0x10, 0xdd, 0xaf, 0xdb, 0x2a, 0xc0, 0x03, 0x68, 0xb2, 0xf9, 0x3c, 0xa2, 0x7c, 0x58, 0x93, 0x69,
+	0x1d, 0x91, 0x1f, 0x10, 0xf4, 0x72, 0x10, 0xd1, 0x92, 0x05, 0x11, 0xc5, 0xf7, 0x40, 0x5d, 0x76,
+	0x88, 0x0e, 0xeb, 0xf7, 0xdb, 0x0f, 0xda, 0x63, 0xd5, 0x07, 0x51, 0x64, 0xab, 0x13, 0xfc, 0x2a,
+	0xb4, 0x39, 0xe3, 0x8e, 0x7f, 0x32, 0x65, 0x71, 0x90, 0xa0, 0x82, 0x4c, 0x3d, 0x12, 0x99, 0x4c,
+	0x47, 0xbd, 0x5a, 0xc7, 0x56, 0x41, 0xc7, 0xeb, 0xb0, 0xf3, 0x98, 0x4a, 0x15, 0xc9, 0x3d, 0x30,
+	0x6c, 0xc5, 0xb1, 0x37, 0x93, 0xd7, 0x68, 0xd9, 0xf2, 0x99, 0x5c, 0x42, 0xef, 0x51, 0x48, 0x1d,
+	0x4e, 0xf3, 0x85, 0x06, 0x6c, 0x0b, 0x49, 0x81, 0xb3, 0xa0, 0xba, 0x38, 0x8d, 0xc5, 0xd9, 0xd2,
+	0x89, 0xa2, 0xaf, 0x59, 0x38, 0x93, 0x12, 0x5b, 0x76, 0x1a, 0x0b, 0x81, 0x74, 0xe1, 0x78, 0xbe,
+	0x14, 0xd8, 0xb2, 0x55, 0x20, 0x04, 0xd2, 0xc0, 0x99, 0xf8, 0x54, 0x0a, 0xdc, 0xb6, 0x75, 0x44,
+	0xce, 0xa1, 0xf7, 0x74, 0x39, 0xdb, 0xa0, 0xae, 0xd0, 0x58, 0x90, 0x53, 0xdb, 0x90, 0x93, 0x52,
+	0x6e, 0x55, 0x53, 0x36, 0x0a, 0x94, 0x6f, 0x40, 0xef, 0x7d, 0xea, 0xd3, 0x6b, 0x29, 0xc9, 0x87,
+	0xd0, 0x79, 0xc2, 0x5c, 0x2f, 0x78, 0xc1, 0x8e, 0x90, 0x67, 0x70, 0x47, 0xe3, 0xa4, 0xdf, 0x41,
+	0xc7, 0x99, 0x4e, 0x69, 0x14, 0x9d, 0x70, 0x76, 0x46, 0x03, 0x0d, 0xd6, 0x56, 0xb9, 0xcf, 0x45,
+	0x0a, 0xbf, 0x06, 0x77, 0x42, 0x3a, 0x0f, 0x69, 0x74, 0xaa, 0x6b, 0x14, 0x68, 0x47, 0x27, 0x65,
+	0x11, 0xd9, 0x95, 0xc0, 0x2c, 0xe6, 0x5a, 0x21, 0xe9, 0xc2, 0x4e, 0x92, 0x50, 0x54, 0xe4, 0x04,
+	0x76, 0x6d, 0xea, 0x7a, 0x11, 0xaf, 0x1e, 0x6c, 0xed, 0x7f, 0xae, 0x51, 0xff, 0xaf, 0xc1, 0xe6,
+	0xbb, 0x4c, 0x9e, 0x43, 0x37, 0x23, 0xd0, 0xf7, 0xbb, 0x95, 0xf9, 0x91, 0xb7, 0x01, 0x7f, 0x41,
+	0x43, 0x6f, 0x7e, 0x29, 0x2f, 0x9b, 0xa8, 0xbf, 0xbe, 0x77, 0xe4, 0x1d, 0xd8, 0x2b, 0xbc, 0x78,
+	0xe3, 0xae, 0x93, 0x63, 0xd8, 0xb3, 0x73, 0x0d, 0x4e, 0x38, 0x4b, 0xc3, 0x40, 0x15, 0xc3, 0xf8,
+	0x0a, 0xfa, 0xc5, 0x77, 0x6f, 0x77, 0xd8, 0x0f, 0xfe, 0x6e, 0x42, 0x5b, 0x7c, 0xb1, 0x9f, 0x29,
+	0xf7, 0xc2, 0x9f, 0x42, 0x2b, 0x75, 0x18, 0x7c, 0xa0, 0xad, 0x64, 0xd3, 0xb6, 0x8c, 0x61, 0xf9,
+	0x40, 0x7f, 0x19, 0xbd, 0xef, 0x7f, 0xff, 0xf3, 0xc7, 0x5a, 0x1b, 0xb7, 0xac, 0x8b, 0xb7, 0x94,
+	0x13, 0xe2, 0xc7, 0xf0, 0xb2, 0x76, 0x0b, 0xbc, 0xaf, 0xdf, 0x2b, 0xba, 0x87, 0x91, 0xb7, 0x2c,
+	0x32, 0x94, 0x08, 0x18, 0x77, 0x53, 0x04, 0xeb, 0x1b, 0x31, 0xeb, 0x6f, 0xf1, 0x47, 0x00, 0x99,
+	0xa1, 0xe0, 0x44, 0x43, 0xc9, 0x63, 0x8a, 0x70, 0x7d, 0x09, 0xb7, 0x43, 0x32, 0x41, 0xc7, 0xe8,
+	0x08, 0x7f, 0x02, 0x90, 0x19, 0x44, 0x0a, 0x55, 0xf2, 0x8c, 0x22, 0xd4, 0x48, 0x42, 0xed, 0x1b,
+	0x25, 0x65, 0x02, 0xf1, 0x39, 0x40, 0xb6, 0xff, 0x29, 0x62, 0xc9, 0x12, 0x8c, 0xc1, 0x58, 0xfd,
+	0x74, 0xc6, 0xc9, 0xef, 0x64, 0xfc, 0x81, 0xf8, 0xe9, 0x24, 0xd7, 0x3e, 0x2a, 0x5f, 0xfb, 0x63,
+	0x68, 0xc8, 0x45, 0xc7, 0x7b, 0x49, 0xd7, 0x73, 0xf6, 0x61, 0xf4, 0x8b, 0x49, 0x3d, 0x06, 0x43,
+	0xa2, 0xf5, 0xc9, 0x6e, 0x86, 0xe6, 0x8b, 0x02, 0xa1, 0xf4, 0x19, 0x6c, 0x27, 0xbb, 0x85, 0x07,
+	0xfa, 0xed, 0x8d, 0x6d, 0x36, 0x0e, 0x4a, 0xf9, 0x1b, 0x00, 0xdb, 0xd0, 0x54, 0x3e, 0x81, 0x73,
+	0xa2, 0x32, 0x1f, 0x31, 0xf6, 0x37, 0xb2, 0x1a, 0x52, 0xb7, 0x95, 0x74, 0x0b, 0x90, 0x2c, 0xe6,
+	0x02, 0xd3, 0x85, 0x76, 0x6e, 0xeb, 0xf0, 0x2b, 0x1a, 0xa2, 0xbc, 0xc2, 0x86, 0x51, 0x75, 0xa4,
+	0x29, 0xee, 0x49, 0x8a, 0x11, 0x19, 0x64, 0x14, 0x72, 0x25, 0xac, 0x0b, 0x59, 0x2c, 0x88, 0xce,
+	0xa0, 0x93, 0x5f, 0x34, 0x6c, 0xa4, 0x1d, 0x28, 0x6d, 0xae, 0x31, 0xaa, 0x3c, 0xd3, 0x5c, 0x44,
+	0x72, 0xdd, 0x25, 0x07, 0x9b, 0x5c, 0x7a, 0xef, 0x8e, 0xd1, 0xd1, 0x7b, 0x0f, 0xff, 0x58, 0x99,
+	0x2f, 0x5d, 0xad, 0x4c, 0xf4, 0xd7, 0xca, 0x44, 0xff, 0xac, 0x4c, 0xf4, 0xdd, 0xda, 0x44, 0x3f,
+	0xad, 0x4d, 0xf4, 0xf3, 0xda, 0x44, 0xbf, 0xac, 0x4d, 0xf4, 0xeb, 0xda, 0x44, 0xbf, 0xad, 0x4d,
+	0x74, 0xb5, 0x36, 0xd1, 0x97, 0xea, 0x27, 0x3e, 0x69, 0xca, 0x2f, 0xe6, 0xe1, 0xbf, 0x01, 0x00,
+	0x00, 0xff, 0xff, 0xe5, 0x9e, 0x8b, 0xe5, 0xfd, 0x08, 0x00, 0x00,
 }
 
 func (this *ListUsersRequest) VerboseEqual(that interface{}) error {
@@ -1245,6 +1528,114 @@ func (this *LoginResponse) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *LogoutRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*LogoutRequest)
+	if !ok {
+		that2, ok := that.(LogoutRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *LogoutRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *LogoutRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *LogoutRequest but is not nil && this == nil")
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *LogoutRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*LogoutRequest)
+	if !ok {
+		that2, ok := that.(LogoutRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *LogoutResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*LogoutResponse)
+	if !ok {
+		that2, ok := that.(LogoutResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *LogoutResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *LogoutResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *LogoutResponse but is not nil && this == nil")
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *LogoutResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*LogoutResponse)
+	if !ok {
+		that2, ok := that.(LogoutResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *RegisterRequest) VerboseEqual(that interface{}) error {
 	if that == nil {
 		if this == nil {
@@ -1389,6 +1780,252 @@ func (this *RegisterResponse) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *VerifyTokenRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*VerifyTokenRequest)
+	if !ok {
+		that2, ok := that.(VerifyTokenRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *VerifyTokenRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *VerifyTokenRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *VerifyTokenRequest but is not nil && this == nil")
+	}
+	if this.AccessToken != that1.AccessToken {
+		return fmt.Errorf("AccessToken this(%v) Not Equal that(%v)", this.AccessToken, that1.AccessToken)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *VerifyTokenRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*VerifyTokenRequest)
+	if !ok {
+		that2, ok := that.(VerifyTokenRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.AccessToken != that1.AccessToken {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *VerifyTokenResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*VerifyTokenResponse)
+	if !ok {
+		that2, ok := that.(VerifyTokenResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *VerifyTokenResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *VerifyTokenResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *VerifyTokenResponse but is not nil && this == nil")
+	}
+	if this.AccessToken != that1.AccessToken {
+		return fmt.Errorf("AccessToken this(%v) Not Equal that(%v)", this.AccessToken, that1.AccessToken)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *VerifyTokenResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*VerifyTokenResponse)
+	if !ok {
+		that2, ok := that.(VerifyTokenResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.AccessToken != that1.AccessToken {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *RefreshTokenRequest) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*RefreshTokenRequest)
+	if !ok {
+		that2, ok := that.(RefreshTokenRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *RefreshTokenRequest")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *RefreshTokenRequest but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *RefreshTokenRequest but is not nil && this == nil")
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return fmt.Errorf("RefreshToken this(%v) Not Equal that(%v)", this.RefreshToken, that1.RefreshToken)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *RefreshTokenRequest) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*RefreshTokenRequest)
+	if !ok {
+		that2, ok := that.(RefreshTokenRequest)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
+func (this *RefreshTokenResponse) VerboseEqual(that interface{}) error {
+	if that == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that == nil && this != nil")
+	}
+
+	that1, ok := that.(*RefreshTokenResponse)
+	if !ok {
+		that2, ok := that.(RefreshTokenResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return fmt.Errorf("that is not of type *RefreshTokenResponse")
+		}
+	}
+	if that1 == nil {
+		if this == nil {
+			return nil
+		}
+		return fmt.Errorf("that is type *RefreshTokenResponse but is nil && this != nil")
+	} else if this == nil {
+		return fmt.Errorf("that is type *RefreshTokenResponse but is not nil && this == nil")
+	}
+	if this.AccessToken != that1.AccessToken {
+		return fmt.Errorf("AccessToken this(%v) Not Equal that(%v)", this.AccessToken, that1.AccessToken)
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return fmt.Errorf("RefreshToken this(%v) Not Equal that(%v)", this.RefreshToken, that1.RefreshToken)
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return fmt.Errorf("XXX_unrecognized this(%v) Not Equal that(%v)", this.XXX_unrecognized, that1.XXX_unrecognized)
+	}
+	return nil
+}
+func (this *RefreshTokenResponse) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*RefreshTokenResponse)
+	if !ok {
+		that2, ok := that.(RefreshTokenResponse)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.AccessToken != that1.AccessToken {
+		return false
+	}
+	if this.RefreshToken != that1.RefreshToken {
+		return false
+	}
+	if !bytes.Equal(this.XXX_unrecognized, that1.XXX_unrecognized) {
+		return false
+	}
+	return true
+}
 func (this *ListUsersRequest) GoString() string {
 	if this == nil {
 		return "nil"
@@ -1507,6 +2144,30 @@ func (this *LoginResponse) GoString() string {
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
+func (this *LogoutRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 4)
+	s = append(s, "&users.LogoutRequest{")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *LogoutResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 4)
+	s = append(s, "&users.LogoutResponse{")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
 func (this *RegisterRequest) GoString() string {
 	if this == nil {
 		return "nil"
@@ -1531,6 +2192,59 @@ func (this *RegisterResponse) GoString() string {
 	s = append(s, "Uuid: "+fmt.Sprintf("%#v", this.Uuid)+",\n")
 	s = append(s, "Username: "+fmt.Sprintf("%#v", this.Username)+",\n")
 	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *VerifyTokenRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&users.VerifyTokenRequest{")
+	s = append(s, "AccessToken: "+fmt.Sprintf("%#v", this.AccessToken)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *VerifyTokenResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&users.VerifyTokenResponse{")
+	s = append(s, "AccessToken: "+fmt.Sprintf("%#v", this.AccessToken)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *RefreshTokenRequest) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 5)
+	s = append(s, "&users.RefreshTokenRequest{")
+	s = append(s, "RefreshToken: "+fmt.Sprintf("%#v", this.RefreshToken)+",\n")
+	if this.XXX_unrecognized != nil {
+		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *RefreshTokenResponse) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&users.RefreshTokenResponse{")
+	s = append(s, "AccessToken: "+fmt.Sprintf("%#v", this.AccessToken)+",\n")
+	s = append(s, "RefreshToken: "+fmt.Sprintf("%#v", this.RefreshToken)+",\n")
 	if this.XXX_unrecognized != nil {
 		s = append(s, "XXX_unrecognized:"+fmt.Sprintf("%#v", this.XXX_unrecognized)+",\n")
 	}
@@ -1572,6 +2286,12 @@ type UserServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// Login login user
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	// Logout will close user session
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	// VerifyToken will verify and return token
+	VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error)
+	// RefreshToken will check and return new token
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 }
 
 type userServiceClient struct {
@@ -1645,6 +2365,33 @@ func (c *userServiceClient) Register(ctx context.Context, in *RegisterRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	out := new(LogoutResponse)
+	err := c.cc.Invoke(ctx, "/users.UserService/Logout", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error) {
+	out := new(VerifyTokenResponse)
+	err := c.cc.Invoke(ctx, "/users.UserService/VerifyToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, "/users.UserService/RefreshToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 type UserServiceServer interface {
 	// List Users
@@ -1661,6 +2408,12 @@ type UserServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// Login login user
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	// Logout will close user session
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	// VerifyToken will verify and return token
+	VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error)
+	// RefreshToken will check and return new token
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 }
 
 // UnimplementedUserServiceServer can be embedded to have forward compatible implementations.
@@ -1687,6 +2440,15 @@ func (*UnimplementedUserServiceServer) Login(ctx context.Context, req *LoginRequ
 }
 func (*UnimplementedUserServiceServer) Register(ctx context.Context, req *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (*UnimplementedUserServiceServer) Logout(ctx context.Context, req *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (*UnimplementedUserServiceServer) VerifyToken(ctx context.Context, req *VerifyTokenRequest) (*VerifyTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyToken not implemented")
+}
+func (*UnimplementedUserServiceServer) RefreshToken(ctx context.Context, req *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 
 func RegisterUserServiceServer(s *grpc.Server, srv UserServiceServer) {
@@ -1819,6 +2581,60 @@ func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.UserService/Logout",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_VerifyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).VerifyToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.UserService/VerifyToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).VerifyToken(ctx, req.(*VerifyTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.UserService/RefreshToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _UserService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "users.UserService",
 	HandlerType: (*UserServiceServer)(nil),
@@ -1850,6 +2666,18 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _UserService_Register_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _UserService_Logout_Handler,
+		},
+		{
+			MethodName: "VerifyToken",
+			Handler:    _UserService_VerifyToken_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _UserService_RefreshToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2215,6 +3043,60 @@ func (m *LoginResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *LogoutRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LogoutRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *LogoutRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *LogoutResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LogoutResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *LogoutResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *RegisterRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2305,6 +3187,149 @@ func (m *RegisterResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.Uuid)
 		copy(dAtA[i:], m.Uuid)
 		i = encodeVarintUsers(dAtA, i, uint64(len(m.Uuid)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VerifyTokenRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VerifyTokenRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VerifyTokenRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.AccessToken) > 0 {
+		i -= len(m.AccessToken)
+		copy(dAtA[i:], m.AccessToken)
+		i = encodeVarintUsers(dAtA, i, uint64(len(m.AccessToken)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *VerifyTokenResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *VerifyTokenResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *VerifyTokenResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.AccessToken) > 0 {
+		i -= len(m.AccessToken)
+		copy(dAtA[i:], m.AccessToken)
+		i = encodeVarintUsers(dAtA, i, uint64(len(m.AccessToken)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *RefreshTokenRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RefreshTokenRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RefreshTokenRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.RefreshToken) > 0 {
+		i -= len(m.RefreshToken)
+		copy(dAtA[i:], m.RefreshToken)
+		i = encodeVarintUsers(dAtA, i, uint64(len(m.RefreshToken)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *RefreshTokenResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *RefreshTokenResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *RefreshTokenResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		i -= len(m.XXX_unrecognized)
+		copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	if len(m.RefreshToken) > 0 {
+		i -= len(m.RefreshToken)
+		copy(dAtA[i:], m.RefreshToken)
+		i = encodeVarintUsers(dAtA, i, uint64(len(m.RefreshToken)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.AccessToken) > 0 {
+		i -= len(m.AccessToken)
+		copy(dAtA[i:], m.AccessToken)
+		i = encodeVarintUsers(dAtA, i, uint64(len(m.AccessToken)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2427,6 +3452,22 @@ func NewPopulatedLoginResponse(r randyUsers, easy bool) *LoginResponse {
 	return this
 }
 
+func NewPopulatedLogoutRequest(r randyUsers, easy bool) *LogoutRequest {
+	this := &LogoutRequest{}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 1)
+	}
+	return this
+}
+
+func NewPopulatedLogoutResponse(r randyUsers, easy bool) *LogoutResponse {
+	this := &LogoutResponse{}
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 1)
+	}
+	return this
+}
+
 func NewPopulatedRegisterRequest(r randyUsers, easy bool) *RegisterRequest {
 	this := &RegisterRequest{}
 	this.Username = string(randStringUsers(r))
@@ -2445,6 +3486,43 @@ func NewPopulatedRegisterResponse(r randyUsers, easy bool) *RegisterResponse {
 	this.Email = string(randStringUsers(r))
 	if !easy && r.Intn(10) != 0 {
 		this.XXX_unrecognized = randUnrecognizedUsers(r, 5)
+	}
+	return this
+}
+
+func NewPopulatedVerifyTokenRequest(r randyUsers, easy bool) *VerifyTokenRequest {
+	this := &VerifyTokenRequest{}
+	this.AccessToken = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedVerifyTokenResponse(r randyUsers, easy bool) *VerifyTokenResponse {
+	this := &VerifyTokenResponse{}
+	this.AccessToken = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedRefreshTokenRequest(r randyUsers, easy bool) *RefreshTokenRequest {
+	this := &RefreshTokenRequest{}
+	this.RefreshToken = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 2)
+	}
+	return this
+}
+
+func NewPopulatedRefreshTokenResponse(r randyUsers, easy bool) *RefreshTokenResponse {
+	this := &RefreshTokenResponse{}
+	this.AccessToken = string(randStringUsers(r))
+	this.RefreshToken = string(randStringUsers(r))
+	if !easy && r.Intn(10) != 0 {
+		this.XXX_unrecognized = randUnrecognizedUsers(r, 3)
 	}
 	return this
 }
@@ -2692,6 +3770,30 @@ func (m *LoginResponse) Size() (n int) {
 	return n
 }
 
+func (m *LogoutRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *LogoutResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *RegisterRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2731,6 +3833,74 @@ func (m *RegisterResponse) Size() (n int) {
 		n += 1 + l + sovUsers(uint64(l))
 	}
 	l = len(m.Email)
+	if l > 0 {
+		n += 1 + l + sovUsers(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *VerifyTokenRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.AccessToken)
+	if l > 0 {
+		n += 1 + l + sovUsers(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *VerifyTokenResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.AccessToken)
+	if l > 0 {
+		n += 1 + l + sovUsers(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *RefreshTokenRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.RefreshToken)
+	if l > 0 {
+		n += 1 + l + sovUsers(uint64(l))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *RefreshTokenResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.AccessToken)
+	if l > 0 {
+		n += 1 + l + sovUsers(uint64(l))
+	}
+	l = len(m.RefreshToken)
 	if l > 0 {
 		n += 1 + l + sovUsers(uint64(l))
 	}
@@ -2851,6 +4021,26 @@ func (this *LoginResponse) String() string {
 	}, "")
 	return s
 }
+func (this *LogoutRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&LogoutRequest{`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *LogoutResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&LogoutResponse{`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
 func (this *RegisterRequest) String() string {
 	if this == nil {
 		return "nil"
@@ -2872,6 +4062,51 @@ func (this *RegisterResponse) String() string {
 		`Uuid:` + fmt.Sprintf("%v", this.Uuid) + `,`,
 		`Username:` + fmt.Sprintf("%v", this.Username) + `,`,
 		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *VerifyTokenRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&VerifyTokenRequest{`,
+		`AccessToken:` + fmt.Sprintf("%v", this.AccessToken) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *VerifyTokenResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&VerifyTokenResponse{`,
+		`AccessToken:` + fmt.Sprintf("%v", this.AccessToken) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *RefreshTokenRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&RefreshTokenRequest{`,
+		`RefreshToken:` + fmt.Sprintf("%v", this.RefreshToken) + `,`,
+		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *RefreshTokenResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&RefreshTokenResponse{`,
+		`AccessToken:` + fmt.Sprintf("%v", this.AccessToken) + `,`,
+		`RefreshToken:` + fmt.Sprintf("%v", this.RefreshToken) + `,`,
 		`XXX_unrecognized:` + fmt.Sprintf("%v", this.XXX_unrecognized) + `,`,
 		`}`,
 	}, "")
@@ -3870,6 +5105,114 @@ func (m *LoginResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *LogoutRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LogoutRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LogoutRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *LogoutResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LogoutResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LogoutResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4144,6 +5487,382 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Email = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VerifyTokenRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VerifyTokenRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VerifyTokenRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowUsers
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthUsers
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *VerifyTokenResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: VerifyTokenResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: VerifyTokenResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowUsers
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthUsers
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RefreshTokenRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RefreshTokenRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RefreshTokenRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RefreshToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowUsers
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthUsers
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RefreshToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipUsers(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *RefreshTokenResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowUsers
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: RefreshTokenResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: RefreshTokenResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AccessToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowUsers
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthUsers
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AccessToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RefreshToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowUsers
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthUsers
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthUsers
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RefreshToken = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
