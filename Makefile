@@ -97,6 +97,11 @@ lint: ## run golint on all Go package
 fmt: ## run "go fmt" on all Go packages
 	@go fmt $(PACKAGES)
 
+.PHONY: proto
+proto:  ## run "prototool generate"
+	@echo "Running prototool generate..."
+	@prototool generate
+
 .PHONY: migrate
 migrate: ## run all new database migrations
 	@echo "Running all new database migrations..."
