@@ -24,3 +24,8 @@ func Set(key string, data interface{}, duration time.Duration) error {
 	}
 	return kv.Get().Set(key, string(val), duration)
 }
+
+// Delete will remove a key from session
+func Delete(key string) error {
+	return kv.Get().Delete(key)
+}
