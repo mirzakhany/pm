@@ -66,6 +66,10 @@ message LoginResponse {
     string refresh_token = 2;
 }
 
+message LogoutRequest {}
+
+message LogoutResponse {}
+
 message RegisterRequest {
     string username = 2;
     string password = 3;
@@ -77,6 +81,24 @@ message RegisterResponse {
     string username = 2;
     string email = 4;
 }
+
+message VerifyTokenRequest {
+    string access_token = 1;
+}
+
+message VerifyTokenResponse {
+    string access_token = 1;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
 
 service UserService {
 
@@ -128,6 +150,30 @@ service UserService {
     rpc Register(RegisterRequest) returns (RegisterResponse) {
         option (google.api.http) = {
             post: "/v1/users/login"
+            body: "*"
+        };
+    }
+
+    // Logout will close user session
+    rpc Logout(LogoutRequest) returns (LogoutResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/logout"
+            body: "*"
+        };
+    }
+
+    // VerifyToken will verify and return token
+    rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/token/verify"
+            body: "*"
+        };
+    }
+
+    // RefreshToken will check and return new token
+    rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+        option (google.api.http) = {
+            post: "/v1/users/token/refresh"
             body: "*"
         };
     }
