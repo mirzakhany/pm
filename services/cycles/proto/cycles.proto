@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package cycles;
+
+option go_package = "cycles";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "services/users/proto/model.proto";
+
+option (gogoproto.gostring_all) = true;
+option (gogoproto.equal_all) = true;
+option (gogoproto.verbose_equal_all) = true;
+option (gogoproto.goproto_stringer_all) = false;
+option (gogoproto.stringer_all) =  true;
+option (gogoproto.populate_all) = true;
+option (gogoproto.testgen_all) = true;
+option (gogoproto.benchgen_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+
+
+message ListCyclesRequest {
+    int64 limit = 1;
+    int64 offset = 2;
+}
+
+message ListCyclesResponse {
+    repeated Cycle cycles = 1 [json_name = "cycles", (gogoproto.jsontag) = "cycles"];
+    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
+    int64 limit = 3;
+    int64 offset = 4;
+}
+
+message GetCycleRequest {
+    string uuid = 1;
+}
+
+message CreateCycleRequest {
+    string title = 1;
+    bool active = 2;
+    string description = 3;
+    google.protobuf.Timestamp start_at = 4 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp end_at = 5 [(gogoproto.stdtime) = true];
+}
+
+message UpdateCycleRequest {
+    string uuid = 1;
+    string title = 2;
+    bool active = 3;
+    string description = 4;
+    google.protobuf.Timestamp start_at = 5 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp end_at = 6 [(gogoproto.stdtime) = true];
+}
+
+message DeleteCycleRequest {
+    string uuid = 1;
+}
+
+message Cycle {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    bool active = 4;
+    string description = 5;
+    users.User creator = 6;
+    google.protobuf.Timestamp start_at = 7 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp end_at = 8 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp created_at = 9 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp updated_at = 10 [(gogoproto.stdtime) = true];
+}
+
+service CycleService {
+
+    // List Cycles
+    rpc ListCycles (ListCyclesRequest) returns (ListCyclesResponse) {
+        option (google.api.http) = {
+            get: "/v1/cycles"
+        };
+    }
+    // Get Cycle
+    rpc GetCycle (GetCycleRequest) returns (Cycle) {
+        option (google.api.http) = {
+          get: "/v1/cycles/{uuid}"
+        };
+    }
+
+    // Create Cycle object request
+    rpc CreateCycle (CreateCycleRequest) returns (Cycle) {
+        option (google.api.http) = {
+            post: "/v1/cycles"
+            body: "*"
+        };
+    }
+
+    // Update Cycle object request
+    rpc UpdateCycle (UpdateCycleRequest) returns (Cycle) {
+        option (google.api.http) = {
+            put: "/v1/cycles/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Cycle object request
+    rpc DeleteCycle (DeleteCycleRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/cycles/{uuid}"
+        };
+    }
+}
