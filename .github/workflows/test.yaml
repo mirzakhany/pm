@@ -4,7 +4,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        go-version: [1.14.x, 1.15.x]
+        go-version: [1.15.x]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     services:
@@ -14,7 +14,6 @@ jobs:
         # Provide the password for postgres
         env:
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: task_manager_test
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
