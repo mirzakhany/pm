@@ -51,7 +51,7 @@ func authHandler(ctx context.Context) (context.Context, error) {
 	if err != nil {
 		return ctx, status.Errorf(codes.Unauthenticated, "invalid token")
 	}
-	return context.WithValue(context.WithValue(ctx, user, userKey), tokenKey, token), nil
+	return context.WithValue(context.WithValue(ctx, userKey, user), tokenKey, token), nil
 }
 
 // ExtractUser try to extract the current user from the context
