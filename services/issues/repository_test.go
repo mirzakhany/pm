@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mirzakhany/pm/services/users"
+
 	"github.com/go-pg/pg/v10"
 	"github.com/google/uuid"
 	"github.com/mirzakhany/pm/pkg/db"
@@ -13,7 +15,7 @@ import (
 )
 
 func TestRepository(t *testing.T) {
-	database := db.NewForTest(t, []interface{}{(*IssueModel)(nil)})
+	database := db.NewForTest(t, []interface{}{(*users.UserModel)(nil), (*IssueModel)(nil)})
 	db.ResetTables(t, database, "issues")
 	repo := NewRepository(database)
 
