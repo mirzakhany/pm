@@ -2,18 +2,18 @@ package users
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/mirzakhany/pm/pkg/log"
+	"github.com/mirzakhany/pm/services/users/auth"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	"github.com/mirzakhany/pm/pkg/kv"
-	"github.com/mirzakhany/pm/pkg/log"
-	"github.com/mirzakhany/pm/services/users/auth"
 	users "github.com/mirzakhany/pm/services/users/proto"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type API interface {
@@ -22,7 +22,17 @@ type API interface {
 }
 
 type api struct {
+	users.UnimplementedUserServiceServer
 	service Service
+}
+
+func (a api) InitRest(ctx context.Context, conn *grpc.ClientConn, mux *runtime.ServeMux) {
+	cl := users.NewUserServiceClient(conn)
+	_ = users.RegisterUserServiceHandlerClient(ctx, mux, cl)
+}
+
+func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
+	users.RegisterUserServiceServer(server, a)
 }
 
 func (a api) Logout(ctx context.Context, req *users.LogoutRequest) (*users.LogoutResponse, error) {
@@ -50,19 +60,16 @@ func (a api) RefreshToken(ctx context.Context, request *users.RefreshTokenReques
 
 	vToken, err := auth.VerifyToken(request.RefreshToken)
 	if err != nil {
-		fmt.Println(err)
 		return nil, status.Errorf(codes.Unauthenticated, "invalid refresh token")
 	}
 
 	user, err := auth.ExtractSessionUser(request.RefreshToken)
 	if err != nil {
-		fmt.Println(err)
 		return nil, status.Errorf(codes.Unauthenticated, "session expired")
 	}
 
 	dbUser, err := a.service.GetByUsername(ctx, user.Username)
 	if err != nil {
-		fmt.Println(err)
 		return nil, status.Errorf(codes.Unauthenticated, "invalid user")
 	}
 
@@ -118,7 +125,7 @@ func (a api) Register(ctx context.Context, request *users.RegisterRequest) (*use
 		Username: request.Username,
 		Password: request.Password,
 		Email:    request.Email,
-		Enable:   false,
+		Enable:   true,
 	})
 
 	if err != nil {
@@ -130,15 +137,6 @@ func (a api) Register(ctx context.Context, request *users.RegisterRequest) (*use
 		Username: user.Username,
 		Email:    user.Email,
 	}, nil
-}
-
-func (a api) InitRest(ctx context.Context, conn *grpc.ClientConn, mux *runtime.ServeMux) {
-	cl := users.NewUserServiceClient(conn)
-	_ = users.RegisterUserServiceHandlerClient(ctx, mux, cl)
-}
-
-func (a api) InitGrpc(ctx context.Context, server *grpc.Server) {
-	users.RegisterUserServiceServer(server, a)
 }
 
 func (a api) ListUsers(ctx context.Context, request *users.ListUsersRequest) (*users.ListUsersResponse, error) {
@@ -175,12 +173,12 @@ func (a api) UpdateUser(ctx context.Context, request *users.UpdateUserRequest) (
 	return res, err
 }
 
-func (a api) DeleteUser(ctx context.Context, request *users.DeleteUserRequest) (*types.Empty, error) {
+func (a api) DeleteUser(ctx context.Context, request *users.DeleteUserRequest) (*empty.Empty, error) {
 	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return &types.Empty{}, err
+	return &empty.Empty{}, err
 }
 
 func New(srv Service) API {
@@ -190,8 +188,8 @@ func New(srv Service) API {
 }
 
 func init() {
-	kv.Memory().SetString("/users.UserService/Login", "open")
-	kv.Memory().SetString("/users.UserService/Register", "open")
-	kv.Memory().SetString("/users.UserService/VerifyToken", "open")
-	kv.Memory().SetString("/users.UserService/RefreshToken", "open")
+	kv.Memory().SetString("/usersV1.UserService/Login", "open")
+	kv.Memory().SetString("/usersV1.UserService/Register", "open")
+	kv.Memory().SetString("/usersV1.UserService/VerifyToken", "open")
+	kv.Memory().SetString("/usersV1.UserService/RefreshToken", "open")
 }

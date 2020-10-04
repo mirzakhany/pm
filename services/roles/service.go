@@ -20,15 +20,15 @@ type Service interface {
 }
 
 // ValidateCreateRequest validates the CreateRoleRequest fields.
-func ValidateCreateRequest(c rolesProto.CreateRoleRequest) error {
-	return validation.ValidateStruct(&c,
+func ValidateCreateRequest(c *rolesProto.CreateRoleRequest) error {
+	return validation.ValidateStruct(c,
 		validation.Field(&c.Title, validation.Required, validation.Length(0, 128)),
 	)
 }
 
 // Validate validates the UpdateRoleRequest fields.
-func ValidateUpdateRequest(u rolesProto.UpdateRoleRequest) error {
-	return validation.ValidateStruct(&u,
+func ValidateUpdateRequest(u *rolesProto.UpdateRoleRequest) error {
+	return validation.ValidateStruct(u,
 		validation.Field(&u.Title, validation.Required, validation.Length(0, 128)),
 	)
 }
@@ -48,18 +48,12 @@ func (s service) Get(ctx context.Context, UUID string) (*rolesProto.Role, error)
 	if err != nil {
 		return nil, err
 	}
-	return &rolesProto.Role{
-		Id:        role.ID,
-		Uuid:      role.UUID,
-		Title:     role.Title,
-		CreatedAt: &role.CreatedAt,
-		UpdatedAt: &role.UpdatedAt,
-	}, nil
+	return role.ToProto(), nil
 }
 
 // Create creates a new role.
 func (s service) Create(ctx context.Context, req *rolesProto.CreateRoleRequest) (*rolesProto.Role, error) {
-	if err := ValidateCreateRequest(*req); err != nil {
+	if err := ValidateCreateRequest(req); err != nil {
 		return nil, err
 	}
 	now := time.Now()
@@ -78,31 +72,30 @@ func (s service) Create(ctx context.Context, req *rolesProto.CreateRoleRequest) 
 
 // Update updates the role with the specified UUID.
 func (s service) Update(ctx context.Context, req *rolesProto.UpdateRoleRequest) (*rolesProto.Role, error) {
-	if err := ValidateUpdateRequest(*req); err != nil {
+	if err := ValidateUpdateRequest(req); err != nil {
 		return nil, err
 	}
 
-	role, err := s.Get(ctx, req.Uuid)
+	role, err := s.repo.Get(ctx, req.Uuid)
 	if err != nil {
-		return role, err
+		return nil, err
 	}
 	now := time.Now()
-
 	role.Title = req.Title
-	role.UpdatedAt = &now
+	role.UpdatedAt = now
 
 	roleModel := RoleModel{
-		ID:        role.Id,
-		UUID:      role.Uuid,
+		ID:        role.ID,
+		UUID:      role.UUID,
 		Title:     req.Title,
-		CreatedAt: *role.CreatedAt,
+		CreatedAt: role.CreatedAt,
 		UpdatedAt: now,
 	}
 
 	if err := s.repo.Update(ctx, roleModel); err != nil {
-		return role, err
+		return nil, err
 	}
-	return role, nil
+	return role.ToProto(), nil
 }
 
 // Delete deletes the role with the specified UUID.
@@ -128,17 +121,8 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*rolesProto.Li
 	if err != nil {
 		return nil, err
 	}
-	var result []*rolesProto.Role
-	for _, item := range items {
-		result = append(result, &rolesProto.Role{
-			Uuid:      item.UUID,
-			Title:     item.Title,
-			CreatedAt: &item.CreatedAt,
-			UpdatedAt: &item.CreatedAt,
-		})
-	}
 	return &rolesProto.ListRolesResponse{
-		Roles:      result,
+		Roles:      ToProtoList(items),
 		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,

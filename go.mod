@@ -10,7 +10,6 @@ require (
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-pg/pg/v10 v10.3.1
 	github.com/go-redis/redis/v8 v8.2.3
-	github.com/gogo/gateway v1.1.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.2
@@ -26,4 +25,5 @@ require (
 	google.golang.org/genproto v0.0.0-20200925023002-c2d885f95484
 	google.golang.org/grpc v1.32.0
 	google.golang.org/grpc/examples v0.0.0-20201001231224-bebda80b05da // indirect
+	google.golang.org/protobuf v1.25.0
 )

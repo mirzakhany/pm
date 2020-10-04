@@ -3,16 +3,16 @@ package auth
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/google/uuid"
 	users "github.com/mirzakhany/pm/services/users/proto"
 )
 
 func TestAuthHelper(t *testing.T) {
-	now := time.Now()
+	now := timestamppb.Now()
 	Uuid := uuid.New().String()
 	user := &users.User{
 		Id:        1,
@@ -21,8 +21,8 @@ func TestAuthHelper(t *testing.T) {
 		Password:  "test",
 		Email:     "user@web.com",
 		Enable:    true,
-		CreatedAt: &now,
-		UpdatedAt: &now,
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	ctx := context.Background()

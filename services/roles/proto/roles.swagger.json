@@ -19,7 +19,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rolesListRolesResponse"
+              "$ref": "#/definitions/rolesV1ListRolesResponse"
             }
           },
           "default": {
@@ -56,7 +56,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rolesRole"
+              "$ref": "#/definitions/rolesV1Role"
             }
           },
           "default": {
@@ -72,7 +72,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/rolesCreateRoleRequest"
+              "$ref": "#/definitions/rolesV1CreateRoleRequest"
             }
           }
         ],
@@ -89,7 +89,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rolesRole"
+              "$ref": "#/definitions/rolesV1Role"
             }
           },
           "default": {
@@ -147,7 +147,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/rolesRole"
+              "$ref": "#/definitions/rolesV1Role"
             }
           },
           "default": {
@@ -169,7 +169,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/rolesUpdateRoleRequest"
+              "$ref": "#/definitions/rolesV1UpdateRoleRequest"
             }
           }
         ],
@@ -192,7 +192,7 @@
         }
       }
     },
-    "rolesCreateRoleRequest": {
+    "rolesV1CreateRoleRequest": {
       "type": "object",
       "properties": {
         "title": {
@@ -200,13 +200,13 @@
         }
       }
     },
-    "rolesListRolesResponse": {
+    "rolesV1ListRolesResponse": {
       "type": "object",
       "properties": {
         "roles": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/rolesRole"
+            "$ref": "#/definitions/rolesV1Role"
           }
         },
         "total_count": {
@@ -223,7 +223,7 @@
         }
       }
     },
-    "rolesRole": {
+    "rolesV1Role": {
       "type": "object",
       "properties": {
         "id": {
@@ -246,7 +246,7 @@
         }
       }
     },
-    "rolesUpdateRoleRequest": {
+    "rolesV1UpdateRoleRequest": {
       "type": "object",
       "properties": {
         "uuid": {

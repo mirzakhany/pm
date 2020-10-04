@@ -1,62 +1,22 @@
-# Paths to exclude when searching for Protobuf files.
 excludes:
   - ./third_party
   - ./tmp
   - ./vendor
-
 protoc:
-  # The Protobuf version to use from https://github.com/protocolbuffers/protobuf/releases.
-  # By default use 3.6.1.
-  # You probably want to set this to make your builds completely reproducible.
-  version: 3.12.1
-  # Additional paths to include with -I to protoc.
-  # By default, the directory of the config file is included,
-  # or the current directory if there is no config file.
+  version: 3.8.0
   includes:
     - ./third_party
-
-# Code generation directives.
 generate:
-  # Options that will apply to all plugins of type go and gogo.
   go_options:
-    # The base import path. This should be the go path of the prototool.yaml file.
-    # This is required if you have any go plugins.
     import_path: github.com/mirzakhany/pm
-
-  # The list of plugins.
   plugins:
-    # The plugin name. This will go to protoc with --name_out, so it either needs
-    # to be a built-in name (like java), or a plugin name with a binary
-    # protoc-gen-name.
-    - name: gogo
-
-      # The type, if any. Valid types are go, gogo.
-      # Use go if your plugin is a standard Golang plugin
-      # that uses github.com/golang/protobuf imports, use gogo
-      # if it uses github.com/gogo/protobuf imports. For protoc-gen-go
-      # use go, For protoc-gen-gogo, protoc-gen-gogoslick, etc, use gogo.
-      type: gogo
-
-      # Extra flags to specify.
-      # The only flag you will generally set is plugins=grpc for Golang.
-      # The Mfile=package flags are automatically set.
-      # ** Otherwise, generally do not set this unless you know what you are doing. **
+    - name: go
+      type: go
       flags: plugins=grpc
-
-      # The path to output generated files to.
-      # If the directory does not exist, it will be created when running generation.
-      # This needs to be a relative path.
       output: .
-
-      # Optional override for the plugin path. For example, if you set set path to
-      # /usr/local/bin/gogo_plugin", prototool will add the
-      # "--plugin=protoc-gen-gogo=/usr/local/bin/gogo_plugin" flag to protoc calls.
-    #      path: /usr/local/bin/gogo
-
     - name: grpc-gateway
-      type: gogo
+      type: go
       output: .
-
     - name: swagger
-      type: gogo
+      type: go
       output: .

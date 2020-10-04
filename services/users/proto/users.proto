@@ -1,25 +1,12 @@
 syntax = "proto3";
 
-package users;
+package usersV1;
 
-option go_package = "users";
+option go_package = "services/users/proto;users";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "services/users/proto/model.proto";
-
-option (gogoproto.gostring_all) = true;
-option (gogoproto.equal_all) = true;
-option (gogoproto.verbose_equal_all) = true;
-option (gogoproto.goproto_stringer_all) = false;
-option (gogoproto.stringer_all) =  true;
-option (gogoproto.populate_all) = true;
-option (gogoproto.testgen_all) = true;
-option (gogoproto.benchgen_all) = true;
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
 
 
 message ListUsersRequest {

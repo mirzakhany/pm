@@ -19,7 +19,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersListUsersResponse"
+              "$ref": "#/definitions/usersV1ListUsersResponse"
             }
           },
           "default": {
@@ -56,7 +56,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersUser"
+              "$ref": "#/definitions/usersV1User"
             }
           },
           "default": {
@@ -72,7 +72,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersCreateUserRequest"
+              "$ref": "#/definitions/usersV1CreateUserRequest"
             }
           }
         ],
@@ -89,7 +89,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersRegisterResponse"
+              "$ref": "#/definitions/usersV1RegisterResponse"
             }
           },
           "default": {
@@ -105,7 +105,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersRegisterRequest"
+              "$ref": "#/definitions/usersV1RegisterRequest"
             }
           }
         ],
@@ -122,7 +122,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersLogoutResponse"
+              "$ref": "#/definitions/usersV1LogoutResponse"
             }
           },
           "default": {
@@ -138,7 +138,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersLogoutRequest"
+              "$ref": "#/definitions/usersV1LogoutRequest"
             }
           }
         ],
@@ -155,7 +155,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersRefreshTokenResponse"
+              "$ref": "#/definitions/usersV1RefreshTokenResponse"
             }
           },
           "default": {
@@ -171,7 +171,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersRefreshTokenRequest"
+              "$ref": "#/definitions/usersV1RefreshTokenRequest"
             }
           }
         ],
@@ -188,7 +188,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersVerifyTokenResponse"
+              "$ref": "#/definitions/usersV1VerifyTokenResponse"
             }
           },
           "default": {
@@ -204,7 +204,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersVerifyTokenRequest"
+              "$ref": "#/definitions/usersV1VerifyTokenRequest"
             }
           }
         ],
@@ -221,7 +221,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersUser"
+              "$ref": "#/definitions/usersV1User"
             }
           },
           "default": {
@@ -279,7 +279,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/usersUser"
+              "$ref": "#/definitions/usersV1User"
             }
           },
           "default": {
@@ -301,7 +301,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/usersUpdateUserRequest"
+              "$ref": "#/definitions/usersV1UpdateUserRequest"
             }
           }
         ],
@@ -345,7 +345,7 @@
         }
       }
     },
-    "usersCreateUserRequest": {
+    "usersV1CreateUserRequest": {
       "type": "object",
       "properties": {
         "username": {
@@ -362,13 +362,13 @@
         }
       }
     },
-    "usersListUsersResponse": {
+    "usersV1ListUsersResponse": {
       "type": "object",
       "properties": {
         "users": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/usersUser"
+            "$ref": "#/definitions/usersV1User"
           }
         },
         "total_count": {
@@ -385,7 +385,7 @@
         }
       }
     },
-    "usersLoginRequest": {
+    "usersV1LoginRequest": {
       "type": "object",
       "properties": {
         "username": {
@@ -396,7 +396,7 @@
         }
       }
     },
-    "usersLoginResponse": {
+    "usersV1LoginResponse": {
       "type": "object",
       "properties": {
         "access_token": {
@@ -407,13 +407,13 @@
         }
       }
     },
-    "usersLogoutRequest": {
+    "usersV1LogoutRequest": {
       "type": "object"
     },
-    "usersLogoutResponse": {
+    "usersV1LogoutResponse": {
       "type": "object"
     },
-    "usersRefreshTokenRequest": {
+    "usersV1RefreshTokenRequest": {
       "type": "object",
       "properties": {
         "refresh_token": {
@@ -421,7 +421,7 @@
         }
       }
     },
-    "usersRefreshTokenResponse": {
+    "usersV1RefreshTokenResponse": {
       "type": "object",
       "properties": {
         "access_token": {
@@ -432,7 +432,7 @@
         }
       }
     },
-    "usersRegisterRequest": {
+    "usersV1RegisterRequest": {
       "type": "object",
       "properties": {
         "username": {
@@ -446,7 +446,7 @@
         }
       }
     },
-    "usersRegisterResponse": {
+    "usersV1RegisterResponse": {
       "type": "object",
       "properties": {
         "uuid": {
@@ -460,7 +460,7 @@
         }
       }
     },
-    "usersUpdateUserRequest": {
+    "usersV1UpdateUserRequest": {
       "type": "object",
       "properties": {
         "uuid": {
@@ -477,7 +477,7 @@
         }
       }
     },
-    "usersUser": {
+    "usersV1User": {
       "type": "object",
       "properties": {
         "id": {
@@ -509,7 +509,7 @@
         }
       }
     },
-    "usersVerifyTokenRequest": {
+    "usersV1VerifyTokenRequest": {
       "type": "object",
       "properties": {
         "access_token": {
@@ -517,7 +517,7 @@
         }
       }
     },
-    "usersVerifyTokenResponse": {
+    "usersV1VerifyTokenResponse": {
       "type": "object",
       "properties": {
         "access_token": {

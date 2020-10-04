@@ -4,6 +4,9 @@ import (
 	"context"
 	"time"
 
+	roles "github.com/mirzakhany/pm/services/roles/proto"
+
+	"github.com/golang/protobuf/ptypes"
 	"github.com/mirzakhany/pm/pkg/db"
 )
 
@@ -30,6 +33,41 @@ type Repository interface {
 	Update(ctx context.Context, role RoleModel) error
 	// Delete removes the role with given UUID from the storage.
 	Delete(ctx context.Context, uuid string) error
+}
+
+func (rm RoleModel) ToProto() *roles.Role {
+	c, _ := ptypes.TimestampProto(rm.CreatedAt)
+	u, _ := ptypes.TimestampProto(rm.UpdatedAt)
+
+	role := &roles.Role{
+		Id:        rm.ID,
+		Uuid:      rm.UUID,
+		Title:     rm.Title,
+		CreatedAt: c,
+		UpdatedAt: u,
+	}
+	return role
+}
+
+func ToProtoList(rml []RoleModel) []*roles.Role {
+	var r []*roles.Role
+	for _, i := range rml {
+		r = append(r, i.ToProto())
+	}
+	return r
+}
+
+func FromProto(role *roles.Role) RoleModel {
+	c, _ := ptypes.Timestamp(role.CreatedAt)
+	u, _ := ptypes.Timestamp(role.UpdatedAt)
+
+	return RoleModel{
+		ID:        role.Id,
+		UUID:      role.Uuid,
+		Title:     role.Title,
+		CreatedAt: c,
+		UpdatedAt: u,
+	}
 }
 
 // repository persists roles in database

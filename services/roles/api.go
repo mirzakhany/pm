@@ -3,7 +3,8 @@ package roles
 import (
 	"context"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes/empty"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	roles "github.com/mirzakhany/pm/services/roles/proto"
@@ -63,12 +64,12 @@ func (a api) UpdateRole(ctx context.Context, request *roles.UpdateRoleRequest) (
 	return res, err
 }
 
-func (a api) DeleteRole(ctx context.Context, request *roles.DeleteRoleRequest) (*types.Empty, error) {
+func (a api) DeleteRole(ctx context.Context, request *roles.DeleteRoleRequest) (*empty.Empty, error) {
 	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return &types.Empty{}, err
+	return nil, err
 }
 
 func New(srv Service) API {
