@@ -4,6 +4,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
+
+	users "github.com/mirzakhany/pm/services/users/proto"
+
 	"github.com/mirzakhany/pm/pkg/db"
 )
 
@@ -37,6 +41,50 @@ type Repository interface {
 	Where(ctx context.Context, condition string, params ...interface{}) ([]UserModel, int, error)
 	// WhereOne returns the one of users with the given condition
 	WhereOne(ctx context.Context, condition string, params ...interface{}) (UserModel, error)
+}
+
+func (um UserModel) ToProto(secure bool) *users.User {
+	c, _ := ptypes.TimestampProto(um.CreatedAt)
+	u, _ := ptypes.TimestampProto(um.UpdatedAt)
+
+	user := &users.User{
+		Id:        um.ID,
+		Uuid:      um.UUID,
+		Username:  um.Username,
+		Password:  um.Password,
+		Email:     um.Email,
+		Enable:    um.Enable,
+		CreatedAt: c,
+		UpdatedAt: u,
+	}
+	if secure {
+		user.Id = 0
+		user.Password = ""
+	}
+	return user
+}
+
+func ToProtoList(uml []UserModel, secure bool) []*users.User {
+	var u []*users.User
+	for _, i := range uml {
+		u = append(u, i.ToProto(secure))
+	}
+	return u
+}
+
+func FromProto(user *users.User) UserModel {
+	c, _ := ptypes.Timestamp(user.CreatedAt)
+	u, _ := ptypes.Timestamp(user.UpdatedAt)
+	return UserModel{
+		ID:        user.Id,
+		UUID:      user.Uuid,
+		Username:  user.Username,
+		Password:  user.Password,
+		Email:     user.Email,
+		Enable:    user.Enable,
+		CreatedAt: c,
+		UpdatedAt: u,
+	}
 }
 
 // repository persists users in database

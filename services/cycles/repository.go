@@ -4,6 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
+	cycles "github.com/mirzakhany/pm/services/cycles/proto"
+
 	"github.com/mirzakhany/pm/services/users"
 
 	"github.com/mirzakhany/pm/pkg/db"
@@ -38,6 +41,60 @@ type Repository interface {
 	Update(ctx context.Context, cycle CycleModel) error
 	// Delete removes the cycle with given UUID from the storage.
 	Delete(ctx context.Context, uuid string) error
+}
+
+func (cm CycleModel) ToProto(secure bool) *cycles.Cycle {
+	c, _ := ptypes.TimestampProto(cm.CreatedAt)
+	u, _ := ptypes.TimestampProto(cm.UpdatedAt)
+
+	s, _ := ptypes.TimestampProto(cm.StartAt)
+	e, _ := ptypes.TimestampProto(cm.EndAt)
+
+	user := cm.Creator.ToProto(secure)
+	cycle := &cycles.Cycle{
+		Id:          cm.ID,
+		Uuid:        cm.UUID,
+		Title:       cm.Title,
+		Description: cm.Description,
+		Active:      cm.Active,
+		Creator:     user,
+		StartAt:     s,
+		EndAt:       e,
+		CreatedAt:   c,
+		UpdatedAt:   u,
+	}
+	return cycle
+}
+
+func ToProtoList(cml []CycleModel, secure bool) []*cycles.Cycle {
+	var c []*cycles.Cycle
+	for _, i := range cml {
+		c = append(c, i.ToProto(secure))
+	}
+	return c
+}
+
+func FromProto(cycle *cycles.Cycle) CycleModel {
+	c, _ := ptypes.Timestamp(cycle.CreatedAt)
+	u, _ := ptypes.Timestamp(cycle.UpdatedAt)
+
+	s, _ := ptypes.Timestamp(cycle.StartAt)
+	e, _ := ptypes.Timestamp(cycle.EndAt)
+
+	user := users.FromProto(cycle.Creator)
+	return CycleModel{
+		ID:          cycle.Id,
+		UUID:        cycle.Uuid,
+		Title:       cycle.Title,
+		Description: cycle.Description,
+		Active:      cycle.Active,
+		StartAt:     s,
+		EndAt:       e,
+		Creator:     &user,
+		CreatorID:   user.ID,
+		CreatedAt:   c,
+		UpdatedAt:   u,
+	}
 }
 
 // repository persists cycles in database

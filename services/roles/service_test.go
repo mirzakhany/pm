@@ -3,10 +3,11 @@ package roles
 import (
 	"context"
 	"errors"
-	"github.com/go-pg/pg/v10"
-	"github.com/mirzakhany/pm/services/roles/proto"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/go-pg/pg/v10"
+	roles "github.com/mirzakhany/pm/services/roles/proto"
+	"github.com/stretchr/testify/assert"
 )
 
 var errCRUD = errors.New("error crud")
@@ -23,7 +24,7 @@ func TestCreateRoleRequest_Validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateCreateRequest(tt.model)
+			err := ValidateCreateRequest(&tt.model)
 			assert.Equal(t, tt.wantError, err != nil)
 		})
 	}
@@ -41,7 +42,7 @@ func TestUpdateRoleRequest_Validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateUpdateRequest(tt.model)
+			err := ValidateUpdateRequest(&tt.model)
 			assert.Equal(t, tt.wantError, err != nil)
 		})
 	}

@@ -3,7 +3,8 @@ package issues
 import (
 	"context"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes/empty"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	issues "github.com/mirzakhany/pm/services/issues/proto"
@@ -63,12 +64,12 @@ func (a api) UpdateIssue(ctx context.Context, request *issues.UpdateIssueRequest
 	return res, err
 }
 
-func (a api) DeleteIssue(ctx context.Context, request *issues.DeleteIssueRequest) (*types.Empty, error) {
+func (a api) DeleteIssue(ctx context.Context, request *issues.DeleteIssueRequest) (*empty.Empty, error) {
 	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return &types.Empty{}, err
+	return nil, err
 }
 
 func New(srv Service) API {

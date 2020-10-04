@@ -4,8 +4,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
+
 	"github.com/mirzakhany/pm/pkg/db"
-	issuesProto "github.com/mirzakhany/pm/services/issues/proto"
+	issues "github.com/mirzakhany/pm/services/issues/proto"
 	"github.com/mirzakhany/pm/services/users"
 )
 
@@ -15,7 +17,7 @@ type IssueModel struct {
 	UUID        string
 	Title       string
 	Description string
-	Status      issuesProto.IssueStatus
+	Status      issues.IssueStatus
 	SprintID    uint64
 	Estimate    uint64
 	AssigneeID  uint64           `pg:",pk"`
@@ -40,6 +42,58 @@ type Repository interface {
 	Update(ctx context.Context, issue IssueModel) error
 	// Delete removes the issue with given UUID from the storage.
 	Delete(ctx context.Context, uuid string) error
+}
+
+func (im IssueModel) ToProto(secure bool) *issues.Issue {
+	c, _ := ptypes.TimestampProto(im.CreatedAt)
+	u, _ := ptypes.TimestampProto(im.UpdatedAt)
+
+	assignee := im.Assignee.ToProto(secure)
+	creator := im.Creator.ToProto(secure)
+
+	cycle := &issues.Issue{
+		Id:          im.ID,
+		Uuid:        im.UUID,
+		Title:       im.Title,
+		Description: im.Description,
+		Status:      im.Status,
+		SprintId:    im.SprintID,
+		Estimate:    im.Estimate,
+		Creator:     creator,
+		Assignee:    assignee,
+		CreatedAt:   c,
+		UpdatedAt:   u,
+	}
+	return cycle
+}
+
+func ToProtoList(iml []IssueModel, secure bool) []*issues.Issue {
+	var _issues []*issues.Issue
+	for _, i := range iml {
+		_issues = append(_issues, i.ToProto(secure))
+	}
+	return _issues
+}
+
+func FromProto(cycle *issues.Issue) IssueModel {
+	c, _ := ptypes.Timestamp(cycle.CreatedAt)
+	u, _ := ptypes.Timestamp(cycle.UpdatedAt)
+
+	assignee := users.FromProto(cycle.Creator)
+	creator := users.FromProto(cycle.Creator)
+	return IssueModel{
+		ID:          cycle.Id,
+		UUID:        cycle.Uuid,
+		Title:       cycle.Title,
+		Description: cycle.Description,
+		SprintID:    cycle.SprintId,
+		Creator:     &creator,
+		CreatorID:   creator.ID,
+		Assignee:    &assignee,
+		AssigneeID:  assignee.ID,
+		CreatedAt:   c,
+		UpdatedAt:   u,
+	}
 }
 
 // repository persists issues in database

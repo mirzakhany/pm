@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
+
 	"github.com/mirzakhany/pm/pkg/auth"
 
 	"github.com/mirzakhany/pm/services/users"
-
-	usersProto "github.com/mirzakhany/pm/services/users/proto"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
@@ -26,15 +26,15 @@ type Service interface {
 }
 
 // ValidateCreateRequest validates the CreateCycleRequest fields.
-func ValidateCreateRequest(c cyclesProto.CreateCycleRequest) error {
-	return validation.ValidateStruct(&c,
+func ValidateCreateRequest(c *cyclesProto.CreateCycleRequest) error {
+	return validation.ValidateStruct(c,
 		validation.Field(&c.Title, validation.Required, validation.Length(0, 128)),
 	)
 }
 
 // Validate validates the UpdateCycleRequest fields.
-func ValidateUpdateRequest(u cyclesProto.UpdateCycleRequest) error {
-	return validation.ValidateStruct(&u,
+func ValidateUpdateRequest(u *cyclesProto.UpdateCycleRequest) error {
+	return validation.ValidateStruct(u,
 		validation.Field(&u.Title, validation.Required, validation.Length(0, 128)),
 	)
 }
@@ -55,30 +55,12 @@ func (s service) Get(ctx context.Context, UUID string) (*cyclesProto.Cycle, erro
 	if err != nil {
 		return nil, err
 	}
-	return &cyclesProto.Cycle{
-		Id:          cycle.ID,
-		Uuid:        cycle.UUID,
-		Title:       cycle.Title,
-		Description: cycle.Description,
-		Active:      cycle.Active,
-		StartAt:     &cycle.StartAt,
-		EndAt:       &cycle.StartAt,
-		Creator: &usersProto.User{
-			Uuid:      cycle.Creator.UUID,
-			Username:  cycle.Creator.Username,
-			Email:     cycle.Creator.Email,
-			Enable:    cycle.Creator.Enable,
-			CreatedAt: &cycle.Creator.CreatedAt,
-			UpdatedAt: &cycle.Creator.UpdatedAt,
-		},
-		CreatedAt: &cycle.CreatedAt,
-		UpdatedAt: &cycle.UpdatedAt,
-	}, nil
+	return cycle.ToProto(true), nil
 }
 
 // Create creates a new cycle.
 func (s service) Create(ctx context.Context, req *cyclesProto.CreateCycleRequest) (*cyclesProto.Cycle, error) {
-	if err := ValidateCreateRequest(*req); err != nil {
+	if err := ValidateCreateRequest(req); err != nil {
 		return nil, err
 	}
 
@@ -87,27 +69,31 @@ func (s service) Create(ctx context.Context, req *cyclesProto.CreateCycleRequest
 		return nil, err
 	}
 
+	startAt, err := ptypes.Timestamp(req.StartAt)
+	if err != nil {
+		return nil, err
+	}
+
+	endAt, err := ptypes.Timestamp(req.EndAt)
+	if err != nil {
+		return nil, err
+	}
+
 	now := time.Now()
 	id := uuid.New().String()
+
+	userModel := users.FromProto(user)
 	err = s.repo.Create(ctx, CycleModel{
 		UUID:        id,
 		Title:       req.Title,
 		Description: req.Description,
 		Active:      req.Active,
-		StartAt:     *req.StartAt,
-		EndAt:       *req.EndAt,
-		Creator: &users.UserModel{
-			ID:        user.Id,
-			UUID:      user.Uuid,
-			Username:  user.Username,
-			Password:  user.Password,
-			Email:     user.Email,
-			Enable:    user.Enable,
-			CreatedAt: *user.CreatedAt,
-			UpdatedAt: *user.UpdatedAt,
-		},
-		CreatedAt: now,
-		UpdatedAt: now,
+		StartAt:     startAt,
+		EndAt:       endAt,
+		Creator:     &userModel,
+		CreatorID:   user.Id,
+		CreatedAt:   now,
+		UpdatedAt:   now,
 	})
 	if err != nil {
 		return nil, err
@@ -117,45 +103,52 @@ func (s service) Create(ctx context.Context, req *cyclesProto.CreateCycleRequest
 
 // Update updates the cycle with the specified UUID.
 func (s service) Update(ctx context.Context, req *cyclesProto.UpdateCycleRequest) (*cyclesProto.Cycle, error) {
-	if err := ValidateUpdateRequest(*req); err != nil {
+	if err := ValidateUpdateRequest(req); err != nil {
 		return nil, err
 	}
 
-	cycle, err := s.Get(ctx, req.Uuid)
+	user, err := auth.ExtractUser(ctx)
 	if err != nil {
-		return cycle, err
+		return nil, err
 	}
+
+	cycle, err := s.repo.Get(ctx, req.Uuid)
+	if err != nil {
+		return nil, err
+	}
+	startAt, err := ptypes.Timestamp(req.StartAt)
+	if err != nil {
+		return nil, err
+	}
+
+	endAt, err := ptypes.Timestamp(req.EndAt)
+	if err != nil {
+		return nil, err
+	}
+
 	now := time.Now()
-
 	cycle.Title = req.Title
-	cycle.UpdatedAt = &now
+	cycle.UpdatedAt = now
 
+	userModel := users.FromProto(user)
 	cycleModel := CycleModel{
-		ID:          cycle.Id,
-		UUID:        cycle.Uuid,
+		ID:          cycle.ID,
+		UUID:        cycle.UUID,
 		Title:       req.Title,
 		Description: req.Description,
 		Active:      req.Active,
-		StartAt:     *req.StartAt,
-		EndAt:       *req.EndAt,
-		Creator: &users.UserModel{
-			ID:        cycle.Creator.Id,
-			UUID:      cycle.Creator.Uuid,
-			Username:  cycle.Creator.Username,
-			Password:  cycle.Creator.Password,
-			Email:     cycle.Creator.Email,
-			Enable:    cycle.Creator.Enable,
-			CreatedAt: *cycle.Creator.CreatedAt,
-			UpdatedAt: *cycle.Creator.UpdatedAt,
-		},
-		CreatedAt: *cycle.CreatedAt,
-		UpdatedAt: now,
+		StartAt:     startAt,
+		EndAt:       endAt,
+		Creator:     &userModel,
+		CreatorID:   user.Id,
+		CreatedAt:   cycle.CreatedAt,
+		UpdatedAt:   now,
 	}
 
 	if err := s.repo.Update(ctx, cycleModel); err != nil {
-		return cycle, err
+		return nil, err
 	}
-	return cycle, nil
+	return cycle.ToProto(true), nil
 }
 
 // Delete deletes the cycle with the specified UUID.
@@ -181,30 +174,8 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*cyclesProto.L
 	if err != nil {
 		return nil, err
 	}
-	var result []*cyclesProto.Cycle
-	for _, item := range items {
-		result = append(result, &cyclesProto.Cycle{
-			Id:          item.ID,
-			Uuid:        item.UUID,
-			Title:       item.Title,
-			Description: item.Description,
-			Active:      item.Active,
-			StartAt:     &item.StartAt,
-			EndAt:       &item.StartAt,
-			Creator: &usersProto.User{
-				Uuid:      item.Creator.UUID,
-				Username:  item.Creator.Username,
-				Email:     item.Creator.Email,
-				Enable:    item.Creator.Enable,
-				CreatedAt: &item.Creator.CreatedAt,
-				UpdatedAt: &item.Creator.UpdatedAt,
-			},
-			CreatedAt: &item.CreatedAt,
-			UpdatedAt: &item.UpdatedAt,
-		})
-	}
 	return &cyclesProto.ListCyclesResponse{
-		Cycles:     result,
+		Cycles:     ToProtoList(items, true),
 		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,

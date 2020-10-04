@@ -1,26 +1,13 @@
 syntax = "proto3";
 
-package issues;
+package issuesV1;
 
-option go_package = "issues";
+option go_package = "services/issues/proto;issues";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "services/users/proto/model.proto";
-
-option (gogoproto.gostring_all) = true;
-option (gogoproto.equal_all) = true;
-option (gogoproto.verbose_equal_all) = true;
-option (gogoproto.goproto_stringer_all) = false;
-option (gogoproto.stringer_all) =  true;
-option (gogoproto.populate_all) = true;
-option (gogoproto.testgen_all) = true;
-option (gogoproto.benchgen_all) = true;
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
 
 enum IssueStatus {
     IN_BACKLOG = 0;
@@ -36,10 +23,10 @@ message ListIssuesRequest {
 }
 
 message ListIssuesResponse {
-    repeated Issue issues = 1 [(gogoproto.jsontag) = "issues"];
-    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
-    int64 limit = 3 [(gogoproto.jsontag) = "limit"];
-    int64 offset = 4 [(gogoproto.jsontag) = "offset"];
+    repeated Issue issues = 1;
+    int64 total_count = 2;
+    int64 limit = 3;
+    int64 offset = 4;
 }
 
 message GetIssueRequest {
@@ -82,10 +69,10 @@ message Issue {
     IssueStatus status = 5;
     uint64 sprint_id = 6;
     uint64 estimate = 7;
-    users.User assignee = 8;
-    users.User creator = 9;
-    google.protobuf.Timestamp created_at = 10 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp updated_at = 11 [(gogoproto.stdtime) = true];
+    usersV1.User assignee = 8;
+    usersV1.User creator = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
 }
 
 service IssueService {

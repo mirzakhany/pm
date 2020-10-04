@@ -19,7 +19,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/issuesListIssuesResponse"
+              "$ref": "#/definitions/issuesV1ListIssuesResponse"
             }
           },
           "default": {
@@ -56,7 +56,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/issuesIssue"
+              "$ref": "#/definitions/issuesV1Issue"
             }
           },
           "default": {
@@ -72,7 +72,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/issuesCreateIssueRequest"
+              "$ref": "#/definitions/issuesV1CreateIssueRequest"
             }
           }
         ],
@@ -89,7 +89,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/issuesIssue"
+              "$ref": "#/definitions/issuesV1Issue"
             }
           },
           "default": {
@@ -147,7 +147,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/issuesIssue"
+              "$ref": "#/definitions/issuesV1Issue"
             }
           },
           "default": {
@@ -169,7 +169,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/issuesUpdateIssueRequest"
+              "$ref": "#/definitions/issuesV1UpdateIssueRequest"
             }
           }
         ],
@@ -180,7 +180,7 @@
     }
   },
   "definitions": {
-    "issuesCreateIssueRequest": {
+    "issuesV1CreateIssueRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -197,7 +197,7 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/issuesIssueStatus"
+          "$ref": "#/definitions/issuesV1IssueStatus"
         },
         "sprint_id": {
           "type": "string",
@@ -215,7 +215,7 @@
         }
       }
     },
-    "issuesIssue": {
+    "issuesV1Issue": {
       "type": "object",
       "properties": {
         "id": {
@@ -232,7 +232,7 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/issuesIssueStatus"
+          "$ref": "#/definitions/issuesV1IssueStatus"
         },
         "sprint_id": {
           "type": "string",
@@ -243,10 +243,10 @@
           "format": "uint64"
         },
         "assignee": {
-          "$ref": "#/definitions/usersUser"
+          "$ref": "#/definitions/usersV1User"
         },
         "creator": {
-          "$ref": "#/definitions/usersUser"
+          "$ref": "#/definitions/usersV1User"
         },
         "created_at": {
           "type": "string",
@@ -258,7 +258,7 @@
         }
       }
     },
-    "issuesIssueStatus": {
+    "issuesV1IssueStatus": {
       "type": "string",
       "enum": [
         "IN_BACKLOG",
@@ -269,13 +269,13 @@
       ],
       "default": "IN_BACKLOG"
     },
-    "issuesListIssuesResponse": {
+    "issuesV1ListIssuesResponse": {
       "type": "object",
       "properties": {
         "issues": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/issuesIssue"
+            "$ref": "#/definitions/issuesV1Issue"
           }
         },
         "total_count": {
@@ -292,7 +292,7 @@
         }
       }
     },
-    "issuesUpdateIssueRequest": {
+    "issuesV1UpdateIssueRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -309,7 +309,7 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/issuesIssueStatus"
+          "$ref": "#/definitions/issuesV1IssueStatus"
         },
         "sprint_id": {
           "type": "string",
@@ -360,7 +360,7 @@
         }
       }
     },
-    "usersUser": {
+    "usersV1User": {
       "type": "object",
       "properties": {
         "id": {

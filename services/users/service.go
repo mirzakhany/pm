@@ -22,8 +22,8 @@ type Service interface {
 }
 
 // ValidateCreateRequest validates the CreateUserRequest fields.
-func ValidateCreateRequest(c usersProto.CreateUserRequest) error {
-	return validation.ValidateStruct(&c,
+func ValidateCreateRequest(c *usersProto.CreateUserRequest) error {
+	return validation.ValidateStruct(c,
 		validation.Field(&c.Username, validation.Required, validation.Length(0, 128)),
 		validation.Field(&c.Email, validation.Required, validation.Length(0, 128)),
 		validation.Field(&c.Password, validation.Required, validation.Length(0, 128)),
@@ -31,8 +31,8 @@ func ValidateCreateRequest(c usersProto.CreateUserRequest) error {
 }
 
 // Validate validates the UpdateUserRequest fields.
-func ValidateUpdateRequest(u usersProto.UpdateUserRequest) error {
-	return validation.ValidateStruct(&u,
+func ValidateUpdateRequest(u *usersProto.UpdateUserRequest) error {
+	return validation.ValidateStruct(u,
 		validation.Field(&u.Username, validation.Required, validation.Length(0, 128)),
 		validation.Field(&u.Email, validation.Required, validation.Length(0, 128)),
 		validation.Field(&u.Enable, validation.Required),
@@ -59,18 +59,14 @@ func (s service) Get(ctx context.Context, UUID string) (*usersProto.User, error)
 	if err != nil {
 		return nil, err
 	}
-	return &usersProto.User{
-		Uuid:      user.UUID,
-		Username:  user.Username,
-		Email:     user.Email,
-		CreatedAt: &user.CreatedAt,
-		UpdatedAt: &user.UpdatedAt,
-	}, nil
+	user.ID = 0
+	user.Password = ""
+	return user.ToProto(true /*secure*/), nil
 }
 
 // Create creates a new user.
 func (s service) Create(ctx context.Context, req *usersProto.CreateUserRequest) (*usersProto.User, error) {
-	if err := ValidateCreateRequest(*req); err != nil {
+	if err := ValidateCreateRequest(req); err != nil {
 		return nil, err
 	}
 	now := time.Now()
@@ -92,37 +88,36 @@ func (s service) Create(ctx context.Context, req *usersProto.CreateUserRequest) 
 
 // Update updates the user with the specified UUID.
 func (s service) Update(ctx context.Context, req *usersProto.UpdateUserRequest) (*usersProto.User, error) {
-	if err := ValidateUpdateRequest(*req); err != nil {
+	if err := ValidateUpdateRequest(req); err != nil {
 		return nil, err
 	}
 
-	user, err := s.Get(ctx, req.Uuid)
+	user, err := s.repo.Get(ctx, req.Uuid)
 	if err != nil {
-		return user, err
+		return nil, err
 	}
 	now := time.Now()
 
-	user.Id = 0
 	user.Username = req.Username
 	user.Email = req.Email
 	user.Enable = req.Enable
-	user.UpdatedAt = &now
+	user.UpdatedAt = now
 
 	userModel := UserModel{
-		ID:        user.Id,
-		UUID:      user.Uuid,
+		ID:        user.ID,
+		UUID:      user.UUID,
 		Username:  req.Username,
 		Password:  user.Password,
 		Email:     req.Email,
 		Enable:    req.Enable,
-		CreatedAt: *user.CreatedAt,
+		CreatedAt: user.CreatedAt,
 		UpdatedAt: now,
 	}
 
 	if err := s.repo.Update(ctx, userModel); err != nil {
-		return user, err
+		return nil, err
 	}
-	return user, nil
+	return user.ToProto(true /*secure*/), nil
 }
 
 // Delete deletes the user with the specified UUID.
@@ -148,19 +143,8 @@ func (s service) Query(ctx context.Context, offset, limit int64) (*usersProto.Li
 	if err != nil {
 		return nil, err
 	}
-	var result []*usersProto.User
-	for _, item := range items {
-		result = append(result, &usersProto.User{
-			Uuid:      item.UUID,
-			Username:  item.Username,
-			Email:     item.Email,
-			Enable:    item.Enable,
-			CreatedAt: &item.CreatedAt,
-			UpdatedAt: &item.CreatedAt,
-		})
-	}
 	return &usersProto.ListUsersResponse{
-		Users:      result,
+		Users:      ToProtoList(items, true /*secure*/),
 		TotalCount: int64(count),
 		Offset:     offset,
 		Limit:      limit,
@@ -173,14 +157,5 @@ func (s service) GetByUsername(ctx context.Context, username string) (*usersProt
 	if err != nil {
 		return nil, err
 	}
-	return &usersProto.User{
-		Id:        user.ID,
-		Uuid:      user.UUID,
-		Username:  user.Username,
-		Password:  user.Password,
-		Email:     user.Email,
-		Enable:    user.Enable,
-		CreatedAt: &user.CreatedAt,
-		UpdatedAt: &user.UpdatedAt,
-	}, nil
+	return user.ToProto(false /*secure*/), nil
 }

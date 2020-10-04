@@ -42,6 +42,7 @@ func TestRepository(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "admin", user.Username)
 	_, err = repo.Get(ctx, "test0")
+	assert.NotNil(t, err)
 	assert.EqualError(t, pg.ErrNoRows, err.Error())
 
 	// update
@@ -67,7 +68,9 @@ func TestRepository(t *testing.T) {
 	err = repo.Delete(ctx, testUuid)
 	assert.Nil(t, err)
 	_, err = repo.Get(ctx, testUuid)
+	assert.NotNil(t, err)
 	assert.EqualError(t, pg.ErrNoRows, err.Error())
 	err = repo.Delete(ctx, testUuid)
+	assert.NotNil(t, err)
 	assert.EqualError(t, pg.ErrNoRows, err.Error())
 }

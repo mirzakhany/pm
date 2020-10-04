@@ -1,27 +1,13 @@
 syntax = "proto3";
 
-package cycles;
+package cyclesV1;
 
-option go_package = "cycles";
+option go_package = "services/cycles/proto;cycles";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "services/users/proto/model.proto";
-
-option (gogoproto.gostring_all) = true;
-option (gogoproto.equal_all) = true;
-option (gogoproto.verbose_equal_all) = true;
-option (gogoproto.goproto_stringer_all) = false;
-option (gogoproto.stringer_all) =  true;
-option (gogoproto.populate_all) = true;
-option (gogoproto.testgen_all) = true;
-option (gogoproto.benchgen_all) = true;
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-
 
 message ListCyclesRequest {
     int64 limit = 1;
@@ -29,8 +15,8 @@ message ListCyclesRequest {
 }
 
 message ListCyclesResponse {
-    repeated Cycle cycles = 1 [json_name = "cycles", (gogoproto.jsontag) = "cycles"];
-    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
+    repeated Cycle cycles = 1;
+    int64 total_count = 2;
     int64 limit = 3;
     int64 offset = 4;
 }
@@ -43,8 +29,8 @@ message CreateCycleRequest {
     string title = 1;
     bool active = 2;
     string description = 3;
-    google.protobuf.Timestamp start_at = 4 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp end_at = 5 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp start_at = 4;
+    google.protobuf.Timestamp end_at = 5;
 }
 
 message UpdateCycleRequest {
@@ -52,8 +38,8 @@ message UpdateCycleRequest {
     string title = 2;
     bool active = 3;
     string description = 4;
-    google.protobuf.Timestamp start_at = 5 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp end_at = 6 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp start_at = 5;
+    google.protobuf.Timestamp end_at = 6;
 }
 
 message DeleteCycleRequest {
@@ -66,11 +52,11 @@ message Cycle {
     string title = 3;
     bool active = 4;
     string description = 5;
-    users.User creator = 6;
-    google.protobuf.Timestamp start_at = 7 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp end_at = 8 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp created_at = 9 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp updated_at = 10 [(gogoproto.stdtime) = true];
+    usersV1.User creator = 6;
+    google.protobuf.Timestamp start_at = 7;
+    google.protobuf.Timestamp end_at = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
 }
 
 service CycleService {

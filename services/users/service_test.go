@@ -20,7 +20,7 @@ func TestCreateUserRequest_Validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateCreateRequest(tt.model)
+			err := ValidateCreateRequest(&tt.model)
 			assert.Equal(t, tt.wantError, err != nil)
 		})
 	}
@@ -38,7 +38,7 @@ func TestUpdateUserRequest_Validate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := ValidateUpdateRequest(tt.model)
+			err := ValidateUpdateRequest(&tt.model)
 			assert.Equal(t, tt.wantError, err != nil)
 		})
 	}

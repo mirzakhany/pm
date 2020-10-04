@@ -10,7 +10,6 @@ import (
 
 	"google.golang.org/grpc/reflection"
 
-	"github.com/gogo/gateway"
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpcZap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpcRecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -94,7 +93,7 @@ func gRPCClient() (*grpc.ClientConn, error) {
 // Serve start the server and wait
 func serveHTTP(ctx context.Context) (func() error, error) {
 
-	jsonpb := &gateway.JSONPb{
+	jsonpb := &runtime.JSONPb{
 		EmitDefaults: false,
 		Indent:       "  ",
 		OrigName:     true,

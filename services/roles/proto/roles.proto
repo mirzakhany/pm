@@ -1,26 +1,12 @@
 syntax = "proto3";
 
-package roles;
+package rolesV1;
 
-option go_package = "roles";
+option go_package = "services/roles/proto;roles";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-
-option (gogoproto.gostring_all) = true;
-option (gogoproto.equal_all) = true;
-option (gogoproto.verbose_equal_all) = true;
-option (gogoproto.goproto_stringer_all) = false;
-option (gogoproto.stringer_all) =  true;
-option (gogoproto.populate_all) = true;
-option (gogoproto.testgen_all) = true;
-option (gogoproto.benchgen_all) = true;
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-
 
 message ListRolesRequest {
     int64 limit = 1;
@@ -28,8 +14,8 @@ message ListRolesRequest {
 }
 
 message ListRolesResponse {
-    repeated Role roles = 1 [json_name = "roles", (gogoproto.jsontag) = "roles"];
-    int64 total_count = 2 [(gogoproto.jsontag) = "total_count"];
+    repeated Role roles = 1;
+    int64 total_count = 2;
     int64 limit = 3;
     int64 offset = 4;
 }
@@ -55,8 +41,8 @@ message Role {
     uint64 id = 1;
     string uuid = 2;
     string title = 3;
-    google.protobuf.Timestamp created_at = 4 [(gogoproto.stdtime) = true];
-    google.protobuf.Timestamp updated_at = 5 [(gogoproto.stdtime) = true];
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
 }
 
 service RoleService {

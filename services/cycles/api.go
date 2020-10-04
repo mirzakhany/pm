@@ -3,7 +3,8 @@ package cycles
 import (
 	"context"
 
-	"github.com/gogo/protobuf/types"
+	"github.com/golang/protobuf/ptypes/empty"
+
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	cycles "github.com/mirzakhany/pm/services/cycles/proto"
@@ -63,12 +64,12 @@ func (a api) UpdateCycle(ctx context.Context, request *cycles.UpdateCycleRequest
 	return res, err
 }
 
-func (a api) DeleteCycle(ctx context.Context, request *cycles.DeleteCycleRequest) (*types.Empty, error) {
+func (a api) DeleteCycle(ctx context.Context, request *cycles.DeleteCycleRequest) (*empty.Empty, error) {
 	_, err := a.service.Delete(ctx, request.Uuid)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	return &types.Empty{}, err
+	return nil, err
 }
 
 func New(srv Service) API {

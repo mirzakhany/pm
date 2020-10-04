@@ -5,7 +5,7 @@ import (
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/mirzakhany/pm/pkg/db"
 	cyclesSrv "github.com/mirzakhany/pm/services/cycles"
-	issueSrv "github.com/mirzakhany/pm/services/issues"
+	issuesSrv "github.com/mirzakhany/pm/services/issues"
 	rolesSrv "github.com/mirzakhany/pm/services/roles"
 	usersSrv "github.com/mirzakhany/pm/services/users"
 )
@@ -21,7 +21,7 @@ func Setup(db *db.DB) error {
 	userService := usersSrv.NewService(usersSrv.NewRepository(db))
 	usersSrv.New(userService)
 	cyclesSrv.New(cyclesSrv.NewService(cyclesSrv.NewRepository(db), userService))
-	issueSrv.New(issueSrv.NewService(issueSrv.NewRepository(db), userService))
+	issuesSrv.New(issuesSrv.NewService(issuesSrv.NewRepository(db), userService))
 	return nil
 }
 
@@ -31,7 +31,7 @@ func createSchema(db *pg.DB) error {
 		(*usersSrv.UserModel)(nil),
 		(*cyclesSrv.CycleModel)(nil),
 		(*rolesSrv.RoleModel)(nil),
-		(*issueSrv.IssueModel)(nil),
+		(*issuesSrv.IssueModel)(nil),
 	}
 
 	for _, model := range models {
