@@ -8,7 +8,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/google/uuid"
-	users "github.com/mirzakhany/pm/services/users/proto"
+	users "github.com/mirzakhany/pm/protobuf/users"
 )
 
 func TestAuthHelper(t *testing.T) {

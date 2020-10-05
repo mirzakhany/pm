@@ -3,16 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/mirzakhany/pm/pkg/kv"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/mirzakhany/pm/internal"
+	"github.com/mirzakhany/pm/pkg/kv"
 
 	"github.com/mirzakhany/pm/pkg/config"
 	"github.com/mirzakhany/pm/pkg/db"
 	"github.com/mirzakhany/pm/pkg/grpcgw"
 	"github.com/mirzakhany/pm/pkg/log"
-	"github.com/mirzakhany/pm/services"
 )
 
 var (
@@ -55,7 +56,7 @@ func main() {
 		panic(err)
 	}
 
-	err = services.Setup(database)
+	err = internal.Setup(database)
 	if err != nil {
 		panic(err)
 	}
