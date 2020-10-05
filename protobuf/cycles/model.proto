@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package cyclesV1;
+
+option go_package = "protobuf/cycles;cycles";
+
+import "google/protobuf/timestamp.proto";
+import "protobuf/users/model.proto";
+
+
+message Cycle {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    bool active = 4;
+    string description = 5;
+    usersV1.User creator = 6;
+    google.protobuf.Timestamp start_at = 7;
+    google.protobuf.Timestamp end_at = 8;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+}

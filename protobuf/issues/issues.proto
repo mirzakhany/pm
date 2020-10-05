@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package issuesV1;
+
+option go_package = "protobuf/issues;issues";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "protobuf/users/model.proto";
+import "protobuf/cycles/model.proto";
+
+enum IssueStatus {
+    IN_BACKLOG = 0;
+    IN_PROGRESS = 1;
+    TEST = 2;
+    DONE = 3;
+    ARCHIVED = 4;
+}
+
+message ListIssuesRequest {
+    int64 limit = 1;
+    int64 offset = 2;
+}
+
+message ListIssuesResponse {
+    repeated Issue issues = 1;
+    int64 total_count = 2;
+    int64 limit = 3;
+    int64 offset = 4;
+}
+
+message GetIssueRequest {
+    string uuid = 1;
+}
+
+message CreateIssueRequest {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    IssueStatus status = 5;
+    string cycle_uuid = 6;
+    uint64 estimate = 7;
+    string assignee_uuid = 8;
+    string creator_uuid = 9;
+}
+
+message UpdateIssueRequest {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    IssueStatus status = 5;
+    string cycle_uuid = 6;
+    uint64 estimate = 7;
+    string assignee_uuid = 8;
+    string creator_uuid = 9;
+}
+
+message DeleteIssueRequest {
+    string uuid = 1;
+}
+
+message Issue {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    IssueStatus status = 5;
+    cyclesV1.Cycle cycle = 6;
+    uint64 estimate = 7;
+    usersV1.User assignee = 8;
+    usersV1.User creator = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+}
+
+service IssueService {
+
+    // List Issues
+    rpc ListIssues (ListIssuesRequest) returns (ListIssuesResponse) {
+        option (google.api.http) = {
+            get: "/v1/issues"
+        };
+    }
+    // Get Issue
+    rpc GetIssue (GetIssueRequest) returns (Issue) {
+        option (google.api.http) = {
+          get: "/v1/issues/{uuid}"
+        };
+    }
+
+    // Create Issue object request
+    rpc CreateIssue (CreateIssueRequest) returns (Issue) {
+        option (google.api.http) = {
+            post: "/v1/issues"
+            body: "*"
+        };
+    }
+
+    // Update Issue object request
+    rpc UpdateIssue (UpdateIssueRequest) returns (Issue) {
+        option (google.api.http) = {
+            put: "/v1/issues/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Issue object request
+    rpc DeleteIssue (DeleteIssueRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/issues/{uuid}"
+        };
+    }
+}

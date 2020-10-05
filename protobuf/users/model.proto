@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package usersV1;
+
+option go_package = "protobuf/users;users";
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+    uint64 id = 1;
+    string uuid = 2;
+    string username = 3;
+    string password = 4;
+    string email = 5;
+    bool enable = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
