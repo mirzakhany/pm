@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	users "github.com/mirzakhany/pm/services/users/proto"
+	users "github.com/mirzakhany/pm/protobuf/users"
 )
 
 type contextKey int
