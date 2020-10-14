@@ -6,17 +6,7 @@ option go_package = "protobuf/issues;issues";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/timestamp.proto";
-import "protobuf/users/model.proto";
-import "protobuf/cycles/model.proto";
-
-enum IssueStatus {
-    IN_BACKLOG = 0;
-    IN_PROGRESS = 1;
-    TEST = 2;
-    DONE = 3;
-    ARCHIVED = 4;
-}
+import "protobuf/issues/model.proto";
 
 message ListIssuesRequest {
     int64 limit = 1;
@@ -35,45 +25,62 @@ message GetIssueRequest {
 }
 
 message CreateIssueRequest {
-    uint64 id = 1;
-    string uuid = 2;
-    string title = 3;
-    string description = 4;
-    IssueStatus status = 5;
-    string cycle_uuid = 6;
-    uint64 estimate = 7;
-    string assignee_uuid = 8;
-    string creator_uuid = 9;
+    string title = 1;
+    string description = 2;
+    string status_uuid = 3;
+    string cycle_uuid = 4;
+    uint64 estimate = 5;
+    string assignee_uuid = 6;
+    string creator_uuid = 7;
 }
 
 message UpdateIssueRequest {
-    uint64 id = 1;
-    string uuid = 2;
-    string title = 3;
-    string description = 4;
-    IssueStatus status = 5;
-    string cycle_uuid = 6;
-    uint64 estimate = 7;
-    string assignee_uuid = 8;
-    string creator_uuid = 9;
+    string uuid = 1;
+    string title = 2;
+    string description = 3;
+    string status_uuid = 4;
+    string cycle_uuid = 5;
+    uint64 estimate = 6;
+    string assignee_uuid = 7;
+    string creator_uuid = 8;
 }
 
 message DeleteIssueRequest {
     string uuid = 1;
 }
 
-message Issue {
-    uint64 id = 1;
-    string uuid = 2;
-    string title = 3;
-    string description = 4;
-    IssueStatus status = 5;
-    cyclesV1.Cycle cycle = 6;
-    uint64 estimate = 7;
-    usersV1.User assignee = 8;
-    usersV1.User creator = 9;
-    google.protobuf.Timestamp created_at = 10;
-    google.protobuf.Timestamp updated_at = 11;
+message ListIssueStatusRequest {
+    int64 limit = 1;
+    int64 offset = 2;
+}
+
+message ListIssueStatusResponse {
+    repeated IssueStatus issue_status = 1;
+    int64 total_count = 2;
+    int64 limit = 3;
+    int64 offset = 4;
+}
+
+message GetIssueStatusRequest {
+    string uuid = 1;
+}
+
+message CreateIssueStatusRequest {
+    string title = 1;
+}
+
+message UpdateIssueStatusRequest {
+    string uuid = 1;
+    string title = 2;
+}
+
+message DeleteIssueStatusRequest {
+    string uuid = 1;
+}
+
+message SetIssueStatusRequest {
+    string uuid = 1;
+    IssueStatus status = 2;
 }
 
 service IssueService {
@@ -111,6 +118,52 @@ service IssueService {
     rpc DeleteIssue (DeleteIssueRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
           delete: "/v1/issues/{uuid}"
+        };
+    }
+
+    // issue status apis
+
+    // List Issue status
+    rpc ListIssueStatus (ListIssueStatusRequest) returns (ListIssueStatusResponse) {
+        option (google.api.http) = {
+            get: "/v1/issues/-/status"
+        };
+    }
+
+    // Get Issue status
+    rpc GetIssueStatus (GetIssueStatusRequest) returns (IssueStatus) {
+        option (google.api.http) = {
+            get: "/v1/issues/-/status"
+        };
+    }
+
+    // Create IssueStatus object request
+    rpc CreateIssueStatus (CreateIssueStatusRequest) returns (IssueStatus) {
+        option (google.api.http) = {
+            post: "/v1/issues/-/status"
+            body: "*"
+        };
+    }
+
+    // Update IssueStatus object request
+    rpc UpdateIssueStatus (UpdateIssueStatusRequest) returns (IssueStatus) {
+        option (google.api.http) = {
+            put: "/v1/issues/-/status/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete IssueStatus object request
+    rpc DeleteIssueStatus (DeleteIssueStatusRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/issues/-/status/{uuid}"
+        };
+    }
+
+    // Set Issue Status object request
+    rpc SetIssueStatus (SetIssueStatusRequest) returns (Issue) {
+        option (google.api.http) = {
+          delete: "/v1/issues/status/{uuid}"
         };
     }
 }
