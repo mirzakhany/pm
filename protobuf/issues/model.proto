@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package issuesV1;
+
+option go_package = "protobuf/issues;issues";
+
+import "google/protobuf/timestamp.proto";
+import "protobuf/users/model.proto";
+import "protobuf/cycles/model.proto";
+
+message IssueStatus {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+}
+
+message Issue {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string description = 4;
+    IssueStatus status = 5;
+    cyclesV1.Cycle cycle = 6;
+    uint64 estimate = 7;
+    usersV1.User assignee = 8;
+    usersV1.User creator = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+}

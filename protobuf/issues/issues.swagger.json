@@ -81,6 +81,200 @@
         ]
       }
     },
+    "/v1/issues/-/status": {
+      "get": {
+        "summary": "Get Issue status",
+        "operationId": "IssueService_GetIssueStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/issuesV1IssueStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "IssueService"
+        ]
+      },
+      "post": {
+        "summary": "Create IssueStatus object request",
+        "operationId": "IssueService_CreateIssueStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/issuesV1IssueStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/issuesV1CreateIssueStatusRequest"
+            }
+          }
+        ],
+        "tags": [
+          "IssueService"
+        ]
+      }
+    },
+    "/v1/issues/-/status/{uuid}": {
+      "delete": {
+        "summary": "Delete IssueStatus object request",
+        "operationId": "IssueService_DeleteIssueStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "IssueService"
+        ]
+      },
+      "put": {
+        "summary": "Update IssueStatus object request",
+        "operationId": "IssueService_UpdateIssueStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/issuesV1IssueStatus"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/issuesV1UpdateIssueStatusRequest"
+            }
+          }
+        ],
+        "tags": [
+          "IssueService"
+        ]
+      }
+    },
+    "/v1/issues/status/{uuid}": {
+      "delete": {
+        "summary": "Set Issue Status object request",
+        "operationId": "IssueService_SetIssueStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/issuesV1Issue"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status.id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "status.uuid",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.title",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status.created_at",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "status.updated_at",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "IssueService"
+        ]
+      }
+    },
     "/v1/issues/{uuid}": {
       "get": {
         "summary": "Get Issue",
@@ -223,21 +417,14 @@
     "issuesV1CreateIssueRequest": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "uuid": {
-          "type": "string"
-        },
         "title": {
           "type": "string"
         },
         "description": {
           "type": "string"
         },
-        "status": {
-          "$ref": "#/definitions/issuesV1IssueStatus"
+        "status_uuid": {
+          "type": "string"
         },
         "cycle_uuid": {
           "type": "string"
@@ -250,6 +437,14 @@
           "type": "string"
         },
         "creator_uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "issuesV1CreateIssueStatusRequest": {
+      "type": "object",
+      "properties": {
+        "title": {
           "type": "string"
         }
       }
@@ -297,15 +492,50 @@
       }
     },
     "issuesV1IssueStatus": {
-      "type": "string",
-      "enum": [
-        "IN_BACKLOG",
-        "IN_PROGRESS",
-        "TEST",
-        "DONE",
-        "ARCHIVED"
-      ],
-      "default": "IN_BACKLOG"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "issuesV1ListIssueStatusResponse": {
+      "type": "object",
+      "properties": {
+        "issue_status": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/issuesV1IssueStatus"
+          }
+        },
+        "total_count": {
+          "type": "string",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "string",
+          "format": "int64"
+        },
+        "offset": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
     },
     "issuesV1ListIssuesResponse": {
       "type": "object",
@@ -333,10 +563,6 @@
     "issuesV1UpdateIssueRequest": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "format": "uint64"
-        },
         "uuid": {
           "type": "string"
         },
@@ -346,8 +572,8 @@
         "description": {
           "type": "string"
         },
-        "status": {
-          "$ref": "#/definitions/issuesV1IssueStatus"
+        "status_uuid": {
+          "type": "string"
         },
         "cycle_uuid": {
           "type": "string"
@@ -360,6 +586,17 @@
           "type": "string"
         },
         "creator_uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "issuesV1UpdateIssueStatusRequest": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "title": {
           "type": "string"
         }
       }
