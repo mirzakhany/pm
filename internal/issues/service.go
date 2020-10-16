@@ -8,8 +8,8 @@ import (
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
+	"github.com/mirzakhany/pm/internal/auth/users"
 	"github.com/mirzakhany/pm/internal/cycles"
-	"github.com/mirzakhany/pm/internal/users"
 	issuesProto "github.com/mirzakhany/pm/protobuf/issues"
 )
 

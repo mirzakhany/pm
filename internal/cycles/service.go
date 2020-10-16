@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 
-	"github.com/mirzakhany/pm/internal/users"
+	"github.com/mirzakhany/pm/internal/auth/users"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"

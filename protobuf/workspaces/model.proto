@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package workspacesV1;
+
+option go_package = "protobuf/workspaces;workspaces";
+
+import "google/protobuf/timestamp.proto";
+
+message Workspace {
+    uint64 id = 1;
+    string uuid = 2;
+    string title = 3;
+    string domain = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}

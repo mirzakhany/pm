@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/mirzakhany/pm/internal/users/auth"
+	"github.com/mirzakhany/pm/internal/auth/users/auth"
 	"github.com/mirzakhany/pm/pkg/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

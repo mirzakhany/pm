@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package workspacesV1;
+
+option go_package = "protobuf/workspaces;workspaces";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protobuf/workspaces/model.proto";
+
+message ListWorkspacesRequest {
+    int64 limit = 1;
+    int64 offset = 2;
+}
+
+message ListWorkspacesResponse {
+    repeated Workspace workspaces = 1;
+    int64 total_count = 2;
+    int64 limit = 3;
+    int64 offset = 4;
+}
+
+message GetWorkspaceRequest {
+    string uuid = 1;
+}
+
+message CreateWorkspaceRequest {
+    string title = 1;
+    string domain = 2;
+}
+
+message UpdateWorkspaceRequest {
+    string uuid = 1;
+    string title = 2;
+    string domain = 3;
+}
+
+message DeleteWorkspaceRequest {
+    string uuid = 1;
+}
+
+service WorkspaceService {
+
+    // List Workspaces
+    rpc ListWorkspaces (ListWorkspacesRequest) returns (ListWorkspacesResponse) {
+        option (google.api.http) = {
+            get: "/v1/workspaces"
+        };
+    }
+    // Get Workspace
+    rpc GetWorkspace (GetWorkspaceRequest) returns (Workspace) {
+        option (google.api.http) = {
+          get: "/v1/workspaces/{uuid}"
+        };
+    }
+
+    // Create Workspace object request
+    rpc CreateWorkspace (CreateWorkspaceRequest) returns (Workspace) {
+        option (google.api.http) = {
+            post: "/v1/workspaces"
+            body: "*"
+        };
+    }
+
+    // Update Workspace object request
+    rpc UpdateWorkspace (UpdateWorkspaceRequest) returns (Workspace) {
+        option (google.api.http) = {
+            put: "/v1/workspaces/{uuid}"
+            body: "*"
+        };
+    }
+
+    // Delete Workspace object request
+    rpc DeleteWorkspace (DeleteWorkspaceRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          delete: "/v1/workspaces/{uuid}"
+        };
+    }
+}
