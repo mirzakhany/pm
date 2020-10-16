@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/go-pg/pg/v10"
-	userSrv "github.com/mirzakhany/pm/internal/users"
+	userSrv "github.com/mirzakhany/pm/internal/auth/users"
 	issues "github.com/mirzakhany/pm/protobuf/issues"
 	usersProto "github.com/mirzakhany/pm/protobuf/users"
 	"github.com/stretchr/testify/assert"

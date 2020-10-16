@@ -10,7 +10,7 @@ import (
 
 	usersProto "github.com/mirzakhany/pm/protobuf/users"
 
-	userSrv "github.com/mirzakhany/pm/internal/users"
+	userSrv "github.com/mirzakhany/pm/internal/auth/users"
 
 	cycles "github.com/mirzakhany/pm/protobuf/cycles"
 	"github.com/stretchr/testify/assert"

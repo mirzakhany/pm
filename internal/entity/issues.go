@@ -18,10 +18,12 @@ type Issue struct {
 	CycleID     uint64       `pg:"unique:cycle_id"`
 	Cycle       *Cycle       `pg:"rel:has-one, fk:cycle"`
 	Estimate    uint64
-	AssigneeID  uint64 `pg:"unique:assignee_id"`
-	Assignee    *User  `pg:"rel:has-one, fk:assignee"`
-	CreatorID   uint64 `pg:"unique:creator_id"`
-	Creator     *User  `pg:"rel:has-one, fk:creator"`
+	WorkspaceID uint64    `pg:"unique:workspace_id"`
+	Workspace   Workspace `pg:"rel:has-one, fk:workspace"`
+	AssigneeID  uint64    `pg:"unique:assignee_id"`
+	Assignee    *User     `pg:"rel:has-one, fk:assignee"`
+	CreatorID   uint64    `pg:"unique:creator_id"`
+	Creator     *User     `pg:"rel:has-one, fk:creator"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

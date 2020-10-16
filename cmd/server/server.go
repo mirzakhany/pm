@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	debugMode = flag.Bool("config", false, "run in debug mode")
+	debugMode = flag.Bool("debug", false, "run in debug mode")
 )
 
 func cliContext() context.Context {

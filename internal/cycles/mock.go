@@ -6,7 +6,7 @@ import (
 
 	"github.com/mirzakhany/pm/internal/entity"
 
-	"github.com/mirzakhany/pm/internal/users"
+	"github.com/mirzakhany/pm/internal/auth/users"
 
 	"github.com/go-pg/pg"
 )

@@ -3,11 +3,12 @@ package internal
 import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
+	rolesSrv "github.com/mirzakhany/pm/internal/auth/roles"
+	usersSrv "github.com/mirzakhany/pm/internal/auth/users"
+	workspacesSrv "github.com/mirzakhany/pm/internal/auth/workspaces"
 	cyclesSrv "github.com/mirzakhany/pm/internal/cycles"
 	"github.com/mirzakhany/pm/internal/entity"
 	issuesSrv "github.com/mirzakhany/pm/internal/issues"
-	rolesSrv "github.com/mirzakhany/pm/internal/roles"
-	usersSrv "github.com/mirzakhany/pm/internal/users"
 	"github.com/mirzakhany/pm/pkg/db"
 )
 
@@ -18,6 +19,7 @@ func Setup(db *db.DB) error {
 		return err
 	}
 
+	workspacesSrv.New(workspacesSrv.NewService(workspacesSrv.NewRepository(db)))
 	rolesSrv.New(rolesSrv.NewService(rolesSrv.NewRepository(db)))
 	userService := usersSrv.NewService(usersSrv.NewRepository(db))
 	usersSrv.New(userService)
@@ -30,6 +32,7 @@ func Setup(db *db.DB) error {
 // createSchema creates database schema
 func createSchema(db *pg.DB) error {
 	models := []interface{}{
+		&entity.Workspace{},
 		&entity.User{},
 		&entity.Cycle{},
 		&entity.Role{},
